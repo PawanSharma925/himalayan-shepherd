@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+:root {
+  --cream: #f4efe6;
+  --cream-deep: #e7dccb;
+  --sand: #d8cbb8;
+  --ink: #171410;
+  --ink-soft: #3c342c;
+  --gold: #b8925a;
+  --gold-deep: #8d6b3a;
+  --paper: #fbf8f2;
+  --whatsapp: #1f8a4c;
+}
+
+@theme inline {
+  --color-cream: var(--cream);
+  --color-cream-deep: var(--cream-deep);
+  --color-sand: var(--sand);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-gold: var(--gold);
+  --color-gold-deep: var(--gold-deep);
+  --color-paper: var(--paper);
+  --color-whatsapp: var(--whatsapp);
+  --font-serif: var(--font-cormorant), "Times New Roman", serif;
+  --font-sans: var(--font-outfit), system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  scroll-margin-top: 5.75rem;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans), sans-serif;
+}
+
+::selection {
+  background: var(--gold);
+  color: white;
+}
+
+.kicker {
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--gold-deep);
+}
+
+.gold-rule {
+  height: 1px;
+  width: 4.5rem;
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
