@@ -43,12 +43,12 @@ const ITEMS = [
 
 export function Amenities() {
   return (
-    <section id="amenities" className="bg-paper px-5 py-24 md:px-8 md:py-32">
+    <section id="amenities" className="bg-paper px-4 py-16 sm:px-5 md:px-8 md:py-32">
       <div className="mx-auto max-w-7xl">
         <Reveal className="max-w-2xl">
           <p className="kicker">House notes</p>
           <div className="gold-rule mt-5" />
-          <h2 className="mt-8 font-serif text-4xl text-ink md:text-5xl">
+          <h2 className="mt-6 font-serif text-[2rem] leading-tight text-ink sm:mt-8 sm:text-4xl md:text-5xl">
             What the house quietly looks after.
           </h2>
         </Reveal>

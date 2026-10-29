@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,6 +16,189 @@ FOLDER_META = {
     "patio_and_rooftop": ("patio", "Rooftop & Patio"),
     "dining_and_food_court": ("dining", "Dining"),
     "closets_and_details": ("details", "Details"),
+}
+
+TITLES = {
+    "presidential-suite-hotel-bedroom-with-king-bed-and-daybed.jpg": (
+        "Daybed and king",
+        "Presidential Suite with a king bed and a daybed at Himalayan Shepherd, Pokhara",
+    ),
+    "presidential-suite-king-bed-room-with-daybed.jpg": (
+        "Inside the suite",
+        "Presidential Suite looking toward the daybed at Himalayan Shepherd, Pokhara",
+    ),
+    "presidential-suite-modern-hotel-bedroom-with-attached-bathroom.jpg": (
+        "Through to the bath",
+        "Presidential Suite with the ensuite bathroom in view at Himalayan Shepherd, Pokhara",
+    ),
+    "presidential-suite-modern-hotel-room-king-bed-daybed.jpg": (
+        "The sitting side",
+        "King bed and daybed in the Presidential Suite at Himalayan Shepherd, Pokhara",
+    ),
+    "presidential-suite-modern-hotel-room-with-king-bed-2.jpg": (
+        "The wide king",
+        "King bed in the Presidential Suite at Himalayan Shepherd, Pokhara",
+    ),
+    "presidential-suite-modern-hotel-room-with-king-bed-balcony.jpg": (
+        "Doors to the balcony",
+        "Presidential Suite with king bed and balcony doors at Himalayan Shepherd, Pokhara",
+    ),
+    "presidential-suite-modern-king-bedroom-with-chaise-lounge.jpg": (
+        "Chaise by the bed",
+        "Chaise beside the king bed in the Presidential Suite at Himalayan Shepherd, Pokhara",
+    ),
+    "cozy-modern-hotel-room-king-bed.jpg": (
+        "A quiet king",
+        "Deluxe King Room at Himalayan Shepherd, Pokhara",
+    ),
+    "hotel-bedroom-with-king-bed.jpg": (
+        "Warm wood",
+        "King bed in a deluxe room at Himalayan Shepherd, Pokhara",
+    ),
+    "modern-hotel-bedroom-king-bed-2.jpg": (
+        "Lamp light",
+        "Deluxe King Room in warm light at Himalayan Shepherd, Pokhara",
+    ),
+    "modern-hotel-bedroom-king-bed.jpg": (
+        "The king room",
+        "Composed king bedroom at Himalayan Shepherd, Pokhara",
+    ),
+    "modern-hotel-room-with-king-bed-3.jpg": (
+        "Wooden headboard",
+        "King room with a timber headboard at Himalayan Shepherd, Pokhara",
+    ),
+    "cozy-hotel-room-with-queen-bed.jpg": (
+        "The queen room",
+        "Deluxe Queen Room at Himalayan Shepherd, Pokhara",
+    ),
+    "modern-hotel-room-with-queen-bed.jpg": (
+        "For two",
+        "Intimate queen room at Himalayan Shepherd, Pokhara",
+    ),
+    "two-twin-beds-hotel-room.jpg": (
+        "The family suite",
+        "Family Suite with two beds at Himalayan Shepherd, Pokhara",
+    ),
+    "two-twin-beds-with-modern-headboard.jpg": (
+        "Two beds",
+        "Two beds with a modern headboard in the Family Suite at Himalayan Shepherd, Pokhara",
+    ),
+    "two-twin-beds-with-shared-nightstand.jpg": (
+        "Between the beds",
+        "Twin beds sharing a nightstand in the Family Suite at Himalayan Shepherd, Pokhara",
+    ),
+    "two-twin-beds-with-wooden-headboard.jpg": (
+        "Wooden headboards",
+        "Family Suite with wooden headboards at Himalayan Shepherd, Pokhara",
+    ),
+    "modern-bathroom-with-glass-shower-stall.jpg": (
+        "Glass shower",
+        "Glass shower in an ensuite bathroom at Himalayan Shepherd, Pokhara",
+    ),
+    "modern-bathroom-with-white-tiled-shower.jpg": (
+        "White tiles",
+        "White tiled ensuite shower at Himalayan Shepherd, Pokhara",
+    ),
+    "modern-marble-tiled-shower-enclosure.jpg": (
+        "Marble shower",
+        "Marble shower enclosure at Himalayan Shepherd, Pokhara",
+    ),
+    "modern-stone-tiled-bathroom-interior.jpg": (
+        "Stone bath",
+        "Stone-tiled ensuite bathroom at Himalayan Shepherd, Pokhara",
+    ),
+    "hotel-front-desk-reception-logo-sign.jpg": (
+        "Front desk",
+        "Front desk at Himalayan Shepherd, Pokhara",
+    ),
+    "hotel-hallway-with-seating-area.jpg": (
+        "The hallway",
+        "Hallway seating outside the rooms at Himalayan Shepherd, Pokhara",
+    ),
+    "hotel-reception-desk-with-illuminated-sign.jpg": (
+        "Reception",
+        "Reception desk beneath the Himalayan Shepherd emblem, Pokhara",
+    ),
+    "hotel-reception-desk-with-logo-signage.jpg": (
+        "The house sign",
+        "Illuminated Himalayan Shepherd sign above reception in Pokhara",
+    ),
+    "cozy-armchairs-by-window-view.jpg": (
+        "By the window",
+        "Yellow lounge chairs by the window at Himalayan Shepherd, Pokhara",
+    ),
+    "indoor-seating-area-with-rattan-furniture.jpg": (
+        "The lounge",
+        "Rattan lounge opening to the balcony at Himalayan Shepherd, Pokhara",
+    ),
+    "rattan-furniture-set-with-green-cushions.jpg": (
+        "Green cushions",
+        "Rattan seating with green cushions at Himalayan Shepherd, Pokhara",
+    ),
+    "rattan-furniture-with-green-cushions.jpg": (
+        "Rattan seating",
+        "Lounge rattan furniture at Himalayan Shepherd, Pokhara",
+    ),
+    "rattan-sofa-set-in-lounge.jpg": (
+        "The sofas",
+        "Rattan sofas in the lounge at Himalayan Shepherd, Pokhara",
+    ),
+    "two-yellow-armchairs-round-table.jpg": (
+        "Yellow armchairs",
+        "Two yellow armchairs by a round table at Himalayan Shepherd, Pokhara",
+    ),
+    "outdoor-terrace-seating-with-rattan-chairs.jpg": (
+        "The patio",
+        "Patio seating with rattan chairs at Himalayan Shepherd, Pokhara",
+    ),
+    "outdoor-terrace-seating-with-street-view.jpg": (
+        "Over the street",
+        "Terrace looking over Lakeside streets at Himalayan Shepherd, Pokhara",
+    ),
+    "outdoor-terrace-seating-with-tables.jpg": (
+        "Tables outside",
+        "Outdoor tables on the terrace at Himalayan Shepherd, Pokhara",
+    ),
+    "outdoor-terrace-seating-with-wicker-chairs.jpg": (
+        "Wicker chairs",
+        "Wicker chairs on the terrace at Himalayan Shepherd, Pokhara",
+    ),
+    "cafe-dining-area-with-cushioned-seating.jpg": (
+        "The café",
+        "Café seating at Himalayan Shepherd, Pokhara",
+    ),
+    "cafe-seating-with-blue-cushioned-benches.jpg": (
+        "Breakfast booths",
+        "Blue booth seating in the breakfast court at Himalayan Shepherd, Pokhara",
+    ),
+    "cappuccino-with-heart-latte-art.jpg": (
+        "Morning coffee",
+        "Cappuccino with heart latte art at Himalayan Shepherd, Pokhara",
+    ),
+    "hotel-breakfast-area-with-tables-chairs.jpg": (
+        "Breakfast tables",
+        "Breakfast tables at Himalayan Shepherd, Pokhara",
+    ),
+    "restaurant-dining-room-with-colorful-chairs.jpg": (
+        "The dining court",
+        "Dining room with blue and yellow chairs at Himalayan Shepherd, Pokhara",
+    ),
+    "restaurant-seating-with-yellow-chairs.jpg": (
+        "Yellow chairs",
+        "Dining seating with yellow chairs at Himalayan Shepherd, Pokhara",
+    ),
+    "wooden-dining-table-and-hotel-room-doors.jpg": (
+        "Near the rooms",
+        "Wooden dining table near the room corridor at Himalayan Shepherd, Pokhara",
+    ),
+    "wooden-wardrobe-with-rattan-detailing.jpg": (
+        "The wardrobe",
+        "Timber wardrobe with rattan panels at Himalayan Shepherd, Pokhara",
+    ),
+}
+
+SKIP = {
+    "himalayan-shepherd-reception-emblem.jpg",
 }
 
 FEATURED = {
@@ -60,18 +244,25 @@ def main() -> None:
         for path in sorted(directory.iterdir(), key=lambda p: p.name.lower()):
             if path.suffix.lower() not in {".jpg", ".jpeg", ".png", ".webp"}:
                 continue
+            if path.name in SKIP:
+                continue
             src = f"/images/hotel/{folder}/{path.name}"
-            title = title_from_name(path.name)
-            alt = f"{title} at Hotel Himalayan Shepherd, Pokhara"
+            title, alt = TITLES.get(
+                path.name,
+                (
+                    title_from_name(path.name),
+                    f"{title_from_name(path.name)} at Himalayan Shepherd, Pokhara",
+                ),
+            )
             featured = "true" if path.name in FEATURED else "false"
             entries.append(
                 "  {\n"
                 f'    id: "{category}-{index}",\n'
                 f'    src: "{src}",\n'
-                f'    title: {title!r},\n'
-                f'    alt: {alt!r},\n'
+                f'    title: {json.dumps(title)},\n'
+                f'    alt: {json.dumps(alt)},\n'
                 f'    category: "{category}",\n'
-                f'    group: {group!r},\n'
+                f'    group: {json.dumps(group)},\n'
                 f"    featured: {featured},\n"
                 "  }"
             )

@@ -6,7 +6,7 @@ import { SmartImage } from "./SmartImage";
 export function Footer() {
   return (
     <footer id="contact" className="bg-ink text-cream">
-      <div className="mx-auto grid max-w-7xl gap-12 px-5 py-20 md:px-8 lg:grid-cols-2">
+      <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-5 md:px-8 md:py-20 lg:grid-cols-2">
         <div>
           <div className="relative mb-8 h-16 w-16 overflow-hidden rounded-full bg-cream ring-1 ring-white/15">
             <SmartImage
@@ -20,7 +20,7 @@ export function Footer() {
           </div>
           <p className="kicker !text-gold">Arrive</p>
           <div className="gold-rule mt-5" />
-          <h2 className="mt-8 font-serif text-4xl">Write, call, or find us in Pokhara.</h2>
+          <h2 className="mt-6 font-serif text-[2rem] leading-tight sm:mt-8 sm:text-4xl">Write, call, or find us in Pokhara.</h2>
           <p className="mt-5 max-w-md text-cream/70">
             We do not take online reservations. Tell us the dates you have in
             mind and we will answer personally.

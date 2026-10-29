@@ -26,13 +26,13 @@ const DINING = [
 
 export function Dining() {
   return (
-    <section id="dining" className="bg-ink px-5 py-24 text-cream md:px-8 md:py-32">
+    <section id="dining" className="bg-ink px-4 py-16 text-cream sm:px-5 md:px-8 md:py-32">
       <div className="mx-auto max-w-7xl">
         <Reveal className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
           <div>
             <p className="kicker !text-gold">Table</p>
             <div className="gold-rule mt-5" />
-            <h2 className="mt-8 font-serif text-4xl md:text-5xl">
+            <h2 className="mt-6 font-serif text-[2rem] leading-tight sm:mt-8 sm:text-4xl md:text-5xl">
               Continental mornings, local plates, coffee with a view of the day beginning.
             </h2>
           </div>
@@ -43,10 +43,16 @@ export function Dining() {
           </p>
         </Reveal>
 
-        <div className="mt-16 grid gap-4 md:grid-cols-4">
+        <div className="mt-12 grid gap-4 sm:mt-16 sm:grid-cols-2 lg:grid-cols-4">
           {DINING.map((item, index) => (
-            <Reveal key={item.src} delay={index * 0.08} className={index === 0 ? "md:col-span-2" : ""}>
-              <figure className={`relative overflow-hidden ${index === 0 ? "h-[420px]" : "h-[320px]"}`}>
+            <Reveal key={item.src} delay={index * 0.08} className={index === 0 ? "sm:col-span-2" : ""}>
+              <figure
+                className={`relative overflow-hidden ${
+                  index === 0
+                    ? "aspect-[4/3] md:aspect-auto md:h-[420px]"
+                    : "aspect-[4/3] md:aspect-auto md:h-[320px]"
+                }`}
+              >
                 <SmartImage
                   src={item.src}
                   alt={item.alt}

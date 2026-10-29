@@ -34,7 +34,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.35 }}
-          className="mt-5 max-w-3xl font-serif text-[2.7rem] leading-[0.95] text-white sm:text-6xl lg:text-7xl"
+          className="mt-5 max-w-3xl font-serif text-[2.15rem] leading-[0.95] text-white sm:text-5xl md:text-6xl lg:text-7xl"
         >
           {HOTEL.tagline}
         </motion.h1>

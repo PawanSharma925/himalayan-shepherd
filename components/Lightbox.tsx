@@ -47,7 +47,7 @@ export function Lightbox({ image, images, onClose, onSelect }: Props) {
     <AnimatePresence>
       {image ? (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/92 p-4"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/92 p-3 md:p-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -92,7 +92,7 @@ export function Lightbox({ image, images, onClose, onSelect }: Props) {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
-            className="relative h-[80vh] w-[min(100%,72rem)]"
+            className="relative h-[70vh] w-[min(100%,72rem)] md:h-[80vh]"
             onClick={(event) => event.stopPropagation()}
           >
             <SmartImage

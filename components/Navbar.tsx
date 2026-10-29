@@ -25,7 +25,7 @@ export function Navbar() {
           : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-3 md:px-8">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:gap-6 sm:px-5 md:px-8">
         <a href="#top" className="flex items-center gap-3">
           <span className="relative flex h-12 w-12 overflow-hidden rounded-full bg-cream shadow-sm ring-1 ring-sand/80">
             <SmartImage
@@ -40,7 +40,7 @@ export function Navbar() {
           </span>
           <span className="leading-tight">
             <span
-              className={`block font-serif text-lg tracking-wide md:text-xl ${
+              className={`block truncate font-serif text-base tracking-wide sm:text-lg md:text-xl ${
                 scrolled || open ? "text-ink" : "text-white"
               }`}
             >

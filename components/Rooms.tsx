@@ -13,12 +13,12 @@ export function Rooms() {
   const [active, setActive] = useState<HotelImage | null>(null);
 
   return (
-    <section id="rooms" className="bg-cream px-5 py-24 md:px-8 md:py-32">
+    <section id="rooms" className="bg-cream px-4 py-16 sm:px-5 md:px-8 md:py-32">
       <div className="mx-auto max-w-7xl">
         <Reveal className="max-w-2xl">
           <p className="kicker">Stay</p>
           <div className="gold-rule mt-5" />
-          <h2 className="mt-8 font-serif text-4xl text-ink md:text-5xl">
+          <h2 className="mt-6 font-serif text-[2rem] leading-tight text-ink sm:mt-8 sm:text-4xl md:text-5xl">
             Four distinct rooms. No overlap, no guesswork.
           </h2>
           <p className="mt-6 text-[17px] leading-8 text-ink-soft">
@@ -58,8 +58,8 @@ export function Rooms() {
                     {room.eyebrow}
                   </span>
                 </button>
-                <div className="p-7 md:p-8">
-                  <h3 className="font-serif text-3xl text-ink">{room.name}</h3>
+                <div className="p-5 sm:p-7 md:p-8">
+                  <h3 className="font-serif text-[1.75rem] text-ink md:text-3xl">{room.name}</h3>
                   <div className="mt-3 flex flex-wrap gap-4 text-sm text-ink-soft">
                     <span className="inline-flex items-center gap-1.5">
                       <Users className="h-4 w-4 text-gold-deep" />

@@ -60,21 +60,23 @@ export function Gallery() {
   }, [active, visible]);
 
   return (
-    <section id="gallery" className="bg-cream px-5 py-24 md:px-8 md:py-32">
+    <section id="gallery" className="bg-cream px-4 py-16 sm:px-5 md:px-8 md:py-32">
       <div className="mx-auto max-w-7xl">
         <Reveal>
           <p className="kicker">Lookbook</p>
           <div className="gold-rule mt-5" />
-          <h2 className="mt-8 font-serif text-4xl text-ink md:text-5xl">The house, room by room.</h2>
+          <h2 className="mt-6 font-serif text-[2rem] leading-tight text-ink sm:mt-8 sm:text-4xl md:text-5xl">
+            The house, room by room.
+          </h2>
         </Reveal>
 
-        <div className="mt-10 flex flex-wrap gap-2">
+        <div className="-mx-4 mt-6 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:mt-10 md:flex-wrap md:overflow-visible md:px-0 md:pb-0">
           {FILTERS.map((item) => (
             <button
               key={item.id}
               type="button"
               onClick={() => setFilter(item.id)}
-              className={`rounded-full px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
+              className={`shrink-0 rounded-full px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
                 filter === item.id
                   ? "bg-ink text-cream"
                   : "border border-sand bg-paper text-ink-soft hover:border-gold"
@@ -85,32 +87,37 @@ export function Gallery() {
           ))}
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {visible.map((image, index) => (
-            <button
-              key={image.id}
-              type="button"
-              className={`group relative aspect-[4/5] w-full overflow-hidden ${
-                filter === "featured" && index === 0 ? "sm:col-span-2 sm:aspect-[16/10]" : ""
-              }`}
-              onClick={() => setActive(image)}
-            >
-              <SmartImage
-                src={image.src}
-                alt={image.alt}
-                fill
-                sizes={
-                  filter === "featured" && index === 0
-                    ? "(max-width: 640px) 100vw, 66vw"
-                    : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                }
-                className="object-cover transition duration-700 group-hover:scale-[1.04]"
-              />
-              <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/75 via-ink/20 to-transparent p-4 text-left font-serif text-lg text-cream opacity-0 transition group-hover:opacity-100">
-                {image.title}
-              </span>
-            </button>
-          ))}
+        <div className="mt-5 grid grid-cols-1 gap-4 sm:mt-8 md:mt-10 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-7">
+          {visible.map((image, index) => {
+            const featuredLead = filter === "featured" && index === 0;
+            return (
+              <button
+                key={image.id}
+                type="button"
+                className={`group relative w-full overflow-hidden ${
+                  featuredLead
+                    ? "aspect-[4/3] md:col-span-2 md:aspect-[16/10] lg:col-span-2"
+                    : "aspect-[4/3] md:aspect-[4/5]"
+                }`}
+                onClick={() => setActive(image)}
+              >
+                <SmartImage
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  sizes={
+                    featuredLead
+                      ? "(max-width: 768px) 100vw, 66vw"
+                      : "(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  }
+                  className="object-cover transition duration-700 group-hover:scale-[1.03]"
+                />
+                <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 via-ink/30 to-transparent px-4 pb-3.5 pt-10 text-left font-serif text-[17px] leading-snug text-cream md:px-5 md:pb-4 md:text-lg md:opacity-0 md:transition md:group-hover:opacity-100">
+                  {image.title}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
       <Lightbox image={active} images={lightboxSet} onClose={() => setActive(null)} onSelect={setActive} />
