@@ -28,10 +28,7 @@
 
 html {
   scroll-behavior: smooth;
-}
-
-section[id] {
-  scroll-margin-top: 5.75rem;
+  scroll-padding-top: 4.75rem;
 }
 
 body {
