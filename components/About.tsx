@@ -7,18 +7,21 @@ const MOSAIC = [
     alt: "Front desk with the illuminated Himalayan Shepherd emblem",
     className: "col-span-2 aspect-[3/2]",
     object: "object-center",
+    sizes: "(max-width: 1024px) 92vw, 1200px",
   },
   {
     src: "/images/hotel/lounge_and_seating/cozy-armchairs-by-window-view.jpg",
     alt: "Yellow lounge chairs by the window looking onto Lakeside streets",
     className: "aspect-[4/3]",
     object: "object-[center_65%]",
+    sizes: "(max-width: 1024px) 46vw, 600px",
   },
   {
     src: "/images/hotel/patio_and_rooftop/outdoor-terrace-seating-with-street-view.jpg",
     alt: "Patio seating looking over Pokhara streets",
     className: "aspect-[4/3]",
     object: "object-center",
+    sizes: "(max-width: 1024px) 46vw, 600px",
   },
 ];
 
@@ -60,7 +63,8 @@ export function About() {
                 src={item.src}
                 alt={item.alt}
                 fill
-                sizes="(max-width: 1024px) 100vw, 28vw"
+                sizes={item.sizes}
+                quality={90}
                 className={`object-cover transition duration-700 hover:scale-105 ${item.object}`}
               />
             </div>

@@ -8,8 +8,8 @@ from PIL import Image, ImageEnhance, ImageOps
 
 ROOT = Path(__file__).resolve().parents[1]
 HOTEL = ROOT / "public" / "images" / "hotel"
-MAX_EDGE = 1600
-JPEG_QUALITY = 78
+MAX_EDGE = 2560
+JPEG_QUALITY = 90
 
 KEEP = {
     "rooms_presidential_suite/presidential-suite-modern-hotel-room-with-king-bed-balcony.jpg",
