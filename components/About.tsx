@@ -3,10 +3,10 @@ import { SmartImage } from "./SmartImage";
 
 const MOSAIC = [
   {
-    src: "/images/hotel/lobby_and_front_desk/himalayan-shepherd-reception-emblem.jpg",
-    alt: "Illuminated Himalayan Shepherd emblem on the reception wall",
-    className: "col-span-2 aspect-[4/3]",
-    object: "object-[center_45%]",
+    src: "/images/hotel/lobby_and_front_desk/hotel-reception-desk-with-illuminated-sign.jpg",
+    alt: "Front desk with the illuminated Himalayan Shepherd emblem",
+    className: "col-span-2 aspect-[3/2]",
+    object: "object-center",
   },
   {
     src: "/images/hotel/lounge_and_seating/cozy-armchairs-by-window-view.jpg",
