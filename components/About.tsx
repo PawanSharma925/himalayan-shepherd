@@ -3,24 +3,22 @@ import { SmartImage } from "./SmartImage";
 
 const MOSAIC = [
   {
-    src: "/images/hotel/lobby_and_front_desk/hotel-reception-desk-with-logo-signage.jpg",
-    alt: "Illuminated Himalayan Shepherd emblem above the reception desk",
-    className: "md:col-span-2 md:row-span-2 min-h-[280px]",
+    src: "/images/hotel/lobby_and_front_desk/himalayan-shepherd-reception-emblem.jpg",
+    alt: "Illuminated Himalayan Shepherd emblem on the reception wall",
+    className: "col-span-2 aspect-[4/3]",
+    object: "object-[center_45%]",
   },
   {
-    src: "/images/hotel/lounge_and_seating/two-yellow-armchairs-round-table.jpg",
-    alt: "Yellow lounge chairs beside a round timber table",
-    className: "min-h-[180px]",
+    src: "/images/hotel/lounge_and_seating/cozy-armchairs-by-window-view.jpg",
+    alt: "Yellow lounge chairs by the window looking onto Lakeside streets",
+    className: "aspect-[4/3]",
+    object: "object-[center_65%]",
   },
   {
     src: "/images/hotel/patio_and_rooftop/outdoor-terrace-seating-with-street-view.jpg",
-    alt: "Rooftop terrace seating looking over Pokhara streets",
-    className: "min-h-[180px]",
-  },
-  {
-    src: "/images/hotel/closets_and_details/wooden-wardrobe-with-rattan-detailing.jpg",
-    alt: "Timber wardrobe with rattan panel detailing",
-    className: "md:col-span-2 min-h-[200px]",
+    alt: "Patio seating looking over Pokhara streets",
+    className: "aspect-[4/3]",
+    object: "object-center",
   },
 ];
 
@@ -62,8 +60,8 @@ export function About() {
                 src={item.src}
                 alt={item.alt}
                 fill
-                sizes="(max-width: 1024px) 50vw, 28vw"
-                className="object-cover transition duration-700 hover:scale-105"
+                sizes="(max-width: 1024px) 100vw, 28vw"
+                className={`object-cover transition duration-700 hover:scale-105 ${item.object}`}
               />
             </div>
           ))}

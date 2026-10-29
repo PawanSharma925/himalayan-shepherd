@@ -53,7 +53,7 @@ export function Footer() {
           <iframe
             title="Map of Himalayan Shepherd, Pokhara"
             src={HOTEL.mapEmbed}
-            className="h-full min-h-[320px] w-full border-0 grayscale contrast-125"
+            className="h-full min-h-[320px] w-full border-0"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
           />
