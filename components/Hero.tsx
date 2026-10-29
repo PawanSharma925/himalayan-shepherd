@@ -3,20 +3,23 @@
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { HOTEL, whatsappHref } from "@/lib/hotel";
+import { SmartImage } from "./SmartImage";
 
 export function Hero() {
   return (
     <section id="top" className="relative isolate min-h-[100svh] overflow-hidden">
       <div className="absolute inset-0">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <SmartImage
           src="/images/hotel/lounge_and_seating/indoor-seating-area-with-rattan-furniture.jpg"
           alt="Lounge seating with rattan furniture and balcony light at Himalayan Shepherd"
-          className="h-full w-full object-cover object-[68%_center]"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-[68%_center]"
         />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-r from-ink/70 via-ink/25 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-ink/30" />
+      <div className="absolute inset-0 bg-gradient-to-r from-ink/58 via-ink/18 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink/72 via-ink/12 to-ink/22" />
 
       <div className="relative mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-5 pb-28 pt-28 md:px-8 md:pb-16">
         <motion.p

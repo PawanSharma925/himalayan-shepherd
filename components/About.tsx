@@ -1,4 +1,5 @@
 import { Reveal } from "./Reveal";
+import { SmartImage } from "./SmartImage";
 
 const MOSAIC = [
   {
@@ -57,11 +58,12 @@ export function About() {
               key={item.src}
               className={`relative overflow-hidden ${item.className}`}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <SmartImage
                 src={item.src}
                 alt={item.alt}
-                className="absolute inset-0 h-full w-full object-cover transition duration-700 hover:scale-105"
+                fill
+                sizes="(max-width: 1024px) 50vw, 28vw"
+                className="object-cover transition duration-700 hover:scale-105"
               />
             </div>
           ))}

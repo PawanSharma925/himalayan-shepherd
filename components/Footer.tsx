@@ -1,12 +1,23 @@
 import { MapPin, Phone, Mail } from "lucide-react";
-import { HOTEL, whatsappHref } from "@/lib/hotel";
+import { HOTEL } from "@/lib/hotel";
 import { WhatsAppButton } from "./WhatsAppButton";
+import { SmartImage } from "./SmartImage";
 
 export function Footer() {
   return (
     <footer id="contact" className="bg-ink text-cream">
       <div className="mx-auto grid max-w-7xl gap-12 px-5 py-20 md:px-8 lg:grid-cols-2">
         <div>
+          <div className="relative mb-8 h-16 w-16 overflow-hidden rounded-full bg-cream ring-1 ring-white/15">
+            <SmartImage
+              src="/brand/logo.jpg"
+              alt={`${HOTEL.name} emblem`}
+              fill
+              sizes="64px"
+              quality={80}
+              className="object-cover"
+            />
+          </div>
           <p className="kicker !text-gold">Arrive</p>
           <div className="gold-rule mt-5" />
           <h2 className="mt-8 font-serif text-4xl">Write, call, or find us in Pokhara.</h2>

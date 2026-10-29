@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { HotelImage } from "@/lib/images";
+import { SmartImage } from "./SmartImage";
 
 type Props = {
   image: HotelImage | null;
@@ -13,6 +15,12 @@ type Props = {
 };
 
 export function Lightbox({ image, images, onClose, onSelect }: Props) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     if (!image) return;
     const onKey = (event: KeyboardEvent) => {
@@ -33,11 +41,13 @@ export function Lightbox({ image, images, onClose, onSelect }: Props) {
 
   const index = image ? images.findIndex((item) => item.src === image.src) : -1;
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {image ? (
         <motion.div
-          className="fixed inset-0 z-[80] flex items-center justify-center bg-ink/92 p-4"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/92 p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -45,7 +55,7 @@ export function Lightbox({ image, images, onClose, onSelect }: Props) {
         >
           <button
             type="button"
-            className="absolute right-5 top-5 text-white"
+            className="absolute right-5 top-5 z-10 text-white"
             onClick={onClose}
             aria-label="Close gallery"
           >
@@ -55,7 +65,7 @@ export function Lightbox({ image, images, onClose, onSelect }: Props) {
             <>
               <button
                 type="button"
-                className="absolute left-4 text-white md:left-8"
+                className="absolute left-4 z-10 text-white md:left-8"
                 onClick={(event) => {
                   event.stopPropagation();
                   onSelect(images[(index - 1 + images.length) % images.length]);
@@ -66,7 +76,7 @@ export function Lightbox({ image, images, onClose, onSelect }: Props) {
               </button>
               <button
                 type="button"
-                className="absolute right-4 text-white md:right-8"
+                className="absolute right-4 z-10 text-white md:right-8"
                 onClick={(event) => {
                   event.stopPropagation();
                   onSelect(images[(index + 1) % images.length]);
@@ -82,21 +92,24 @@ export function Lightbox({ image, images, onClose, onSelect }: Props) {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
-            className="max-h-[88vh] max-w-6xl"
+            className="relative h-[80vh] w-[min(100%,72rem)]"
             onClick={(event) => event.stopPropagation()}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <SmartImage
               src={image.src}
               alt={image.alt}
-              className="max-h-[80vh] w-full object-contain"
+              fill
+              sizes="90vw"
+              quality={80}
+              className="object-contain"
             />
-            <figcaption className="mt-4 text-center font-serif text-xl text-cream">
+            <figcaption className="absolute inset-x-0 bottom-0 text-center font-serif text-xl text-cream">
               {image.title}
             </figcaption>
           </motion.figure>
         </motion.div>
       ) : null}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }

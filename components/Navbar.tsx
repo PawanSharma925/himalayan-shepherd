@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { HOTEL, NAV_LINKS } from "@/lib/hotel";
 import { WhatsAppButton } from "./WhatsAppButton";
+import { SmartImage } from "./SmartImage";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -26,12 +27,15 @@ export function Navbar() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-3 md:px-8">
         <a href="#top" className="flex items-center gap-3">
-          <span className="flex h-12 w-12 overflow-hidden rounded-full bg-cream shadow-sm ring-1 ring-sand/80">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+          <span className="relative flex h-12 w-12 overflow-hidden rounded-full bg-cream shadow-sm ring-1 ring-sand/80">
+            <SmartImage
               src="/brand/logo.jpg"
               alt={`${HOTEL.name} emblem`}
-              className="h-full w-full object-cover"
+              fill
+              priority
+              sizes="48px"
+              quality={80}
+              className="object-cover"
             />
           </span>
           <span className="leading-tight">

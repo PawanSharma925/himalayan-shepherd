@@ -1,4 +1,5 @@
 import { Reveal } from "./Reveal";
+import { SmartImage } from "./SmartImage";
 
 const DINING = [
   {
@@ -45,14 +46,15 @@ export function Dining() {
         <div className="mt-16 grid gap-4 md:grid-cols-4">
           {DINING.map((item, index) => (
             <Reveal key={item.src} delay={index * 0.08} className={index === 0 ? "md:col-span-2" : ""}>
-              <figure className="relative overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+              <figure className={`relative overflow-hidden ${index === 0 ? "h-[420px]" : "h-[320px]"}`}>
+                <SmartImage
                   src={item.src}
                   alt={item.alt}
-                  className={`w-full object-cover ${index === 0 ? "h-[420px]" : "h-[320px]"}`}
+                  fill
+                  sizes={index === 0 ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 25vw"}
+                  className="object-cover"
                 />
-                <figcaption className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-ink/80 to-transparent p-5 font-serif text-xl">
+                <figcaption className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-ink/80 to-transparent p-5 font-serif text-xl">
                   {item.title}
                 </figcaption>
               </figure>

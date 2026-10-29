@@ -17,6 +17,23 @@ FOLDER_META = {
     "closets_and_details": ("details", "Details"),
 }
 
+FEATURED = {
+    "presidential-suite-modern-hotel-room-with-king-bed-balcony.jpg",
+    "presidential-suite-modern-king-bedroom-with-chaise-lounge.jpg",
+    "modern-hotel-bedroom-king-bed.jpg",
+    "cozy-hotel-room-with-queen-bed.jpg",
+    "two-twin-beds-hotel-room.jpg",
+    "modern-marble-tiled-shower-enclosure.jpg",
+    "hotel-reception-desk-with-logo-signage.jpg",
+    "indoor-seating-area-with-rattan-furniture.jpg",
+    "two-yellow-armchairs-round-table.jpg",
+    "outdoor-terrace-seating-with-street-view.jpg",
+    "cafe-seating-with-blue-cushioned-benches.jpg",
+    "cappuccino-with-heart-latte-art.jpg",
+    "restaurant-dining-room-with-colorful-chairs.jpg",
+    "wooden-wardrobe-with-rattan-detailing.jpg",
+}
+
 
 def title_from_name(name: str) -> str:
     stem = Path(name).stem
@@ -46,6 +63,7 @@ def main() -> None:
             src = f"/images/hotel/{folder}/{path.name}"
             title = title_from_name(path.name)
             alt = f"{title} at Hotel Himalayan Shepherd, Pokhara"
+            featured = "true" if path.name in FEATURED else "false"
             entries.append(
                 "  {\n"
                 f'    id: "{category}-{index}",\n'
@@ -54,6 +72,7 @@ def main() -> None:
                 f'    alt: {alt!r},\n'
                 f'    category: "{category}",\n'
                 f'    group: {group!r},\n'
+                f"    featured: {featured},\n"
                 "  }"
             )
             index += 1
@@ -78,6 +97,7 @@ export type HotelImage = {{
   alt: string;
   category: ImageCategory;
   group: string;
+  featured: boolean;
 }};
 
 export const hotelImages: HotelImage[] = [

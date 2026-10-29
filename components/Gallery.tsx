@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { hotelImages, type HotelImage, type ImageCategory } from "@/lib/images";
 import { Reveal } from "./Reveal";
 import { Lightbox } from "./Lightbox";
+import { SmartImage } from "./SmartImage";
 
 type Filter = {
   id: string;
@@ -12,6 +13,7 @@ type Filter = {
 };
 
 const FILTERS: Filter[] = [
+  { id: "featured", label: "Highlights", match: (image) => image.featured },
   { id: "all", label: "All", match: () => true },
   {
     id: "presidential",
@@ -41,7 +43,7 @@ const FILTERS: Filter[] = [
 const ROOM_CATEGORIES: ImageCategory[] = ["presidential", "king", "queen", "family"];
 
 export function Gallery() {
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState("featured");
   const [active, setActive] = useState<HotelImage | null>(null);
 
   const visible = useMemo(() => {
@@ -83,20 +85,30 @@ export function Gallery() {
           ))}
         </div>
 
-        <div className="mt-10 columns-1 gap-4 sm:columns-2 lg:columns-3">
-          {visible.map((image) => (
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {visible.map((image, index) => (
             <button
               key={image.id}
               type="button"
-              className="mb-4 block w-full break-inside-avoid overflow-hidden"
+              className={`group relative aspect-[4/5] w-full overflow-hidden ${
+                filter === "featured" && index === 0 ? "sm:col-span-2 sm:aspect-[16/10]" : ""
+              }`}
               onClick={() => setActive(image)}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <SmartImage
                 src={image.src}
                 alt={image.alt}
-                className="w-full object-cover transition duration-700 hover:scale-[1.03]"
+                fill
+                sizes={
+                  filter === "featured" && index === 0
+                    ? "(max-width: 640px) 100vw, 66vw"
+                    : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                }
+                className="object-cover transition duration-700 group-hover:scale-[1.04]"
               />
+              <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/75 via-ink/20 to-transparent p-4 text-left font-serif text-lg text-cream opacity-0 transition group-hover:opacity-100">
+                {image.title}
+              </span>
             </button>
           ))}
         </div>

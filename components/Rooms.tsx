@@ -7,6 +7,7 @@ import { imagesByCategory, type HotelImage } from "@/lib/images";
 import { Reveal } from "./Reveal";
 import { WhatsAppButton } from "./WhatsAppButton";
 import { Lightbox } from "./Lightbox";
+import { SmartImage } from "./SmartImage";
 
 export function Rooms() {
   const [active, setActive] = useState<HotelImage | null>(null);
@@ -42,14 +43,16 @@ export function Rooms() {
                       alt: room.name,
                       category: room.id,
                       group: room.name,
+                      featured: true,
                     })
                   }
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <SmartImage
                     src={room.cover}
                     alt={room.name}
-                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover transition duration-700 group-hover:scale-105"
                   />
                   <span className="absolute left-5 top-5 rounded-full bg-ink/80 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-cream">
                     {room.eyebrow}

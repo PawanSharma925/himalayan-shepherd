@@ -19,6 +19,10 @@ export const metadata: Metadata = {
   title: `${HOTEL.name} · Boutique Hotel in Pokhara`,
   description:
     "A boutique hotel in Pokhara, Nepal — Himalayan serenity, modern rooms, and direct WhatsApp inquiry. No online booking.",
+  icons: {
+    icon: "/brand/logo.jpg",
+    apple: "/brand/logo.jpg",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
