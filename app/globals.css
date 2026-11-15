@@ -71,6 +71,42 @@ body {
   }
 }
 
+/* Justified lookbook: tiles keep their photo's shape; --r / --rm are set per tile. */
+.lookbook {
+  display: grid;
+  gap: 0.875rem;
+}
+
+.lookbook > * {
+  aspect-ratio: var(--rm);
+}
+
+@media (min-width: 768px) {
+  .lookbook {
+    --row: 240px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .lookbook::after {
+    content: "";
+    flex-grow: 999999;
+  }
+
+  .lookbook > * {
+    aspect-ratio: var(--r);
+    flex: var(--r) 1 calc(var(--r) * var(--row));
+  }
+}
+
+@media (min-width: 1024px) {
+  .lookbook {
+    --row: 300px;
+  }
+}
+
 .gold-rule {
   height: 1px;
   width: 4.5rem;

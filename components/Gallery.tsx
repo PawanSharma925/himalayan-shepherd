@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 import { hotelImages, type HotelImage, type ImageCategory } from "@/lib/images";
 import { Reveal } from "./Reveal";
 import { Lightbox } from "./Lightbox";
@@ -51,6 +51,29 @@ const FILTERS: Filter[] = [
 
 const ROOM_CATEGORIES: ImageCategory[] = ["exec", "premium", "double", "twin"];
 
+const DESKTOP_ROW = 300;
+const CONTAINER = 1280;
+
+const clamp = (value: number, min: number, max: number) =>
+  Math.min(max, Math.max(min, value));
+
+// object-cover crops when a tile is narrower than its photo, so the requested
+// width must be scaled up by ratio / tileRatio or the browser fetches a file
+// sized for the tile's width and stretches it to fill the height.
+function tileShape(image: HotelImage) {
+  const ratio = image.width / image.height;
+  const desktop = clamp(ratio, 0.7, 4);
+  const mobile = clamp(ratio, 0.75, 2);
+  const desktopPx = Math.min(CONTAINER, desktop * DESKTOP_ROW * 1.6) * Math.max(1, ratio / desktop);
+  const mobileVw = 100 * Math.max(1, ratio / mobile);
+  return {
+    ratio,
+    desktop: desktop.toFixed(3),
+    mobile: mobile.toFixed(3),
+    sizes: `(max-width: 767px) ${Math.ceil(mobileVw)}vw, ${Math.ceil(desktopPx)}px`,
+  };
+}
+
 export function Gallery() {
   const [filter, setFilter] = useState("featured");
   const [active, setActive] = useState<HotelImage | null>(null);
@@ -96,33 +119,38 @@ export function Gallery() {
           ))}
         </div>
 
-        <div className="mt-5 grid grid-cols-1 gap-4 sm:mt-8 md:mt-10 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-7">
-          {visible.map((image, index) => {
-            const featuredLead = filter === "featured" && index === 0;
+        <p className="mt-5 text-sm text-ink-soft md:mt-6">
+          {visible.length} photographs · tap any one to see it full screen
+        </p>
+
+        <div className="lookbook mt-4 md:mt-6">
+          {visible.map((image) => {
+            const { ratio, desktop, mobile, sizes } = tileShape(image);
             return (
               <button
                 key={image.id}
                 type="button"
-                className={`group relative w-full overflow-hidden ${
-                  featuredLead
-                    ? "aspect-[4/3] md:col-span-2 md:aspect-[16/10] lg:col-span-2"
-                    : "aspect-[4/3] md:aspect-[4/5]"
-                }`}
+                style={{ "--r": desktop, "--rm": mobile } as CSSProperties}
+                className="group relative w-full overflow-hidden bg-sand/40 md:w-auto"
                 onClick={() => setActive(image)}
+                aria-label={`Open ${image.title}`}
               >
                 <SmartImage
                   src={image.src}
                   alt={image.alt}
                   fill
-                  sizes={
-                    featuredLead
-                      ? "(max-width: 768px) 100vw, 66vw"
-                      : "(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  }
+                  sizes={sizes}
                   className="object-cover transition duration-700 group-hover:scale-[1.03]"
                 />
-                <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 via-ink/30 to-transparent px-4 pb-3.5 pt-10 text-left font-serif text-[17px] leading-snug text-cream md:px-5 md:pb-4 md:text-lg md:opacity-0 md:transition md:group-hover:opacity-100">
-                  {image.title}
+                <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-ink/80 via-ink/30 to-transparent px-4 pb-3.5 pt-10 text-left md:px-5 md:pb-4 md:opacity-0 md:transition md:group-hover:opacity-100">
+                  <span className="font-serif text-[17px] leading-snug text-cream md:text-lg">
+                    {image.title}
+                  </span>
+                  {ratio > 2.2 ? (
+                    <span className="shrink-0 text-[10px] uppercase tracking-[0.2em] text-gold">
+                      Panorama
+                    </span>
+                  ) : null}
                 </span>
               </button>
             );

@@ -166,18 +166,22 @@ def collect_sources() -> list[tuple[Path, str, str, str]]:
         unknowns = [p for p in files if is_unknown(p)]
         # Skip Unknown* when the folder already has clearly named shots
         keep = named if named else unknowns
-        # Deduplicate by slug within this destination folder
-        seen: set[str] = set()
+        # Near-duplicate edits share a title; keep only the sharpest one.
+        best: dict[str, tuple[float, Path]] = {}
         for path in sorted(keep, key=lambda p: p.name.lower()):
-            s = slugify(path.name)
-            if s in seen:
-                continue
-            seen.add(s)
             with Image.open(path) as img:
                 score = sharpness(img.convert("RGB"))
             if category != "view" and score < MIN_SHARPNESS:
                 print(f"  skip (soft, {score:.0f}): {path.relative_to(SOURCE)}")
                 continue
+            title = title_from_stem(path.stem).lower()
+            if title in best and best[title][0] >= score:
+                print(f"  skip (duplicate of sharper shot): {path.relative_to(SOURCE)}")
+                continue
+            if title in best:
+                print(f"  skip (duplicate of sharper shot): {best[title][1].relative_to(SOURCE)}")
+            best[title] = (score, path)
+        for _, path in sorted(best.values(), key=lambda item: item[1].name.lower()):
             results.append((path, slug, category, group))
     return results
 
@@ -200,7 +204,7 @@ def main() -> None:
         used_slugs[f"{folder_slug}/{base}"] = n + 1
         file_slug = base if n == 0 else f"{base}-{n + 1}"
         dest = HOTEL / folder_slug / f"{file_slug}.jpg"
-        convert(src, dest)
+        width, height = convert(src, dest)
 
         title = title_from_stem(Path(src.name).stem if not is_unknown(src) else folder_slug)
         if is_unknown(src):
@@ -213,6 +217,8 @@ def main() -> None:
             "  {\n"
             f'    id: "{category}-{index}",\n'
             f'    src: "{web_src}",\n'
+            f"    width: {width},\n"
+            f"    height: {height},\n"
             f"    title: {json.dumps(title)},\n"
             f"    alt: {json.dumps(alt)},\n"
             f'    category: "{category}",\n'
@@ -237,6 +243,8 @@ def main() -> None:
 export type HotelImage = {{
   id: string;
   src: string;
+  width: number;
+  height: number;
   title: string;
   alt: string;
   category: ImageCategory;
@@ -253,6 +261,9 @@ export const imagesByCategory = (category: ImageCategory) =>
 
 export const firstImage = (category: ImageCategory) =>
   imagesByCategory(category)[0];
+
+export const imageBySrc = (src: string) =>
+  hotelImages.find((image) => image.src === src);
 """
     OUT_TS.write_text(content, encoding="utf-8")
     print(f"\nWrote {len(entries)} images to {OUT_TS}")

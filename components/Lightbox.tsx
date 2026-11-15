@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { CalendarDays, ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { HotelImage } from "@/lib/images";
+import { ROOM_TIERS } from "@/lib/rooms";
 import { SmartImage } from "./SmartImage";
+import { PLAN_ROOM_EVENT } from "./StayPlanner";
 
 type Props = {
   image: HotelImage | null;
@@ -40,6 +42,7 @@ export function Lightbox({ image, images, onClose, onSelect }: Props) {
   }, [image, images, onClose, onSelect]);
 
   const index = image ? images.findIndex((item) => item.src === image.src) : -1;
+  const room = image ? ROOM_TIERS.find((tier) => tier.id === image.category) : undefined;
 
   if (!mounted) return null;
 
@@ -92,19 +95,43 @@ export function Lightbox({ image, images, onClose, onSelect }: Props) {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
-            className="relative h-[70vh] w-[min(100%,72rem)] md:h-[80vh]"
+            className="flex h-[78vh] w-[min(100%,72rem)] flex-col md:h-[86vh]"
             onClick={(event) => event.stopPropagation()}
           >
-            <SmartImage
-              src={image.src}
-              alt={image.alt}
-              fill
-              sizes="90vw"
-              quality={80}
-              className="object-contain"
-            />
-            <figcaption className="absolute inset-x-0 bottom-0 text-center font-serif text-xl text-cream">
-              {image.title}
+            <div className="relative min-h-0 flex-1">
+              <SmartImage
+                src={image.src}
+                alt={image.alt}
+                fill
+                sizes="90vw"
+                quality={90}
+                className="object-contain"
+              />
+            </div>
+            <figcaption className="flex flex-col items-center gap-3 pt-4 text-center sm:flex-row sm:justify-between sm:text-left">
+              <span>
+                <span className="block font-serif text-xl text-cream">{image.title}</span>
+                {index >= 0 && images.length > 1 ? (
+                  <span className="text-xs uppercase tracking-[0.2em] text-cream/60">
+                    {index + 1} / {images.length}
+                  </span>
+                ) : null}
+              </span>
+              {room ? (
+                <button
+                  type="button"
+                  className="inline-flex shrink-0 items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-cream"
+                  onClick={() => {
+                    onClose();
+                    window.setTimeout(() => {
+                      window.dispatchEvent(new CustomEvent(PLAN_ROOM_EVENT, { detail: room.id }));
+                    }, 60);
+                  }}
+                >
+                  <CalendarDays className="h-4 w-4" />
+                  Check dates for the {room.name}
+                </button>
+              ) : null}
             </figcaption>
           </motion.figure>
         </motion.div>

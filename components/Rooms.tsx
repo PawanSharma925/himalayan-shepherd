@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { CalendarDays, Users, Layout } from "lucide-react";
 import { ROOM_TIERS } from "@/lib/rooms";
-import { imagesByCategory, type HotelImage } from "@/lib/images";
+import { imageBySrc, imagesByCategory, type HotelImage } from "@/lib/images";
 import { Reveal } from "./Reveal";
 import { Lightbox } from "./Lightbox";
 import { PLAN_ROOM_EVENT } from "./StayPlanner";
@@ -36,15 +36,7 @@ export function Rooms() {
                   type="button"
                   className="relative block aspect-[16/11] w-full overflow-hidden"
                   onClick={() =>
-                    setActive({
-                      id: `${room.id}-cover`,
-                      src: room.cover,
-                      title: room.name,
-                      alt: room.name,
-                      category: room.id,
-                      group: room.name,
-                      featured: true,
-                    })
+                    setActive(imageBySrc(room.cover) ?? imagesByCategory(room.id)[0])
                   }
                 >
                   <SmartImage
