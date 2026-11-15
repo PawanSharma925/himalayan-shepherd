@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarDays, MessageCircle, Minus, Plus, Sunrise } from "lucide-react";
 import { whatsappHref } from "@/lib/hotel";
+import { planStore } from "@/lib/planStore";
 import { ROOM_TIERS } from "@/lib/rooms";
 
 export const PLAN_ROOM_EVENT = "plan-room";
@@ -97,6 +98,10 @@ export function StayPlanner() {
       : "";
     return `Hello Himalayan Shepherd, is ${room === "any" ? "a room" : `the ${roomName}`} available ${when} for ${who}?${view}`;
   }, [checkIn, checkOut, guests, nights, room, sunrise]);
+
+  useEffect(() => {
+    planStore.set(message);
+  }, [message]);
 
   const field =
     "w-full rounded-xl border border-white/15 bg-white/[0.06] px-3 py-2.5 text-sm text-white outline-none transition focus:border-gold [color-scheme:dark]";

@@ -1,31 +1,30 @@
 import { MapPin, Phone, Mail } from "lucide-react";
 import { HOTEL } from "@/lib/hotel";
-import { WhatsAppButton } from "./WhatsAppButton";
-import { SmartImage } from "./SmartImage";
+import { MessageTheHouse } from "./MessageTheHouse";
 
 export function Footer() {
   return (
     <footer id="contact" className="bg-ink text-cream">
-      <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-5 md:px-8 md:py-20 lg:grid-cols-2">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-5 md:px-8 md:py-24 lg:grid-cols-[1fr_1.05fr] lg:grid-rows-[auto_1fr] lg:gap-x-16 lg:gap-y-10">
         <div>
-          <div className="relative mb-8 h-16 w-16 overflow-hidden rounded-full bg-cream ring-1 ring-white/15">
-            <SmartImage
-              src="/brand/logo.jpg"
-              alt={`${HOTEL.name} emblem`}
-              fill
-              sizes="64px"
-              quality={80}
-              className="object-cover"
-            />
-          </div>
           <p className="kicker !text-gold">Arrive</p>
           <div className="gold-rule mt-5" />
-          <h2 className="mt-6 font-serif text-[2rem] leading-tight sm:mt-8 sm:text-4xl">Write, call, or find us in Pokhara.</h2>
-          <p className="mt-5 max-w-md text-cream/70">
-            We do not take online reservations. Tell us the dates you have in
-            mind and we will answer personally.
+          <h2 className="mt-6 font-serif text-[2.1rem] leading-tight sm:mt-8 sm:text-5xl">
+            Your message is ready.
+          </h2>
+          <p className="mt-5 max-w-md text-[17px] leading-8 text-cream/70">
+            No booking engine, no platform fees — just a conversation. Your note to
+            the house fills itself in as you plan your stay. Change anything you
+            like, then send it straight to reception.
           </p>
-          <ul className="mt-10 space-y-4 text-sm">
+        </div>
+
+        <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center">
+          <MessageTheHouse />
+        </div>
+
+        <div>
+          <ul className="space-y-4 text-sm">
             <li className="flex items-start gap-3">
               <MapPin className="mt-0.5 h-4 w-4 text-gold" />
               <a href={HOTEL.mapLink} target="_blank" rel="noreferrer" className="hover:text-gold">
@@ -45,18 +44,15 @@ export function Footer() {
               </a>
             </li>
           </ul>
-          <div className="mt-8">
-            <WhatsAppButton label="WhatsApp the house" />
+          <div className="mt-8 h-56 overflow-hidden rounded-2xl bg-ink-soft md:h-64">
+            <iframe
+              title="Map of Himalayan Shepherd, Pokhara"
+              src={HOTEL.mapEmbed}
+              className="h-full w-full border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
           </div>
-        </div>
-        <div className="min-h-[320px] overflow-hidden bg-ink-soft">
-          <iframe
-            title="Map of Himalayan Shepherd, Pokhara"
-            src={HOTEL.mapEmbed}
-            className="h-full min-h-[320px] w-full border-0"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          />
         </div>
       </div>
       <div className="border-t border-white/10 px-5 py-6 md:px-8">
