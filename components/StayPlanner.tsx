@@ -1,11 +1,18 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CalendarDays, MessageCircle, Minus, Plus } from "lucide-react";
+import { CalendarDays, MessageCircle, Minus, Plus, Sunrise } from "lucide-react";
 import { whatsappHref } from "@/lib/hotel";
 import { ROOM_TIERS } from "@/lib/rooms";
 
 export const PLAN_ROOM_EVENT = "plan-room";
+export const PLAN_DATES_EVENT = "plan-dates";
+
+export type PlanDatesDetail = {
+  checkIn: string;
+  checkOut: string;
+  sunrise: string;
+};
 
 const toInput = (date: Date) => {
   const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
@@ -26,9 +33,17 @@ export function StayPlanner() {
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(2);
   const [room, setRoom] = useState("any");
+  const [sunrise, setSunrise] = useState("");
+  const [flash, setFlash] = useState(false);
 
   useEffect(() => {
     setToday(toInput(new Date()));
+    let flashTimer = 0;
+    const highlight = () => {
+      setFlash(true);
+      window.clearTimeout(flashTimer);
+      flashTimer = window.setTimeout(() => setFlash(false), 1600);
+    };
     const onPlan = (event: Event) => {
       const id = (event as CustomEvent<string>).detail;
       setRoom(id);
@@ -36,9 +51,26 @@ export function StayPlanner() {
       root.current?.querySelector<HTMLInputElement>("input[type=date]")?.focus({
         preventScroll: true,
       });
+      highlight();
+    };
+    const onDates = (event: Event) => {
+      const detail = (event as CustomEvent<PlanDatesDetail>).detail;
+      setCheckIn(detail.checkIn);
+      setCheckOut(detail.checkOut);
+      setSunrise(detail.sunrise);
+      root.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      root.current?.querySelector<HTMLButtonElement>("button[type=submit]")?.focus({
+        preventScroll: true,
+      });
+      highlight();
     };
     window.addEventListener(PLAN_ROOM_EVENT, onPlan);
-    return () => window.removeEventListener(PLAN_ROOM_EVENT, onPlan);
+    window.addEventListener(PLAN_DATES_EVENT, onDates);
+    return () => {
+      window.clearTimeout(flashTimer);
+      window.removeEventListener(PLAN_ROOM_EVENT, onPlan);
+      window.removeEventListener(PLAN_DATES_EVENT, onDates);
+    };
   }, []);
 
   const nights = useMemo(() => {
@@ -60,8 +92,11 @@ export function StayPlanner() {
         : checkIn
           ? `from ${pretty(checkIn)}`
           : "— my dates are flexible";
-    return `Hello Himalayan Shepherd, is ${room === "any" ? "a room" : `the ${roomName}`} available ${when} for ${who}?`;
-  }, [checkIn, checkOut, guests, nights, room]);
+    const view = sunrise
+      ? ` I'd love to catch the sunrise over the Annapurna on ${pretty(sunrise)}.`
+      : "";
+    return `Hello Himalayan Shepherd, is ${room === "any" ? "a room" : `the ${roomName}`} available ${when} for ${who}?${view}`;
+  }, [checkIn, checkOut, guests, nights, room, sunrise]);
 
   const field =
     "w-full rounded-xl border border-white/15 bg-white/[0.06] px-3 py-2.5 text-sm text-white outline-none transition focus:border-gold [color-scheme:dark]";
@@ -75,11 +110,19 @@ export function StayPlanner() {
         event.preventDefault();
         window.open(whatsappHref(message), "_blank", "noopener,noreferrer");
       }}
-      className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 shadow-[0_30px_80px_rgba(0,0,0,0.35)] backdrop-blur-sm md:p-5"
+      className={`rounded-2xl border bg-white/[0.04] p-4 shadow-[0_30px_80px_rgba(0,0,0,0.35)] backdrop-blur-sm transition duration-500 md:p-5 ${
+        flash ? "border-gold ring-4 ring-gold/25" : "border-white/10"
+      }`}
     >
       <div className="mb-4 flex items-center gap-2 text-sm text-white/80">
         <CalendarDays className="h-4 w-4 text-gold" />
         Plan your stay
+        {sunrise ? (
+          <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-gold/15 px-2.5 py-1 text-[11px] text-gold">
+            <Sunrise className="h-3 w-3" />
+            Sunrise {pretty(sunrise).replace(/ \d{4}$/, "")}
+          </span>
+        ) : null}
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div>
@@ -93,6 +136,7 @@ export function StayPlanner() {
             value={checkIn}
             onChange={(event) => {
               setCheckIn(event.target.value);
+              setSunrise("");
               if (checkOut && event.target.value >= checkOut) setCheckOut("");
             }}
             className={field}
@@ -107,7 +151,10 @@ export function StayPlanner() {
             type="date"
             min={checkIn || today}
             value={checkOut}
-            onChange={(event) => setCheckOut(event.target.value)}
+            onChange={(event) => {
+              setCheckOut(event.target.value);
+              setSunrise("");
+            }}
             className={field}
           />
         </div>
