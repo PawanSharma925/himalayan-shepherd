@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Users, Layout } from "lucide-react";
+import { CalendarDays, Users, Layout } from "lucide-react";
 import { ROOM_TIERS } from "@/lib/rooms";
 import { imagesByCategory, type HotelImage } from "@/lib/images";
 import { Reveal } from "./Reveal";
-import { WhatsAppButton } from "./WhatsAppButton";
 import { Lightbox } from "./Lightbox";
+import { PLAN_ROOM_EVENT } from "./StayPlanner";
 import { SmartImage } from "./SmartImage";
 
 export function Rooms() {
@@ -84,11 +84,18 @@ export function Rooms() {
                     ))}
                   </div>
                   <div className="mt-7 flex flex-wrap items-center gap-4">
-                    <WhatsAppButton
-                      variant="gold"
-                      message={room.inquireMessage}
-                      label="Inquire on WhatsApp"
-                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        window.dispatchEvent(
+                          new CustomEvent(PLAN_ROOM_EVENT, { detail: room.id }),
+                        )
+                      }
+                      className="inline-flex items-center justify-center gap-2 rounded-full bg-gold px-5 py-3 text-sm font-medium tracking-wide text-ink transition hover:bg-gold-deep hover:text-white"
+                    >
+                      <CalendarDays className="h-4 w-4" />
+                      Check dates
+                    </button>
                     <button
                       type="button"
                       className="text-sm tracking-wide text-ink-soft underline decoration-gold/60 underline-offset-4"

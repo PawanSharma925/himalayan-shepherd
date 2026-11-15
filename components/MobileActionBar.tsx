@@ -1,5 +1,5 @@
-import { Phone } from "lucide-react";
-import { HOTEL, whatsappHref } from "@/lib/hotel";
+import { CalendarDays, Phone } from "lucide-react";
+import { HOTEL } from "@/lib/hotel";
 
 export function MobileActionBar() {
   return (
@@ -13,12 +13,11 @@ export function MobileActionBar() {
           Call now
         </a>
         <a
-          href={whatsappHref()}
-          target="_blank"
-          rel="noreferrer"
+          href="#plan"
           className="inline-flex items-center justify-center gap-2 rounded-full bg-whatsapp py-3 text-sm font-medium text-white"
         >
-          WhatsApp inquiry
+          <CalendarDays className="h-4 w-4" />
+          Check dates
         </a>
       </div>
     </div>
