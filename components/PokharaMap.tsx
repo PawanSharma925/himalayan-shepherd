@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CalendarDays, Check, MessageCircle, Plus } from "lucide-react";
 import { whatsappHref } from "@/lib/hotel";
-import { planStore } from "@/lib/planStore";
+import { initialPlan, planStore } from "@/lib/planStore";
 import { PLAN_WISHES_EVENT, type PlanArrivalDetail } from "./StayPlanner";
 
-type Place = {
+export type Place = {
   id: string;
   name: string;
   when: string;
@@ -21,7 +21,7 @@ type Place = {
 
 const HOUSE = { x: 458, y: 330 };
 
-const PLACES: Place[] = [
+export const PLACES: Place[] = [
   {
     id: "sunrise",
     name: "Sunrise at Sarangkot",
@@ -203,6 +203,18 @@ function Valley() {
   );
 }
 
+function announceWishes(ids: string[]) {
+  const items = PLACES.filter((place) => ids.includes(place.id));
+  const detail: PlanArrivalDetail | null = items.length
+    ? {
+        note: `While we're in Pokhara we'd love to fit in ${join(items.map((place) => place.ask))} — could you help us plan any of it?`,
+        label: items.length === 1 ? items[0].name : `${items.length} things to do`,
+        code: items.map((place) => place.id).join("."),
+      }
+    : null;
+  window.dispatchEvent(new CustomEvent(PLAN_WISHES_EVENT, { detail }));
+}
+
 export function PokharaMap() {
   const [picked, setPicked] = useState<string[]>([]);
   const [focus, setFocus] = useState<string | null>(null);
@@ -213,15 +225,19 @@ export function PokharaMap() {
   const toggle = (id: string) => {
     const next = picked.includes(id) ? picked.filter((item) => item !== id) : [...picked, id];
     setPicked(next);
-    const items = PLACES.filter((place) => next.includes(place.id));
-    const detail: PlanArrivalDetail | null = items.length
-      ? {
-          note: `While we're in Pokhara we'd love to fit in ${join(items.map((place) => place.ask))} — could you help us plan any of it?`,
-          label: items.length === 1 ? items[0].name : `${items.length} things to do`,
-        }
-      : null;
-    window.dispatchEvent(new CustomEvent(PLAN_WISHES_EVENT, { detail }));
+    announceWishes(next);
   };
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const saved = (initialPlan().params.get("do") ?? "").split(".");
+      const ids = PLACES.filter((place) => saved.includes(place.id)).map((place) => place.id);
+      if (!ids.length) return;
+      setPicked(ids);
+      announceWishes(ids);
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   return (
     <section

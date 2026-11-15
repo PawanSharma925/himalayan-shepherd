@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Bus,
@@ -14,10 +14,10 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { whatsappHref } from "@/lib/hotel";
-import { planStore } from "@/lib/planStore";
+import { initialPlan, planStore } from "@/lib/planStore";
 import { PLAN_ARRIVAL_EVENT, type PlanArrivalDetail } from "./StayPlanner";
 
-type Route = {
+export type Route = {
   id: string;
   icon: LucideIcon;
   label: string;
@@ -31,7 +31,7 @@ type Route = {
 
 const at = (time: string, lead: string) => (time ? `${lead} ${time}` : "");
 
-const ROUTES: Route[] = [
+export const ROUTES: Route[] = [
   {
     id: "flight",
     icon: Plane,
@@ -114,6 +114,13 @@ const ROUTES: Route[] = [
   },
 ];
 
+function announceArrival(route: Route, time: string) {
+  const code = `${route.id}|${time}`;
+  const detail: PlanArrivalDetail = { note: route.note(time), label: route.summary, code };
+  window.dispatchEvent(new CustomEvent(PLAN_ARRIVAL_EVENT, { detail }));
+  return code;
+}
+
 export function GettingHere() {
   const [routeId, setRouteId] = useState(ROUTES[0].id);
   const [time, setTime] = useState("");
@@ -123,10 +130,21 @@ export function GettingHere() {
   const isAdded = added === `${route.id}|${time}`;
 
   const add = () => {
-    const detail: PlanArrivalDetail = { note: route.note(time), label: route.summary };
-    window.dispatchEvent(new CustomEvent(PLAN_ARRIVAL_EVENT, { detail }));
-    setAdded(`${route.id}|${time}`);
+    setAdded(announceArrival(route, time));
   };
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const [id, savedTime = ""] = (initialPlan().params.get("arr") ?? "").split("|");
+      const saved = ROUTES.find((item) => item.id === id);
+      if (!saved) return;
+      const clean = /^\d{2}:\d{2}$/.test(savedTime) ? savedTime : "";
+      setRouteId(saved.id);
+      setTime(clean);
+      setAdded(announceArrival(saved, clean));
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   return (
     <section id="getting-here" className="bg-cream px-4 py-16 sm:px-5 md:px-8 md:py-28">

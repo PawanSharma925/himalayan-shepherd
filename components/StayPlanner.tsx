@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarDays, MessageCircle, Minus, Plus, Sunrise } from "lucide-react";
 import { whatsappHref } from "@/lib/hotel";
-import { planStore } from "@/lib/planStore";
+import { initialPlan, planStore, savePlan } from "@/lib/planStore";
 import { ROOM_TIERS } from "@/lib/rooms";
 
 export const PLAN_ROOM_EVENT = "plan-room";
@@ -15,6 +15,7 @@ export const PLAN_WISHES_EVENT = "plan-wishes";
 export type PlanArrivalDetail = {
   note: string;
   label: string;
+  code: string;
 };
 
 export type PlanDatesDetail = {
@@ -46,9 +47,27 @@ export function StayPlanner() {
   const [arrival, setArrival] = useState<PlanArrivalDetail | null>(null);
   const [wishes, setWishes] = useState<PlanArrivalDetail | null>(null);
   const [flash, setFlash] = useState(false);
+  const [restored, setRestored] = useState(false);
 
   useEffect(() => {
-    const todayTimer = window.setTimeout(() => setToday(toInput(new Date())), 0);
+    const todayTimer = window.setTimeout(() => {
+      const now = toInput(new Date());
+      setToday(now);
+      const saved = initialPlan().params;
+      const savedIn = saved.get("in") ?? "";
+      const savedOut = saved.get("out") ?? "";
+      if (savedIn >= now && /^\d{4}-\d{2}-\d{2}$/.test(savedIn)) {
+        setCheckIn(savedIn);
+        if (savedOut > savedIn) setCheckOut(savedOut);
+        const sun = saved.get("sun") ?? "";
+        if (sun >= savedIn) setSunrise(sun);
+      }
+      const savedGuests = Number(saved.get("g"));
+      if (savedGuests >= 1 && savedGuests <= 8) setGuests(savedGuests);
+      const savedRoom = saved.get("room");
+      if (ROOM_TIERS.some((tier) => tier.id === savedRoom)) setRoom(savedRoom as string);
+      setRestored(true);
+    }, 0);
     let flashTimer = 0;
     const highlight = () => {
       setFlash(true);
@@ -136,12 +155,23 @@ export function StayPlanner() {
     if (roomName) summary.push(roomName);
     if (arrival) summary.push(arrival.label);
     if (wishes) summary.push(wishes.label);
+    const query = new URLSearchParams();
+    if (checkIn) query.set("in", checkIn);
+    if (checkOut) query.set("out", checkOut);
+    if (guests !== 2) query.set("g", String(guests));
+    if (room !== "any") query.set("room", room);
+    if (sunrise) query.set("sun", sunrise);
+    if (arrival) query.set("arr", arrival.code);
+    if (wishes) query.set("do", wishes.code);
+    const share = query.toString();
     planStore.set({
       message,
       summary,
       hasPlan: Boolean(checkIn) || room !== "any" || arrival !== null || wishes !== null,
+      share,
     });
-  }, [arrival, wishes, message, checkIn, checkOut, nights, guests, room]);
+    if (restored) savePlan(share);
+  }, [arrival, wishes, message, checkIn, checkOut, nights, guests, room, sunrise, restored]);
 
   const field =
     "w-full rounded-xl border border-white/15 bg-white/[0.06] px-3 py-2.5 text-sm text-white outline-none transition focus:border-gold [color-scheme:dark]";

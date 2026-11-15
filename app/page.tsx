@@ -10,6 +10,7 @@ import { MountainForecast } from "@/components/MountainForecast";
 import { Navbar } from "@/components/Navbar";
 import { PokharaMap } from "@/components/PokharaMap";
 import { Rooms } from "@/components/Rooms";
+import { TripCard } from "@/components/TripCard";
 
 export default function HomePage() {
   return (
@@ -28,6 +29,7 @@ export default function HomePage() {
         <Footer />
       </main>
       <StayDock />
+      <TripCard />
     </>
   );
 }

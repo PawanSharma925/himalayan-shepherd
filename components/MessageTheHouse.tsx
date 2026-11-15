@@ -5,6 +5,7 @@ import { CheckCheck, MessageCircle, Pencil, RotateCcw } from "lucide-react";
 import { HOTEL, whatsappHref } from "@/lib/hotel";
 import { planStore } from "@/lib/planStore";
 import { SmartImage } from "./SmartImage";
+import { openTripCard } from "./TripCard";
 
 const pokharaTime = () =>
   new Date().toLocaleTimeString("en-GB", {
@@ -116,6 +117,15 @@ export function MessageTheHouse() {
           <a href={HOTEL.phoneHref} className="text-gold underline-offset-4 hover:underline">
             Call the house
           </a>
+          <br />
+          Planning together?{" "}
+          <button
+            type="button"
+            onClick={openTripCard}
+            className="text-gold underline-offset-4 hover:underline"
+          >
+            Share your trip card
+          </button>
         </p>
       </div>
     </div>

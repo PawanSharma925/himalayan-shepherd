@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { CalendarDays, ChevronLeft, ChevronRight, X } from "lucide-react";
@@ -8,6 +8,8 @@ import type { HotelImage } from "@/lib/images";
 import { ROOM_TIERS } from "@/lib/rooms";
 import { SmartImage } from "./SmartImage";
 import { PLAN_ROOM_EVENT } from "./StayPlanner";
+
+const noopSubscribe = () => () => {};
 
 type Props = {
   image: HotelImage | null;
@@ -17,11 +19,11 @@ type Props = {
 };
 
 export function Lightbox({ image, images, onClose, onSelect }: Props) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
+  );
 
   useEffect(() => {
     if (!image) return;

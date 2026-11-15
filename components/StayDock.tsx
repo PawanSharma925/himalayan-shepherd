@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { CalendarDays, MessageCircle, Pencil, Phone } from "lucide-react";
+import { CalendarDays, MessageCircle, Pencil, Phone, Ticket } from "lucide-react";
 import { HOTEL, whatsappHref } from "@/lib/hotel";
 import { planStore } from "@/lib/planStore";
+import { openTripCard } from "./TripCard";
 
 const WATCHED = ["plan", "contact"];
 
@@ -50,6 +51,17 @@ export function StayDock() {
             <Pencil className="h-3.5 w-3.5" />
             {plan.hasPlan ? "Edit" : "Pick dates"}
           </a>
+          {plan.hasPlan ? (
+            <button
+              type="button"
+              onClick={openTripCard}
+              tabIndex={covered ? -1 : undefined}
+              className="inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 text-sm text-cream/80 transition hover:bg-white/10 hover:text-cream"
+            >
+              <Ticket className="h-3.5 w-3.5" />
+              Trip card
+            </button>
+          ) : null}
           <a
             href={send}
             target="_blank"
@@ -65,14 +77,21 @@ export function StayDock() {
 
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-sand bg-white/92 px-3 pb-3 pt-2 backdrop-blur-md md:hidden">
         {plan.hasPlan ? (
-          <a
-            href="#plan"
-            className="mb-2 flex items-center justify-center gap-1.5 truncate text-xs text-ink-soft"
-          >
-            <CalendarDays className="h-3.5 w-3.5 shrink-0 text-gold-deep" />
-            <span className="truncate">{plan.summary.join(" · ")}</span>
-            <span className="shrink-0 text-gold-deep underline underline-offset-2">Edit</span>
-          </a>
+          <div className="mb-2 flex items-center justify-center gap-2 text-xs text-ink-soft">
+            <a href="#plan" className="flex min-w-0 items-center gap-1.5">
+              <CalendarDays className="h-3.5 w-3.5 shrink-0 text-gold-deep" />
+              <span className="truncate">{plan.summary.join(" · ")}</span>
+              <span className="shrink-0 text-gold-deep underline underline-offset-2">Edit</span>
+            </a>
+            <button
+              type="button"
+              onClick={openTripCard}
+              className="inline-flex shrink-0 items-center gap-1 rounded-full bg-cream px-2.5 py-1 font-medium text-ink"
+            >
+              <Ticket className="h-3.5 w-3.5 text-gold-deep" />
+              Share
+            </button>
+          </div>
         ) : null}
         <div className="grid grid-cols-[auto_1fr] gap-2">
           <a
