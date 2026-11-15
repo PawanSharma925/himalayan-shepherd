@@ -1,5 +1,5 @@
 import { About } from "@/components/About";
-import { Amenities } from "@/components/Amenities";
+import { DayAtTheHouse } from "@/components/DayAtTheHouse";
 import { Dining } from "@/components/Dining";
 import { Footer } from "@/components/Footer";
 import { Gallery } from "@/components/Gallery";
@@ -18,7 +18,7 @@ export default function HomePage() {
         <MountainForecast />
         <About />
         <Rooms />
-        <Amenities />
+        <DayAtTheHouse />
         <Dining />
         <Gallery />
         <Footer />
