@@ -15,32 +15,41 @@ type Filter = {
 const FILTERS: Filter[] = [
   { id: "featured", label: "Highlights", match: (image) => image.featured },
   { id: "all", label: "All", match: () => true },
+  { id: "view", label: "Views", match: (image) => image.category === "view" },
   {
-    id: "presidential",
-    label: "Presidential Suite",
-    match: (image) => image.category === "presidential",
-  },
-  { id: "king", label: "King Rooms", match: (image) => image.category === "king" },
-  { id: "queen", label: "Queen Rooms", match: (image) => image.category === "queen" },
-  { id: "family", label: "Family Rooms", match: (image) => image.category === "family" },
-  {
-    id: "patio",
-    label: "Rooftop & Patio",
-    match: (image) => image.category === "patio",
+    id: "exec",
+    label: "Executive Suite",
+    match: (image) => image.category === "exec",
   },
   {
-    id: "dining-lounge",
-    label: "Dining & Lounge",
-    match: (image) => image.category === "dining" || image.category === "lounge",
+    id: "premium",
+    label: "Premium Rooms",
+    match: (image) => image.category === "premium",
   },
   {
-    id: "bathrooms",
-    label: "Bathrooms",
-    match: (image) => image.category === "bathrooms",
+    id: "double",
+    label: "Double Rooms",
+    match: (image) => image.category === "double",
+  },
+  {
+    id: "twin",
+    label: "Twin Rooms",
+    match: (image) => image.category === "twin",
+  },
+  {
+    id: "sundeck",
+    label: "Sundeck",
+    match: (image) => image.category === "sundeck",
+  },
+  {
+    id: "restaurant-lobby",
+    label: "Dining & Lobby",
+    match: (image) =>
+      image.category === "restaurant" || image.category === "lobby",
   },
 ];
 
-const ROOM_CATEGORIES: ImageCategory[] = ["presidential", "king", "queen", "family"];
+const ROOM_CATEGORIES: ImageCategory[] = ["exec", "premium", "double", "twin"];
 
 export function Gallery() {
   const [filter, setFilter] = useState("featured");

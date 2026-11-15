@@ -5,21 +5,25 @@ import { ChevronDown } from "lucide-react";
 import { HOTEL, whatsappHref } from "@/lib/hotel";
 import { SmartImage } from "./SmartImage";
 
+const VIEW_INQUIRE =
+  "Hello Himalayan Shepherd, I would like to inquire about a mountain-view room in Pokhara.";
+
 export function Hero() {
   return (
     <section id="top" className="relative isolate min-h-[100svh] overflow-hidden">
       <div className="absolute inset-0">
         <SmartImage
-          src="/images/hotel/lounge_and_seating/indoor-seating-area-with-rattan-furniture.jpg"
-          alt="Lounge seating with rattan furniture and balcony light at Himalayan Shepherd"
+          src="/images/hotel/view/himalayan-shepherd-01-lake-and-mountains-hd.jpg"
+          alt="Fewa Lake and the Annapurna mountains at Himalayan Shepherd, Pokhara"
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[68%_center]"
+          quality={90}
+          className="object-cover object-[center_40%]"
         />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-r from-ink/58 via-ink/18 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-ink/72 via-ink/12 to-ink/22" />
+      <div className="absolute inset-0 bg-gradient-to-r from-ink/45 via-ink/12 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink/68 via-ink/10 to-ink/18" />
 
       <div className="relative mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-5 pb-28 pt-28 md:px-8 md:pb-16">
         <motion.p
@@ -42,10 +46,10 @@ export function Hero() {
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.55 }}
-          className="mt-7 max-w-xl text-base leading-relaxed text-white/80 md:text-lg"
+          className="mt-7 max-w-xl text-base leading-relaxed text-white/85 md:text-lg"
         >
-          A boutique house in Pokhara for still mornings, lake light, and the
-          quiet luxury of arriving somewhere that already feels like rest.
+          Wake to Fewa Lake and the Annapurna skyline — then sleep in a quiet
+          boutique house that already feels like rest.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 18 }}
@@ -54,18 +58,18 @@ export function Hero() {
           className="mt-10 flex flex-wrap gap-4"
         >
           <a
-            href="#rooms"
-            className="rounded-full bg-white px-6 py-3 text-sm font-medium tracking-wide text-ink transition hover:bg-cream"
-          >
-            Explore accommodations
-          </a>
-          <a
-            href={whatsappHref()}
+            href={whatsappHref(VIEW_INQUIRE)}
             target="_blank"
             rel="noreferrer"
+            className="rounded-full bg-white px-6 py-3 text-sm font-medium tracking-wide text-ink transition hover:bg-cream"
+          >
+            Ask about a view room
+          </a>
+          <a
+            href="#rooms"
             className="rounded-full border border-white/50 px-6 py-3 text-sm font-medium tracking-wide text-white transition hover:bg-white hover:text-ink"
           >
-            Instant inquiry
+            Explore rooms
           </a>
         </motion.div>
       </div>

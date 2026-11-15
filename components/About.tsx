@@ -3,22 +3,22 @@ import { SmartImage } from "./SmartImage";
 
 const MOSAIC = [
   {
-    src: "/images/hotel/lobby_and_front_desk/hotel-reception-desk-with-illuminated-sign.jpg",
-    alt: "Front desk with the illuminated Himalayan Shepherd emblem",
+    src: "/images/hotel/view/himalayan-shepherd-01-lake-and-mountains-hd.jpg",
+    alt: "Fewa Lake and the Annapurna range from Himalayan Shepherd, Pokhara",
     className: "col-span-2 aspect-[3/2]",
     object: "object-center",
     sizes: "(max-width: 1024px) 92vw, 1200px",
   },
   {
-    src: "/images/hotel/lounge_and_seating/cozy-armchairs-by-window-view.jpg",
-    alt: "Yellow lounge chairs by the window looking onto Lakeside streets",
+    src: "/images/hotel/reception-lobby/waving-receptionist-at-himalayan-shepherd-hotel-1.jpg",
+    alt: "Receptionist welcoming guests at Himalayan Shepherd",
     className: "aspect-[4/3]",
-    object: "object-[center_65%]",
+    object: "object-center",
     sizes: "(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 600px",
   },
   {
-    src: "/images/hotel/patio_and_rooftop/outdoor-terrace-seating-with-street-view.jpg",
-    alt: "Patio seating looking over Pokhara streets",
+    src: "/images/hotel/sundeck/himalayan-shepherd-hotel-terrace-3.jpg",
+    alt: "Sundeck terrace seating at Himalayan Shepherd",
     className: "aspect-[4/3]",
     object: "object-center",
     sizes: "(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 600px",
@@ -42,8 +42,8 @@ export function About() {
               for a dawn start, and quiet enough that neither has to rush you.
             </p>
             <p>
-              The rooms are timber, linen, and soft light. The lounge opens to
-              the street breeze. Breakfast is unhurried. We keep the house
+              The rooms are timber, linen, and soft light. The sundeck catches
+              late mountain air. Breakfast is unhurried. We keep the house
               personal on purpose: no platforms, no booking engine — just a
               conversation, then a key.
             </p>

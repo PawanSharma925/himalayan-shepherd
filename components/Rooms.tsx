@@ -22,9 +22,9 @@ export function Rooms() {
             Four distinct rooms. No overlap, no guesswork.
           </h2>
           <p className="mt-6 text-[17px] leading-8 text-ink-soft">
-            The Presidential Suite is kept entirely apart from the standard
-            rooms — a private lounge, chaise, and balcony that never appear in
-            the king, queen, or family galleries.
+            The Executive Suite sits apart from the standards. Premium rooms on
+            Floor 2 catch mountain light. Doubles and twins keep the same warm
+            timber and linen — scaled for how you travel.
           </p>
         </Reveal>
 

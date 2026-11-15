@@ -14,57 +14,56 @@ export type RoomTier = {
 
 export const ROOM_TIERS: RoomTier[] = [
   {
-    id: "presidential",
-    name: "Presidential Suite",
+    id: "exec",
+    name: "Executive Suite",
     eyebrow: "Flagship suite",
     capacity: "2 guests",
-    layout: "King bed · private chaise lounge · balcony",
+    layout: "King bed · lounge plane · evening light",
     description:
-      "Our most generous room: a wide living plane, a private chaise beside the bed, and glass doors that open to the balcony. Quiet, slow, and unmistakably the suite.",
-    cover:
-      "/images/hotel/rooms_presidential_suite/presidential-suite-modern-hotel-room-with-king-bed-balcony.jpg",
-    tags: ["Wi-Fi", "En-suite bathroom", "Wardrobe", "Lounge chaise", "Balcony"],
+      "Our most generous room: a wide living plane, soft night lighting, and space to stretch after the lake or the trail. Quiet, slow, and unmistakably the suite.",
+    cover: "/images/hotel/exec-suite/warmly-lit-executive-suite-at-night-1.jpg",
+    tags: ["Wi-Fi", "En-suite bathroom", "Wardrobe", "Lounge seating"],
     inquireMessage:
-      "Hello Himalayan Shepherd, I would like to inquire about the Presidential Suite in Pokhara.",
+      "Hello Himalayan Shepherd, I would like to inquire about the Executive Suite in Pokhara.",
   },
   {
-    id: "king",
-    name: "Deluxe King Room",
+    id: "premium",
+    name: "Premium Room",
+    eyebrow: "Floor 2 · views",
+    capacity: "2 guests",
+    layout: "King bed · mountain light · Room 303 class",
+    description:
+      "Bright premium rooms on Floor 2 — clear windows, warm evening light, and on the best days a clean look toward the hills. Made for guests who came for the view.",
+    cover: "/images/hotel/floor-2-premium/sunlit-hotel-room-clear-mountain-view-2.jpg",
+    tags: ["Wi-Fi", "En-suite bathroom", "Mountain light", "Floor 2"],
+    inquireMessage:
+      "Hello Himalayan Shepherd, I would like to inquire about a Premium Room with a mountain view in Pokhara.",
+  },
+  {
+    id: "double",
+    name: "Double Room",
     eyebrow: "For two",
     capacity: "2 guests",
-    layout: "King bed · writing nook · city light",
+    layout: "Double bed · warm timber · standard floor",
     description:
-      "A composed king room with warm timber, soft linen, and a calm, uncluttered plan. Made for unhurried evenings after the lake or the trail.",
-    cover: "/images/hotel/rooms_king_bed/modern-hotel-bedroom-king-bed.jpg",
-    tags: ["Wi-Fi", "En-suite bathroom", "Wardrobe", "City view"],
+      "A composed double room with warm night lighting, soft linen, and a calm, uncluttered plan. Made for unhurried evenings after the lake.",
+    cover: "/images/hotel/standard-double/warm-nighttime-standard-room-1.jpg",
+    tags: ["Wi-Fi", "En-suite bathroom", "Wardrobe", "Double bed"],
     inquireMessage:
-      "Hello Himalayan Shepherd, I would like to inquire about a Deluxe King Room in Pokhara.",
+      "Hello Himalayan Shepherd, I would like to inquire about a Double Room in Pokhara.",
   },
   {
-    id: "queen",
-    name: "Deluxe Queen Room",
-    eyebrow: "Intimate",
-    capacity: "2 guests",
-    layout: "Queen bed · compact deluxe",
-    description:
-      "A quieter, more intimate chamber for couples. The same considered materials, scaled for two people who want the city close and the room still.",
-    cover: "/images/hotel/rooms_queen_bed/cozy-hotel-room-with-queen-bed.jpg",
-    tags: ["Wi-Fi", "En-suite bathroom", "Wardrobe", "Couple's stay"],
-    inquireMessage:
-      "Hello Himalayan Shepherd, I would like to inquire about a Deluxe Queen Room in Pokhara.",
-  },
-  {
-    id: "family",
-    name: "Family Suite",
+    id: "twin",
+    name: "Twin Room",
     eyebrow: "Together",
-    capacity: "3–4 guests",
-    layout: "Twin beds · shared nightstand · family plan",
+    capacity: "2 guests",
+    layout: "Twin beds · bright plan · shared stay",
     description:
-      "Two generous beds in a bright, practical room. Space for children, friends, or a second couple travelling as one party.",
-    cover: "/images/hotel/rooms_family_room/two-twin-beds-hotel-room.jpg",
-    tags: ["Wi-Fi", "En-suite bathroom", "Wardrobe", "Two beds"],
+      "Two twin beds in a bright, practical room. Space for friends, siblings, or travellers who prefer separate beds without losing the house’s warmth.",
+    cover: "/images/hotel/standard-twin/bright-himalayan-shepherd-twin-room-7.jpg",
+    tags: ["Wi-Fi", "En-suite bathroom", "Wardrobe", "Twin beds"],
     inquireMessage:
-      "Hello Himalayan Shepherd, I would like to inquire about a Family Suite in Pokhara.",
+      "Hello Himalayan Shepherd, I would like to inquire about a Twin Room in Pokhara.",
   },
 ];
 

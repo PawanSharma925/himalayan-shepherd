@@ -11,8 +11,8 @@ import { Reveal } from "./Reveal";
 const ITEMS = [
   {
     icon: SunMedium,
-    title: "Rooftop seating & patio",
-    copy: "Open-air tables for late light, mountain air, and an unhurried drink.",
+    title: "Sundeck & BBQ terrace",
+    copy: "Open-air tables for late light, mountain air, and an unhurried drink on the sundeck.",
   },
   {
     icon: Wifi,
@@ -32,7 +32,7 @@ const ITEMS = [
   {
     icon: Bath,
     title: "Private en-suite bathrooms",
-    copy: "Stone, glass, and warm water in every room — including the Presidential Suite.",
+    copy: "Stone, glass, and warm water in every room — including the Executive Suite.",
   },
   {
     icon: MapPin,

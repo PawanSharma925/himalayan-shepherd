@@ -3,24 +3,24 @@ import { SmartImage } from "./SmartImage";
 
 const DINING = [
   {
-    src: "/images/hotel/dining_and_food_court/cafe-seating-with-blue-cushioned-benches.jpg",
-    alt: "Cafe booth seating with blue cushions",
-    title: "Breakfast court",
+    src: "/images/hotel/restaurant/sunlit-himalayan-shepherd-dining-room-2.jpg",
+    alt: "Sunlit dining room at Himalayan Shepherd",
+    title: "Sunlit dining room",
   },
   {
-    src: "/images/hotel/dining_and_food_court/cappuccino-with-heart-latte-art.jpg",
-    alt: "Cappuccino with heart latte art",
-    title: "Barista coffee",
+    src: "/images/hotel/reception-lobby/warm-himalayan-shepherd-coffee-moment-2.jpg",
+    alt: "Warm coffee moment at Himalayan Shepherd",
+    title: "Morning coffee",
   },
   {
-    src: "/images/hotel/dining_and_food_court/restaurant-dining-room-with-colorful-chairs.jpg",
-    alt: "Dining room with colorful chairs and timber tables",
-    title: "Open dining",
+    src: "/images/hotel/restaurant/bright-himalayan-shepherd-dining-room-3.jpg",
+    alt: "Bright Himalayan Shepherd dining room",
+    title: "The dining court",
   },
   {
-    src: "/images/hotel/dining_and_food_court/hotel-breakfast-area-with-tables-chairs.jpg",
-    alt: "Hotel breakfast tables in morning light",
-    title: "Morning light",
+    src: "/images/hotel/restaurant/warm-taupe-interior-with-glazed-partition.jpg",
+    alt: "Warm taupe dining interior with glazed partition",
+    title: "Taupe interior",
   },
 ];
 
