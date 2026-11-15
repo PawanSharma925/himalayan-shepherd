@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { HOTEL, whatsappHref } from "@/lib/hotel";
 import { SmartImage } from "./SmartImage";
 
@@ -10,77 +10,80 @@ const VIEW_INQUIRE =
 
 export function Hero() {
   return (
-    <section id="top" className="relative isolate min-h-[100svh] overflow-hidden">
-      <div className="absolute inset-0">
-        <SmartImage
-          src="/images/hotel/view/himalayan-shepherd-01-lake-and-mountains-hd.jpg"
-          alt="Fewa Lake and the Annapurna mountains at Himalayan Shepherd, Pokhara"
-          fill
-          priority
-          sizes="100vw"
-          quality={90}
-          className="object-cover object-[center_40%]"
-        />
+    <section
+      id="top"
+      className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-ink pt-[4.75rem] text-white"
+    >
+      <div className="group relative h-[clamp(240px,34svh,300px)] w-full overflow-hidden md:h-[clamp(320px,50svh,520px)]">
+        <div className="hero-pan h-full w-max group-hover:[animation-play-state:paused]">
+          <SmartImage
+            src="/images/hotel/view/himalayan-shepherd-01-lake-and-mountains-hd.jpg"
+            alt="Panorama of Fewa Lake and the Annapurna range above Lakeside, Pokhara"
+            width={4401}
+            height={963}
+            priority
+            quality={90}
+            sizes="(max-width: 768px) 1400px, 2400px"
+            className="h-full w-auto max-w-none"
+          />
+        </div>
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-ink to-transparent" />
+        <p className="absolute bottom-4 left-5 text-[10px] uppercase tracking-[0.28em] text-white/75 md:left-8">
+          Fewa Lake · Annapurna range · Lakeside
+        </p>
       </div>
-      <div className="absolute inset-0 bg-gradient-to-r from-ink/45 via-ink/12 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-ink/68 via-ink/10 to-ink/18" />
 
-      <div className="relative mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-5 pb-28 pt-28 md:px-8 md:pb-16">
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="kicker text-gold"
-        >
-          {HOTEL.kicker}
-        </motion.p>
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.35 }}
-          className="mt-5 max-w-3xl font-serif text-[2.15rem] leading-[0.95] text-white sm:text-5xl md:text-6xl lg:text-7xl"
-        >
-          {HOTEL.tagline}
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.55 }}
-          className="mt-7 max-w-xl text-base leading-relaxed text-white/85 md:text-lg"
-        >
-          Wake to Fewa Lake and the Annapurna skyline — then sleep in a quiet
-          boutique house that already feels like rest.
-        </motion.p>
+      <div className="mx-auto grid w-full max-w-7xl flex-1 content-center gap-8 px-5 pb-28 pt-8 md:px-8 md:pb-14 lg:grid-cols-[1.25fr_0.75fr] lg:items-end lg:gap-16">
+        <div>
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.15 }}
+            className="kicker !text-gold"
+          >
+            {HOTEL.kicker}
+          </motion.p>
+          <motion.h1
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.3 }}
+            className="mt-4 max-w-3xl font-serif text-[2.1rem] leading-[1] sm:text-5xl md:text-6xl"
+          >
+            {HOTEL.tagline}
+          </motion.h1>
+        </div>
+
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.7 }}
-          className="mt-10 flex flex-wrap gap-4"
+          transition={{ duration: 0.9, delay: 0.5 }}
         >
-          <a
-            href={whatsappHref(VIEW_INQUIRE)}
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-full bg-white px-6 py-3 text-sm font-medium tracking-wide text-ink transition hover:bg-cream"
-          >
-            Ask about a view room
-          </a>
-          <a
-            href="#rooms"
-            className="rounded-full border border-white/50 px-6 py-3 text-sm font-medium tracking-wide text-white transition hover:bg-white hover:text-ink"
-          >
-            Explore rooms
-          </a>
+          <p className="max-w-md text-base leading-relaxed text-white/75 md:text-[17px]">
+            Wake to Fewa Lake and the Annapurna skyline, then come back to a
+            quiet boutique house in Lakeside.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a
+              href={whatsappHref(VIEW_INQUIRE)}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-whatsapp px-6 py-3 text-sm font-medium tracking-wide text-white transition hover:brightness-110"
+            >
+              <MessageCircle className="h-4 w-4" />
+              Ask about a view room
+            </a>
+            <a
+              href="#rooms"
+              className="rounded-full border border-white/40 px-6 py-3 text-sm font-medium tracking-wide text-white transition hover:bg-white hover:text-ink"
+            >
+              Explore rooms
+            </a>
+          </div>
+          <p className="mt-5 text-xs tracking-wide text-white/55">
+            No booking fees · You talk to the house directly
+          </p>
         </motion.div>
       </div>
-
-      <a
-        href="#about"
-        className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 text-white/70 md:block"
-        aria-label="Scroll to about"
-      >
-        <ChevronDown className="h-7 w-7 animate-bounce" />
-      </a>
     </section>
   );
 }

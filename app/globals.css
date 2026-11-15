@@ -51,6 +51,26 @@ body {
   color: var(--gold-deep);
 }
 
+@keyframes hero-pan {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% + 100vw));
+  }
+}
+
+.hero-pan {
+  animation: hero-pan 45s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-pan {
+    animation: none;
+  }
+}
+
 .gold-rule {
   height: 1px;
   width: 4.5rem;

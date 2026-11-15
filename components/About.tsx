@@ -3,8 +3,8 @@ import { SmartImage } from "./SmartImage";
 
 const MOSAIC = [
   {
-    src: "/images/hotel/view/himalayan-shepherd-01-lake-and-mountains-hd.jpg",
-    alt: "Fewa Lake and the Annapurna range from Himalayan Shepherd, Pokhara",
+    src: "/images/hotel/view/himalayan-shepherd-03-summit-closeup-crisp.jpg",
+    alt: "Annapurna summit above Pokhara, seen from Himalayan Shepherd",
     className: "col-span-2 aspect-[3/2]",
     object: "object-center",
     sizes: "(max-width: 1024px) 92vw, 1200px",

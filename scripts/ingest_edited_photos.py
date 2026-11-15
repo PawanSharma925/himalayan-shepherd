@@ -7,14 +7,15 @@ import re
 import shutil
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageFilter, ImageStat
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "edited photos"
 HOTEL = ROOT / "public" / "images" / "hotel"
 OUT_TS = ROOT / "lib" / "images.ts"
-MAX_EDGE = 2560
-JPEG_QUALITY = 90
+MAX_SHORT_EDGE = 1600
+JPEG_QUALITY = 92
+MIN_SHARPNESS = 450
 
 # (relative path under edited photos, public folder slug, category, group label)
 FOLDER_MAP: list[tuple[str, str, str, str]] = [
@@ -52,20 +53,20 @@ FOLDER_MAP: list[tuple[str, str, str, str]] = [
 ]
 
 FEATURED_SLUGS = {
-    "himalayan-shepherd-01-lake-and-mountains-hd",
-    "himalayan-shepherd-04-lake-to-sunset-hd",
-    "warmly-lit-executive-suite-at-night-1",
-    "bright-hotel-room-clear-views-1",
+    "himalayan-shepherd-02-golden-peak-telephoto",
     "sunlit-hotel-room-clear-mountain-view-2",
-    "warm-nighttime-standard-room-1",
-    "bright-himalayan-shepherd-twin-room-7",
-    "waving-receptionist-at-himalayan-shepherd-hotel-1",
-    "warm-lounge-with-blue-seating",
-    "sunlit-himalayan-shepherd-dining-room-2",
-    "warm-himalayan-shepherd-coffee-moment-2",
+    "bright-himalayan-shepherd-dining-room-3",
     "himalayan-shepherd-hotel-terrace-3",
+    "warm-lit-executive-suite-at-night-7",
+    "bright-hotel-room-clear-views-1",
+    "warm-lounge-with-blue-seating",
+    "himalayan-shepherd-hotel-interior-1",
+    "warm-nighttime-hotel-room-glow-5",
+    "warm-nighttime-standard-room-2",
+    "bright-himalayan-shepherd-twin-room-7",
+    "sunlit-himalayan-shepherd-dining-room-2",
     "himalayan-shepherd-outdoor-bbq-amenity-2",
-    "warm-nighttime-executive-suite-2",
+    "warm-himalayan-hotel-room-at-night-7",
 }
 
 UNKNOWN_RE = re.compile(r"^unknown(\s+copy)?([\s\-_]?\d+)?$", re.I)
@@ -111,20 +112,36 @@ def is_unknown(path: Path) -> bool:
 
 
 def fit(img: Image.Image) -> Image.Image:
+    # Cap the short edge so panoramas keep their native height.
     w, h = img.size
-    longest = max(w, h)
-    if longest <= MAX_EDGE:
+    shortest = min(w, h)
+    if shortest <= MAX_SHORT_EDGE:
         return img
-    scale = MAX_EDGE / longest
+    scale = MAX_SHORT_EDGE / shortest
     return img.resize((int(w * scale), int(h * scale)), Image.Resampling.LANCZOS)
 
 
-def convert(src: Path, dest: Path) -> None:
+def sharpness(img: Image.Image) -> float:
+    gray = img.convert("L")
+    gray.thumbnail((1200, 1200))
+    return ImageStat.Stat(gray.filter(ImageFilter.FIND_EDGES)).var[0]
+
+
+def convert(src: Path, dest: Path) -> tuple[int, int]:
     dest.parent.mkdir(parents=True, exist_ok=True)
     with Image.open(src) as img:
         img = img.convert("RGB")
         img = fit(img)
-        img.save(dest, "JPEG", quality=JPEG_QUALITY, optimize=True, progressive=True)
+        img = img.filter(ImageFilter.UnsharpMask(radius=1.4, percent=55, threshold=2))
+        img.save(
+            dest,
+            "JPEG",
+            quality=JPEG_QUALITY,
+            optimize=True,
+            progressive=True,
+            subsampling=0,
+        )
+        return img.size
 
 
 def collect_sources() -> list[tuple[Path, str, str, str]]:
@@ -156,6 +173,11 @@ def collect_sources() -> list[tuple[Path, str, str, str]]:
             if s in seen:
                 continue
             seen.add(s)
+            with Image.open(path) as img:
+                score = sharpness(img.convert("RGB"))
+            if category != "view" and score < MIN_SHARPNESS:
+                print(f"  skip (soft, {score:.0f}): {path.relative_to(SOURCE)}")
+                continue
             results.append((path, slug, category, group))
     return results
 

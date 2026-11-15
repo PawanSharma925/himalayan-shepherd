@@ -8,9 +8,9 @@ const DINING = [
     title: "Sunlit dining room",
   },
   {
-    src: "/images/hotel/reception-lobby/warm-himalayan-shepherd-coffee-moment-2.jpg",
-    alt: "Warm coffee moment at Himalayan Shepherd",
-    title: "Morning coffee",
+    src: "/images/hotel/restaurant/himalayan-shepherd-hotel-interior-1.jpg",
+    alt: "Restaurant interior at Himalayan Shepherd",
+    title: "The restaurant",
   },
   {
     src: "/images/hotel/restaurant/bright-himalayan-shepherd-dining-room-3.jpg",

@@ -21,7 +21,7 @@ export const ROOM_TIERS: RoomTier[] = [
     layout: "King bed · lounge plane · evening light",
     description:
       "Our most generous room: a wide living plane, soft night lighting, and space to stretch after the lake or the trail. Quiet, slow, and unmistakably the suite.",
-    cover: "/images/hotel/exec-suite/warmly-lit-executive-suite-at-night-1.jpg",
+    cover: "/images/hotel/exec-suite/warm-nighttime-executive-suite-5.jpg",
     tags: ["Wi-Fi", "En-suite bathroom", "Wardrobe", "Lounge seating"],
     inquireMessage:
       "Hello Himalayan Shepherd, I would like to inquire about the Executive Suite in Pokhara.",
@@ -47,7 +47,7 @@ export const ROOM_TIERS: RoomTier[] = [
     layout: "Double bed · warm timber · standard floor",
     description:
       "A composed double room with warm night lighting, soft linen, and a calm, uncluttered plan. Made for unhurried evenings after the lake.",
-    cover: "/images/hotel/standard-double/warm-nighttime-standard-room-1.jpg",
+    cover: "/images/hotel/standard-double/warm-nighttime-standard-room-2.jpg",
     tags: ["Wi-Fi", "En-suite bathroom", "Wardrobe", "Double bed"],
     inquireMessage:
       "Hello Himalayan Shepherd, I would like to inquire about a Double Room in Pokhara.",
