@@ -27,5 +27,6 @@ export const NAV_LINKS = [
   { href: "#amenities", label: "Amenities" },
   { href: "#dining", label: "Dining" },
   { href: "#gallery", label: "Gallery" },
+  { href: "#explore", label: "Pokhara" },
   { href: "#contact", label: "Contact" },
 ] as const;

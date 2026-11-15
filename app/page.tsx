@@ -8,6 +8,7 @@ import { Hero } from "@/components/Hero";
 import { StayDock } from "@/components/StayDock";
 import { MountainForecast } from "@/components/MountainForecast";
 import { Navbar } from "@/components/Navbar";
+import { PokharaMap } from "@/components/PokharaMap";
 import { Rooms } from "@/components/Rooms";
 
 export default function HomePage() {
@@ -22,6 +23,7 @@ export default function HomePage() {
         <DayAtTheHouse />
         <Dining />
         <Gallery />
+        <PokharaMap />
         <GettingHere />
         <Footer />
       </main>
