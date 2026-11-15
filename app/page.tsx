@@ -3,6 +3,7 @@ import { DayAtTheHouse } from "@/components/DayAtTheHouse";
 import { Dining } from "@/components/Dining";
 import { Footer } from "@/components/Footer";
 import { Gallery } from "@/components/Gallery";
+import { GettingHere } from "@/components/GettingHere";
 import { Hero } from "@/components/Hero";
 import { StayDock } from "@/components/StayDock";
 import { MountainForecast } from "@/components/MountainForecast";
@@ -21,6 +22,7 @@ export default function HomePage() {
         <DayAtTheHouse />
         <Dining />
         <Gallery />
+        <GettingHere />
         <Footer />
       </main>
       <StayDock />

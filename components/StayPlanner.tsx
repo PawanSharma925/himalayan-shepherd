@@ -9,6 +9,13 @@ import { ROOM_TIERS } from "@/lib/rooms";
 export const PLAN_ROOM_EVENT = "plan-room";
 export const PLAN_DATES_EVENT = "plan-dates";
 
+export const PLAN_ARRIVAL_EVENT = "plan-arrival";
+
+export type PlanArrivalDetail = {
+  note: string;
+  label: string;
+};
+
 export type PlanDatesDetail = {
   checkIn: string;
   checkOut: string;
@@ -35,10 +42,11 @@ export function StayPlanner() {
   const [guests, setGuests] = useState(2);
   const [room, setRoom] = useState("any");
   const [sunrise, setSunrise] = useState("");
+  const [arrival, setArrival] = useState<PlanArrivalDetail | null>(null);
   const [flash, setFlash] = useState(false);
 
   useEffect(() => {
-    setToday(toInput(new Date()));
+    const todayTimer = window.setTimeout(() => setToday(toInput(new Date())), 0);
     let flashTimer = 0;
     const highlight = () => {
       setFlash(true);
@@ -65,12 +73,18 @@ export function StayPlanner() {
       });
       highlight();
     };
+    const onArrival = (event: Event) => {
+      setArrival((event as CustomEvent<PlanArrivalDetail | null>).detail);
+    };
     window.addEventListener(PLAN_ROOM_EVENT, onPlan);
     window.addEventListener(PLAN_DATES_EVENT, onDates);
+    window.addEventListener(PLAN_ARRIVAL_EVENT, onArrival);
     return () => {
+      window.clearTimeout(todayTimer);
       window.clearTimeout(flashTimer);
       window.removeEventListener(PLAN_ROOM_EVENT, onPlan);
       window.removeEventListener(PLAN_DATES_EVENT, onDates);
+      window.removeEventListener(PLAN_ARRIVAL_EVENT, onArrival);
     };
   }, []);
 
@@ -96,8 +110,9 @@ export function StayPlanner() {
     const view = sunrise
       ? ` I'd love to catch the sunrise over the Annapurna on ${pretty(sunrise)}.`
       : "";
-    return `Hello Himalayan Shepherd, is ${room === "any" ? "a room" : `the ${roomName}`} available ${when} for ${who}?${view}`;
-  }, [checkIn, checkOut, guests, nights, room, sunrise]);
+    const travel = arrival ? ` ${arrival.note}` : "";
+    return `Hello Himalayan Shepherd, is ${room === "any" ? "a room" : `the ${roomName}`} available ${when} for ${who}?${view}${travel}`;
+  }, [arrival, checkIn, checkOut, guests, nights, room, sunrise]);
 
   useEffect(() => {
     const short = (value: string) => pretty(value).replace(/ \d{4}$/, "");
@@ -111,8 +126,13 @@ export function StayPlanner() {
     ];
     const roomName = ROOM_TIERS.find((tier) => tier.id === room)?.name;
     if (roomName) summary.push(roomName);
-    planStore.set({ message, summary, hasPlan: Boolean(checkIn) || room !== "any" });
-  }, [message, checkIn, checkOut, nights, guests, room]);
+    if (arrival) summary.push(arrival.label);
+    planStore.set({
+      message,
+      summary,
+      hasPlan: Boolean(checkIn) || room !== "any" || arrival !== null,
+    });
+  }, [arrival, message, checkIn, checkOut, nights, guests, room]);
 
   const field =
     "w-full rounded-xl border border-white/15 bg-white/[0.06] px-3 py-2.5 text-sm text-white outline-none transition focus:border-gold [color-scheme:dark]";
