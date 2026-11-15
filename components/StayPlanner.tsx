@@ -100,8 +100,19 @@ export function StayPlanner() {
   }, [checkIn, checkOut, guests, nights, room, sunrise]);
 
   useEffect(() => {
-    planStore.set(message);
-  }, [message]);
+    const short = (value: string) => pretty(value).replace(/ \d{4}$/, "");
+    const summary = [
+      checkIn && nights
+        ? `${short(checkIn)} → ${short(checkOut)} · ${nights} ${nights === 1 ? "night" : "nights"}`
+        : checkIn
+          ? `From ${short(checkIn)}`
+          : "Flexible dates",
+      `${guests} ${guests === 1 ? "guest" : "guests"}`,
+    ];
+    const roomName = ROOM_TIERS.find((tier) => tier.id === room)?.name;
+    if (roomName) summary.push(roomName);
+    planStore.set({ message, summary, hasPlan: Boolean(checkIn) || room !== "any" });
+  }, [message, checkIn, checkOut, nights, guests, room]);
 
   const field =
     "w-full rounded-xl border border-white/15 bg-white/[0.06] px-3 py-2.5 text-sm text-white outline-none transition focus:border-gold [color-scheme:dark]";

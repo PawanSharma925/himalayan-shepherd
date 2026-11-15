@@ -14,7 +14,11 @@ const pokharaTime = () =>
   });
 
 export function MessageTheHouse() {
-  const planned = useSyncExternalStore(planStore.subscribe, planStore.get, planStore.getServer);
+  const planned = useSyncExternalStore(
+    planStore.subscribe,
+    planStore.get,
+    planStore.getServer,
+  ).message;
   const [edited, setEdited] = useState<string | null>(null);
   const [time, setTime] = useState("");
   const text = edited ?? planned;

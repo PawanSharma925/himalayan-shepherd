@@ -1,14 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { Menu, X } from "lucide-react";
 import { HOTEL, NAV_LINKS } from "@/lib/hotel";
+import { planStore } from "@/lib/planStore";
 import { WhatsAppButton } from "./WhatsAppButton";
 import { SmartImage } from "./SmartImage";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const plan = useSyncExternalStore(planStore.subscribe, planStore.get, planStore.getServer);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -71,7 +73,7 @@ export function Navbar() {
         </nav>
 
         <div className="hidden md:block">
-          <WhatsAppButton label="WhatsApp inquiry" />
+          <WhatsAppButton label="WhatsApp inquiry" message={plan.message} />
         </div>
 
         <button
@@ -97,7 +99,7 @@ export function Navbar() {
                 {link.label}
               </a>
             ))}
-            <WhatsAppButton className="mt-2 w-full" />
+            <WhatsAppButton className="mt-2 w-full" message={plan.message} />
           </div>
         </div>
       ) : null}
