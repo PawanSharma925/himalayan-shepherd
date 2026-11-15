@@ -110,95 +110,272 @@ const route = (place: Place) => {
   return `M${HOUSE.x} ${HOUSE.y} Q${midX} ${midY} ${place.x} ${place.y}`;
 };
 
+const PAPER = "#f1e7d3";
+const INK = "#2e261d";
+const WATER = "#b7cdc6";
+const WATER_INK = "#4f6f6d";
+export const ROUTE_RED = "#a8432a";
+
+const SKYLINE = 150;
+const PEAKS = [
+  { x: 252, y: 54, w: 78 },
+  { x: 628, y: 46, w: 74 },
+  { x: 470, y: 22, w: 50 },
+  { x: 560, y: 66, w: 58 },
+  { x: 180, y: 86, w: 60 },
+  { x: 726, y: 80, w: 66 },
+  { x: 354, y: 94, w: 62 },
+  { x: 100, y: 104, w: 64 },
+  { x: 30, y: 118, w: 52 },
+];
+
+function peakShape({ x, y, w }: (typeof PEAKS)[number]) {
+  const h = SKYLINE - y;
+  const shoulder = { x: x + w * 0.32, y: y + h * 0.34 };
+  const outline = `M${x - w} ${SKYLINE} L${x - w * 0.48} ${y + h * 0.42} L${x - w * 0.18} ${y + h * 0.16} L${x} ${y} L${shoulder.x} ${shoulder.y} L${x + w} ${SKYLINE}`;
+  const flank = (hx: number) =>
+    hx <= shoulder.x
+      ? y + ((hx - x) / (shoulder.x - x)) * (shoulder.y - y)
+      : shoulder.y + ((hx - shoulder.x) / (x + w - shoulder.x)) * (SKYLINE - shoulder.y);
+  const hatch: string[] = [];
+  for (let hx = x + 3; hx < x + w - 3; hx += 4.2) {
+    const top = flank(hx) + 1.5;
+    const length = Math.min(SKYLINE - top - 2, 18 + (hx - x) * 0.55);
+    if (length > 2) hatch.push(`M${hx.toFixed(1)} ${top.toFixed(1)} v${length.toFixed(1)}`);
+  }
+  const snow = `M${x - w * 0.3} ${y + h * 0.3} l${w * 0.08} ${h * 0.05} l${w * 0.07} ${-h * 0.06} l${w * 0.08} ${h * 0.07} l${w * 0.07} ${-h * 0.05}`;
+  return { outline, hatch: hatch.join(" "), snow };
+}
+
+const TREES = [
+  [168, 238], [180, 230], [192, 241], [206, 228], [214, 244], [176, 252], [262, 224], [276, 232],
+  [318, 236], [330, 246], [304, 226], [196, 258], [236, 452], [250, 442], [262, 458], [276, 446],
+  [352, 440], [366, 452], [380, 444], [392, 458], [244, 466], [60, 300], [72, 292], [84, 304],
+  [48, 316], [66, 420], [80, 410], [94, 424], [700, 240], [714, 230], [728, 244], [742, 236],
+  [690, 400], [704, 412], [718, 398],
+];
+
+const BLOCKS = [
+  [440, 296], [452, 302], [468, 298], [482, 306], [436, 318], [474, 318], [488, 322], [444, 344],
+  [470, 342], [486, 340], [452, 356], [498, 296], [512, 334], [528, 344], [544, 336], [520, 360],
+  [538, 372], [556, 356], [570, 366], [548, 388], [528, 392], [566, 392], [580, 380], [554, 410],
+  [540, 424], [574, 422], [586, 404], [518, 408],
+];
+
+const LAKE =
+  "M108 334 C140 300 206 304 248 318 C286 330 318 298 360 304 C400 310 428 324 430 350 C432 378 400 390 364 382 C328 374 300 398 258 394 C212 390 178 374 146 372 C112 370 92 352 108 334 Z";
+const BEGNAS =
+  "M690 306 C704 292 738 294 752 306 C764 318 750 336 728 336 C704 336 680 320 690 306 Z";
+const SARANGKOT =
+  "M140 252 C158 214 210 196 262 202 C306 206 344 226 352 252 C338 266 300 270 258 266 C214 263 168 272 140 252 Z";
+const PAGODA_RIDGE =
+  "M196 454 C224 426 288 418 342 426 C392 434 424 446 436 464 C404 482 340 486 288 482 C238 478 206 472 196 454 Z";
+
+const contours = (d: string, cx: number, cy: number, key: string) =>
+  [0.66, 0.36].map((s) => (
+    <path
+      key={`${key}${s}`}
+      d={d}
+      transform={`translate(${cx} ${cy}) scale(${s}) translate(${-cx} ${-cy})`}
+      fill="none"
+      stroke={INK}
+      strokeOpacity="0.35"
+      strokeWidth={0.7 / s}
+    />
+  ));
+
 function Valley() {
   return (
     <>
       <defs>
-        <linearGradient id="snow" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#f6efe3" stopOpacity="0.55" />
-          <stop offset="0.55" stopColor="#f6efe3" stopOpacity="0.08" />
-          <stop offset="1" stopColor="#f6efe3" stopOpacity="0" />
-        </linearGradient>
-        <linearGradient id="water" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#7fa6ad" stopOpacity="0.45" />
-          <stop offset="1" stopColor="#4d7480" stopOpacity="0.3" />
-        </linearGradient>
-        <radialGradient id="glow">
-          <stop offset="0" stopColor="#b8925a" stopOpacity="0.35" />
-          <stop offset="1" stopColor="#b8925a" stopOpacity="0" />
+        <filter id="map-rough" x="-5%" y="-5%" width="110%" height="110%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="7" />
+          <feDisplacementMap in="SourceGraphic" scale="2.6" />
+        </filter>
+        <filter id="map-grain">
+          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="4" stitchTiles="stitch" />
+          <feColorMatrix values="0 0 0 0 0.32  0 0 0 0 0.25  0 0 0 0 0.16  0 0 0 0.11 0" />
+        </filter>
+        <radialGradient id="map-age" cx="50%" cy="48%" r="70%">
+          <stop offset="0.6" stopColor="#d9c39b" stopOpacity="0" />
+          <stop offset="1" stopColor="#c9ac7c" stopOpacity="0.45" />
         </radialGradient>
+        <pattern id="map-ripple" width="26" height="9" patternUnits="userSpaceOnUse">
+          <path d="M2 6 q4 -4 8 0 t8 0" fill="none" stroke={WATER_INK} strokeOpacity="0.4" strokeWidth="0.7" />
+        </pattern>
+        <path id="map-lake-label" d="M112 352 C150 364 210 372 268 364" />
+        <path id="map-seti-label" d="M620 200 C612 232 628 262 618 300" />
       </defs>
 
-      <path
-        d="M0 158 L48 118 L96 132 L150 84 L196 106 L248 50 L292 96 L340 82 L392 108 L436 70 L470 14 L492 56 L528 78 L572 38 L622 70 L676 52 L728 92 L800 68 L800 190 L0 190 Z"
-        fill="url(#snow)"
-        stroke="#f6efe3"
-        strokeOpacity="0.5"
-        strokeWidth="1.2"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M0 196 C80 170 140 200 210 182 C280 164 340 196 420 178 C500 160 560 194 640 176 C700 164 760 186 800 176"
-        fill="none"
-        stroke="#f6efe3"
-        strokeOpacity="0.14"
-      />
-      <text x="248" y="40" textAnchor="middle" className="fill-cream/55 font-serif" fontSize="15">
-        Annapurna South
-      </text>
-      <text x="498" y="26" className="fill-cream/70 font-serif italic" fontSize="16">
-        Machhapuchhre
-      </text>
-      <text x="690" y="40" textAnchor="middle" className="fill-cream/55 font-serif" fontSize="15">
-        Annapurna II &amp; IV
-      </text>
+      <rect width="800" height="560" fill={PAPER} />
 
-      {[90, 62, 36].map((r) => (
-        <ellipse key={`s${r}`} cx="252" cy="236" rx={r * 1.5} ry={r * 0.7} fill="none" stroke="#f6efe3" strokeOpacity="0.07" />
-      ))}
-      {[70, 46, 24].map((r) => (
-        <ellipse key={`p${r}`} cx="316" cy="452" rx={r * 1.6} ry={r * 0.55} fill="none" stroke="#f6efe3" strokeOpacity="0.07" />
-      ))}
+      <g filter="url(#map-rough)" strokeLinecap="round" strokeLinejoin="round">
+        {PEAKS.map((peak) => {
+          const { outline, hatch, snow } = peakShape(peak);
+          return (
+            <g key={peak.x}>
+              <path d={`${outline} Z`} fill={PAPER} stroke="none" />
+              <path d={hatch} stroke={INK} strokeOpacity="0.55" strokeWidth="0.6" />
+              <path d={outline} fill="none" stroke={INK} strokeWidth="1.15" />
+              <path d={snow} fill="none" stroke={INK} strokeOpacity="0.5" strokeWidth="0.7" />
+            </g>
+          );
+        })}
+        <path
+          d="M0 166 C40 150 82 160 122 152 C170 142 212 170 262 160 C312 150 352 172 402 162 C452 152 502 176 562 164 C622 152 682 172 742 160 C772 154 790 160 800 158 L800 214 L0 214 Z"
+          fill={PAPER}
+        />
+        <path
+          d="M0 166 C40 150 82 160 122 152 C170 142 212 170 262 160 C312 150 352 172 402 162 C452 152 502 176 562 164 C622 152 682 172 742 160 C772 154 790 160 800 158"
+          fill="none"
+          stroke={INK}
+          strokeWidth="0.9"
+        />
+        {[60, 150, 238, 330, 420, 520, 610, 700, 772].map((x) => (
+          <path key={x} d={`M${x - 14} ${172} q14 -6 28 0`} fill="none" stroke={INK} strokeOpacity="0.4" strokeWidth="0.6" />
+        ))}
 
-      <path
-        d="M108 334 C140 300 206 304 248 318 C286 330 318 298 360 304 C400 310 428 324 430 350 C432 378 400 390 364 382 C328 374 300 398 258 394 C212 390 178 374 146 372 C112 370 92 352 108 334 Z"
-        fill="url(#water)"
-        stroke="#9fc1c6"
-        strokeOpacity="0.45"
-      />
-      <text x="186" y="364" textAnchor="middle" className="fill-cream/45 font-serif italic" fontSize="17" letterSpacing="3">
-        Fewa Lake
-      </text>
-      <path d="M426 366 C444 392 458 414 474 440" fill="none" stroke="#9fc1c6" strokeOpacity="0.4" strokeWidth="1.4" />
-      <path
-        d="M612 186 C596 236 626 282 606 336 C590 384 616 444 598 560"
-        fill="none"
-        stroke="#9fc1c6"
-        strokeOpacity="0.35"
-        strokeWidth="1.6"
-      />
-      <text x="628" y="262" className="fill-cream/35 italic" fontSize="12" letterSpacing="2">
-        Seti
-      </text>
-      <path
-        d="M690 306 C704 292 738 294 752 306 C764 318 750 336 728 336 C704 336 680 320 690 306 Z"
-        fill="url(#water)"
-        stroke="#9fc1c6"
-        strokeOpacity="0.45"
-      />
-      <path d="M470 330 C540 324 610 318 688 314" fill="none" stroke="#f6efe3" strokeOpacity="0.16" strokeDasharray="2 6" />
+        <path d={SARANGKOT} fill="#e7d9bb" stroke={INK} strokeOpacity="0.7" strokeWidth="0.9" />
+        {contours(SARANGKOT, 246, 238, "s")}
+        <path d={PAGODA_RIDGE} fill="#e7d9bb" stroke={INK} strokeOpacity="0.7" strokeWidth="0.9" />
+        {contours(PAGODA_RIDGE, 316, 454, "p")}
 
-      {[
-        [446, 318], [470, 316], [440, 342], [478, 346], [462, 356], [486, 330], [450, 300], [494, 312],
-      ].map(([x, y]) => (
-        <rect key={`${x}-${y}`} x={x} y={y} width="5" height="5" fill="#f6efe3" fillOpacity="0.16" />
-      ))}
-      <circle cx={HOUSE.x} cy={HOUSE.y} r="46" fill="url(#glow)" />
+        {TREES.map(([x, y]) => (
+          <path
+            key={`${x}-${y}`}
+            d={`M${x} ${y - 6} l-3.2 7 h6.4 z M${x} ${y + 1} v2.5`}
+            fill={PAPER}
+            stroke={INK}
+            strokeOpacity="0.7"
+            strokeWidth="0.7"
+          />
+        ))}
 
-      <g transform="translate(748 520)" className="fill-cream/40" fontSize="11">
-        <path d="M0 -26 L5 -12 L0 -15 L-5 -12 Z" fill="#f6efe3" fillOpacity="0.5" />
-        <text y="-30" textAnchor="middle">N</text>
+        <path
+          d="M612 186 C596 236 626 282 606 336 C590 384 616 444 598 560"
+          fill="none"
+          stroke={WATER_INK}
+          strokeWidth="1.8"
+        />
+        <path
+          d="M612 186 C596 236 626 282 606 336 C590 384 616 444 598 560"
+          fill="none"
+          stroke={WATER}
+          strokeWidth="0.7"
+        />
+        <path d="M426 366 C444 392 458 414 474 440" fill="none" stroke={WATER_INK} strokeWidth="1.2" />
+
+        <path d={LAKE} fill={WATER} />
+        <path d={LAKE} fill="url(#map-ripple)" />
+        {[0.93, 0.85].map((s) => (
+          <path
+            key={s}
+            d={LAKE}
+            transform={`translate(270 348) scale(${s}) translate(-270 -348)`}
+            fill="none"
+            stroke={WATER_INK}
+            strokeOpacity="0.45"
+            strokeWidth={0.6 / s}
+          />
+        ))}
+        <path d={LAKE} fill="none" stroke={INK} strokeWidth="1.2" />
+        <path d={BEGNAS} fill={WATER} stroke={INK} strokeWidth="1.1" />
+        <path
+          d={BEGNAS}
+          transform="translate(722 316) scale(0.8) translate(-722 -316)"
+          fill="none"
+          stroke={WATER_INK}
+          strokeOpacity="0.45"
+          strokeWidth="0.7"
+        />
+
+        <path
+          d="M470 330 C520 338 560 350 600 345 C640 340 668 326 688 316"
+          fill="none"
+          stroke={INK}
+          strokeOpacity="0.55"
+          strokeWidth="2.4"
+        />
+        <path
+          d="M470 330 C520 338 560 350 600 345 C640 340 668 326 688 316"
+          fill="none"
+          stroke={PAPER}
+          strokeWidth="1.2"
+        />
+        {BLOCKS.map(([x, y], index) => (
+          <rect
+            key={`${x}-${y}`}
+            x={x}
+            y={y}
+            width={index % 3 ? 6 : 8}
+            height="5"
+            transform={`rotate(${(index % 5) * 6 - 12} ${x} ${y})`}
+            fill={index % 4 ? PAPER : "#d8c7a6"}
+            stroke={INK}
+            strokeOpacity="0.6"
+            strokeWidth="0.6"
+          />
+        ))}
+
+        <rect x="9" y="9" width="782" height="542" fill="none" stroke={INK} strokeWidth="1.4" />
+        <rect x="15" y="15" width="770" height="530" fill="none" stroke={INK} strokeWidth="0.5" />
+
+        <g transform="translate(740 488)">
+          <circle r="24" fill="none" stroke={INK} strokeWidth="0.6" />
+          <circle r="17" fill="none" stroke={INK} strokeOpacity="0.5" strokeWidth="0.5" />
+          <path d="M0 -30 L4.5 -4.5 L0 0 Z M0 30 L-4.5 4.5 L0 0 Z" fill={INK} />
+          <path d="M0 -30 L-4.5 -4.5 L0 0 Z M0 30 L4.5 4.5 L0 0 Z" fill={PAPER} stroke={INK} strokeWidth="0.6" />
+          <path d="M-22 0 L-4 -3.5 L0 0 L-4 3.5 Z M22 0 L4 3.5 L0 0 L4 -3.5 Z" fill={PAPER} stroke={INK} strokeWidth="0.6" />
+        </g>
+
+        <g transform="translate(26 486)">
+          <rect width="196" height="54" fill={PAPER} stroke={INK} strokeWidth="1" />
+          <rect x="4" y="4" width="188" height="46" fill="none" stroke={INK} strokeWidth="0.5" />
+        </g>
       </g>
+
+      <g className="font-serif" fill={INK} stroke={PAPER} strokeWidth="3" strokeLinejoin="round" paintOrder="stroke">
+        <text x="252" y="40" textAnchor="middle" fontSize="13" fontStyle="italic" opacity="0.8">
+          Annapurna South
+        </text>
+        <text x="500" y="22" fontSize="14" fontStyle="italic" opacity="0.85">
+          Machhapuchhre
+        </text>
+        <text x="500" y="36" fontSize="10" letterSpacing="1.5" opacity="0.6">
+          FISHTAIL
+        </text>
+        <text x="628" y="32" textAnchor="middle" fontSize="13" fontStyle="italic" opacity="0.8">
+          Annapurna II
+        </text>
+        <text fontSize="15" fontStyle="italic" letterSpacing="7" fill={WATER_INK}>
+          <textPath href="#map-lake-label" startOffset="50%" textAnchor="middle">
+            Fewa Lake
+          </textPath>
+        </text>
+        <text fontSize="11" fontStyle="italic" letterSpacing="3" fill={WATER_INK}>
+          <textPath href="#map-seti-label" startOffset="50%" textAnchor="middle">
+            Seti River
+          </textPath>
+        </text>
+        <text x="722" y="352" textAnchor="middle" fontSize="11" fontStyle="italic" fill={WATER_INK}>
+          Begnas
+        </text>
+        <text x="556" y="400" textAnchor="middle" fontSize="12" letterSpacing="6" opacity="0.75">
+          POKHARA
+        </text>
+        <text x="740" y="455" textAnchor="middle" fontSize="11">
+          N
+        </text>
+        <text x="124" y="508" textAnchor="middle" fontSize="13" letterSpacing="4">
+          POKHARA VALLEY
+        </text>
+        <text x="124" y="527" textAnchor="middle" fontSize="10.5" fontStyle="italic" opacity="0.7">
+          drawn around the house · not to scale
+        </text>
+      </g>
+
+      <rect width="800" height="560" fill="url(#map-age)" />
+      <rect width="800" height="560" filter="url(#map-grain)" />
     </>
   );
 }
@@ -262,23 +439,34 @@ export function PokharaMap() {
 
         <div className="mt-10 grid gap-8 md:mt-14 lg:grid-cols-[1.3fr_1fr] lg:items-start lg:gap-12">
           <div className="lg:sticky lg:top-28">
-            <div className="relative aspect-[800/560] w-full overflow-hidden rounded-2xl border border-white/10 bg-[#1e1a15] shadow-[0_40px_90px_rgba(0,0,0,0.35)]">
+            <div className="relative aspect-[800/560] w-full overflow-hidden rounded-[3px] bg-[#f1e7d3] shadow-[0_2px_0_rgba(255,255,255,0.08),0_40px_90px_rgba(0,0,0,0.45)]">
               <svg viewBox="0 0 800 560" className="absolute inset-0 h-full w-full" aria-hidden="true">
                 <Valley />
                 <AnimatePresence>
                   {chosen.map((place) => (
-                    <motion.path
-                      key={place.id}
-                      d={route(place)}
-                      fill="none"
-                      className="stroke-gold"
-                      strokeWidth={focus === place.id ? 2.4 : 1.6}
-                      strokeLinecap="round"
-                      initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: 0.9 }}
-                      exit={{ pathLength: 0, opacity: 0 }}
-                      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-                    />
+                    <motion.g key={place.id} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+                      <mask id={`map-reveal-${place.id}`} maskUnits="userSpaceOnUse" x="0" y="0" width="800" height="560">
+                        <motion.path
+                          d={route(place)}
+                          fill="none"
+                          stroke="white"
+                          strokeWidth="8"
+                          strokeLinecap="round"
+                          initial={{ pathLength: 0 }}
+                          animate={{ pathLength: 1 }}
+                          transition={{ duration: 1.1, ease: [0.45, 0, 0.2, 1] }}
+                        />
+                      </mask>
+                      <path
+                        d={route(place)}
+                        fill="none"
+                        stroke={ROUTE_RED}
+                        strokeWidth={focus === place.id ? 2.6 : 1.9}
+                        strokeDasharray="7 5"
+                        strokeLinecap="round"
+                        mask={`url(#map-reveal-${place.id})`}
+                      />
+                    </motion.g>
                   ))}
                 </AnimatePresence>
               </svg>
@@ -287,10 +475,12 @@ export function PokharaMap() {
                 className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2"
                 style={{ left: `${HOUSE.x / 8}%`, top: `${HOUSE.y / 5.6}%` }}
               >
-                <span className="absolute inset-0 animate-ping rounded-full bg-gold/40" />
-                <span className="relative block h-3.5 w-3.5 rounded-full border-2 border-ink bg-gold md:h-4 md:w-4" />
-                <span className="absolute left-1/2 top-full mt-1.5 -translate-x-1/2 whitespace-nowrap rounded-full bg-ink/80 px-2 py-0.5 text-[9px] uppercase tracking-[0.18em] text-gold md:text-[10px]">
-                  The house
+                <svg viewBox="0 0 24 24" className="h-5 w-5 drop-shadow-[0_1px_0_#f1e7d3] md:h-6 md:w-6">
+                  <path d="M3 11 L12 3 L21 11 V21 H3 Z" fill="#b8925a" stroke="#2e261d" strokeWidth="1.6" strokeLinejoin="round" />
+                  <path d="M9.5 21 V15 H14.5 V21" fill="#f1e7d3" stroke="#2e261d" strokeWidth="1.4" />
+                </svg>
+                <span className="absolute left-1 top-full mt-0.5 whitespace-nowrap font-serif text-[9px] uppercase tracking-[0.16em] text-[#2e261d] [text-shadow:0_0_3px_#f1e7d3,0_0_3px_#f1e7d3] md:text-[11px]">
+                  Himalayan Shepherd
                 </span>
               </div>
 
@@ -312,20 +502,20 @@ export function PokharaMap() {
                     style={{ left: `${place.x / 8}%`, top: `${place.y / 5.6}%` }}
                   >
                     <span
-                      className={`grid h-6 w-6 place-items-center rounded-full border text-[11px] font-semibold tabular-nums transition md:h-7 md:w-7 ${
+                      className={`grid h-6 w-6 place-items-center rounded-full border-[1.5px] font-serif text-[13px] font-semibold tabular-nums transition md:h-7 md:w-7 md:text-[15px] ${
                         on
-                          ? "scale-110 border-gold bg-gold text-ink"
+                          ? "scale-110 border-[#2e261d] bg-[#a8432a] text-[#f1e7d3]"
                           : lit
-                            ? "border-gold bg-ink text-gold"
-                            : "border-cream/40 bg-ink/80 text-cream/80"
-                      } group-focus-visible:ring-2 group-focus-visible:ring-gold`}
+                            ? "border-[#a8432a] bg-[#f1e7d3] text-[#a8432a]"
+                            : "border-[#2e261d] bg-[#f1e7d3] text-[#2e261d]"
+                      } group-focus-visible:ring-2 group-focus-visible:ring-[#a8432a]`}
                     >
                       {on ? <Check className="h-3.5 w-3.5" strokeWidth={3} /> : index + 1}
                     </span>
                     <span
-                      className={`pointer-events-none absolute top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full px-2 py-0.5 text-xs transition md:block ${
-                        place.side === "left" ? "right-full mr-0.5" : "left-full ml-0.5"
-                      } ${lit ? "bg-gold/15 text-gold" : "text-cream/60"}`}
+                      className={`pointer-events-none absolute top-1/2 hidden -translate-y-1/2 whitespace-nowrap px-1.5 font-serif text-[14px] italic transition [text-shadow:0_0_3px_#f1e7d3,0_0_3px_#f1e7d3,0_0_3px_#f1e7d3] md:block ${
+                        place.side === "left" ? "right-full" : "left-full"
+                      } ${lit ? "text-[#a8432a]" : "text-[#2e261d]"}`}
                     >
                       {place.name}
                     </span>

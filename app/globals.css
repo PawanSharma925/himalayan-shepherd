@@ -61,7 +61,7 @@ body {
 }
 
 .hero-pan {
-  animation: hero-pan 45s ease-in-out infinite alternate;
+  animation: hero-pan 22s ease-in-out infinite alternate;
   will-change: transform;
 }
 
