@@ -166,18 +166,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "twin-13",
-    src: "/images/hotel/standard-twin/warm-nighttime-glow-in-room-303.jpg",
-    width: 1086,
-    height: 1448,
-    title: "Warm Nighttime Glow in Room 303",
-    alt: "Warm Nighttime Glow in Room 303 at Himalayan Shepherd, Pokhara",
-    category: "twin",
-    group: "Twin Room",
-    featured: false,
-  },
-  {
-    id: "premium-14",
+    id: "premium-13",
     src: "/images/hotel/floor-2-premium/warm-nighttime-hotel-room-glow-5.jpg",
     width: 1086,
     height: 1448,
@@ -188,7 +177,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "premium-15",
+    id: "premium-14",
     src: "/images/hotel/floor-2-premium/warm-nighttime-hotel-room-4.jpg",
     width: 1448,
     height: 1086,
@@ -199,7 +188,7 @@ export const hotelImages: HotelImage[] = [
     featured: true,
   },
   {
-    id: "premium-16",
+    id: "premium-15",
     src: "/images/hotel/floor-2-premium/warmly-lit-hotel-room-at-night-6.jpg",
     width: 1086,
     height: 1448,
@@ -210,7 +199,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "double-17",
+    id: "double-16",
     src: "/images/hotel/standard-double/warm-himalayan-hotel-room-at-night-7.jpg",
     width: 1086,
     height: 1448,
@@ -221,7 +210,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "double-18",
+    id: "double-17",
     src: "/images/hotel/standard-double/warm-himalayan-shepherd-standard-room-4.jpg",
     width: 1086,
     height: 1448,
@@ -232,18 +221,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "double-19",
-    src: "/images/hotel/standard-double/warm-nighttime-himalayan-shepherd-room-6.jpg",
-    width: 1086,
-    height: 1448,
-    title: "Warm Nighttime Himalayan Shepherd Room",
-    alt: "Warm Nighttime Himalayan Shepherd Room at Himalayan Shepherd, Pokhara",
-    category: "double",
-    group: "Double Room",
-    featured: false,
-  },
-  {
-    id: "double-20",
+    id: "double-18",
     src: "/images/hotel/standard-double/warm-nighttime-himalayan-standard-room-3.jpg",
     width: 1448,
     height: 1086,
@@ -254,7 +232,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "double-21",
+    id: "double-19",
     src: "/images/hotel/standard-double/warm-nighttime-standard-room-2.jpg",
     width: 1448,
     height: 1086,
@@ -265,7 +243,7 @@ export const hotelImages: HotelImage[] = [
     featured: true,
   },
   {
-    id: "large-22",
+    id: "large-20",
     src: "/images/hotel/standard-large/unknown-2.jpg",
     width: 910,
     height: 1448,
@@ -276,7 +254,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "large-23",
+    id: "large-21",
     src: "/images/hotel/standard-large/unknown-copy.jpg",
     width: 1448,
     height: 1086,
@@ -287,7 +265,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "large-24",
+    id: "large-22",
     src: "/images/hotel/standard-large/unknown.jpg",
     width: 1448,
     height: 1086,
@@ -298,7 +276,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "large-25",
+    id: "large-23",
     src: "/images/hotel/standard-large/warm-himalayan-shepherd-hotel-room-2.jpg",
     width: 1448,
     height: 1086,
@@ -309,7 +287,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "large-26",
+    id: "large-24",
     src: "/images/hotel/standard-large/warm-nighttime-himalayan-shepherd-hotel-room-1.jpg",
     width: 1448,
     height: 1086,
@@ -320,7 +298,7 @@ export const hotelImages: HotelImage[] = [
     featured: true,
   },
   {
-    id: "twin-27",
+    id: "twin-25",
     src: "/images/hotel/standard-twin/bright-himalayan-shepherd-twin-room-7.jpg",
     width: 1086,
     height: 1448,
@@ -331,7 +309,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "twin-28",
+    id: "twin-26",
     src: "/images/hotel/standard-twin/himalayan-shepherd-twin-room-warmly-retouched-5.jpg",
     width: 1448,
     height: 1086,
@@ -342,18 +320,7 @@ export const hotelImages: HotelImage[] = [
     featured: true,
   },
   {
-    id: "twin-29",
-    src: "/images/hotel/standard-twin/interior-crop-with-cupboard-removed.jpg",
-    width: 1447,
-    height: 1087,
-    title: "Interior Crop with Cupboard Removed",
-    alt: "Interior Crop with Cupboard Removed at Himalayan Shepherd, Pokhara",
-    category: "twin",
-    group: "Twin Room",
-    featured: false,
-  },
-  {
-    id: "twin-30",
+    id: "twin-27",
     src: "/images/hotel/standard-twin/refined-himalayan-shepherd-twin-room-4.jpg",
     width: 1448,
     height: 1086,
@@ -364,18 +331,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "twin-31",
-    src: "/images/hotel/standard-twin/room-303-in-warm-evening-light.jpg",
-    width: 1448,
-    height: 1086,
-    title: "Room 303 in Warm Evening Light",
-    alt: "Room 303 in Warm Evening Light at Himalayan Shepherd, Pokhara",
-    category: "twin",
-    group: "Twin Room",
-    featured: false,
-  },
-  {
-    id: "lobby-32",
+    id: "lobby-28",
     src: "/images/hotel/reception-lobby/reception-area-with-olive-glass.jpg",
     width: 1448,
     height: 1086,
@@ -386,7 +342,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "lobby-33",
+    id: "lobby-29",
     src: "/images/hotel/reception-lobby/warm-lounge-with-blue-seating.jpg",
     width: 1536,
     height: 1024,
@@ -397,7 +353,7 @@ export const hotelImages: HotelImage[] = [
     featured: true,
   },
   {
-    id: "lobby-34",
+    id: "lobby-30",
     src: "/images/hotel/reception-lobby/warm-nighttime-executive-suite-lighting-8.jpg",
     width: 1448,
     height: 1086,
@@ -408,7 +364,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "lobby-35",
+    id: "lobby-31",
     src: "/images/hotel/reception-lobby/waving-receptionist-at-himalayan-shepherd-hotel-1.jpg",
     width: 1536,
     height: 1024,
@@ -419,7 +375,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "restaurant-36",
+    id: "restaurant-32",
     src: "/images/hotel/restaurant/bright-himalayan-shepherd-dining-room-3.jpg",
     width: 1448,
     height: 1086,
@@ -430,7 +386,7 @@ export const hotelImages: HotelImage[] = [
     featured: true,
   },
   {
-    id: "restaurant-37",
+    id: "restaurant-33",
     src: "/images/hotel/restaurant/brightened-dining-room-with-closed-taupe-blinds-5.jpg",
     width: 1448,
     height: 1086,
@@ -441,7 +397,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "restaurant-38",
+    id: "restaurant-34",
     src: "/images/hotel/restaurant/himalayan-shepherd-hotel-interior-1.jpg",
     width: 1536,
     height: 1024,
@@ -452,7 +408,7 @@ export const hotelImages: HotelImage[] = [
     featured: true,
   },
   {
-    id: "restaurant-39",
+    id: "restaurant-35",
     src: "/images/hotel/restaurant/sunlit-himalayan-shepherd-dining-room-2.jpg",
     width: 1448,
     height: 1086,
@@ -463,7 +419,7 @@ export const hotelImages: HotelImage[] = [
     featured: true,
   },
   {
-    id: "restaurant-40",
+    id: "restaurant-36",
     src: "/images/hotel/restaurant/warm-taupe-interior-with-glazed-partition.jpg",
     width: 1448,
     height: 1086,
@@ -474,7 +430,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "sundeck-41",
+    id: "sundeck-37",
     src: "/images/hotel/sundeck/himalayan-shepherd-hotel-terrace-3.jpg",
     width: 1536,
     height: 1024,
@@ -485,7 +441,7 @@ export const hotelImages: HotelImage[] = [
     featured: true,
   },
   {
-    id: "sundeck-42",
+    id: "sundeck-38",
     src: "/images/hotel/sundeck/himalayan-shepherd-outdoor-bbq-amenity-2.jpg",
     width: 1536,
     height: 1024,

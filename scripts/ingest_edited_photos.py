@@ -51,6 +51,18 @@ FOLDER_MAP: list[tuple[str, str, str, str]] = [
     ("Sundeck", "sundeck", "sundeck", "Sundeck"),
 ]
 
+# Near-duplicate room shots — keep one clear view of each scene.
+SKIP_FILES = {
+    # Double Room: same vanity/toilet angle as warm-himalayan-hotel-room-at-night-7.
+    "Standard rooms/Standard Double bed/Warm nighttime Himalayan Shepherd room-6.png",
+    # Twin Room: same two-bed angle as Warmly Retouched-5.
+    "extras/Interior crop with cupboard removed.png",
+    # Twin Room: same desk/TV angle as Refined Twin Room-4.
+    "extras/Room 303 in warm evening light.png",
+    # Twin Room: same bathroom as Bright Twin Room-7.
+    "Floor 2 premium/Warm nighttime glow in Room 303.png",
+}
+
 # Files that sit in the wrong folder relative to what they actually show.
 # Key is path relative to "edited photos" using forward slashes.
 FILE_OVERRIDES: dict[str, tuple[str, str, str]] = {
@@ -199,11 +211,15 @@ def collect_sources() -> list[tuple[Path, str, str, str]]:
         if not folder.exists():
             continue
         key = f"{slug}|{category}|{group}"
-        files = [
-            p
-            for p in folder.iterdir()
-            if p.is_file() and p.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp"}
-        ]
+        files = []
+        for p in folder.iterdir():
+            if not p.is_file() or p.suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp"}:
+                continue
+            rel = p.relative_to(SOURCE).as_posix()
+            if rel in SKIP_FILES:
+                print(f"  skip (near-duplicate): {rel}")
+                continue
+            files.append(p)
         by_folder.setdefault(key, []).extend(files)
 
     # Extras are only taken via FILE_OVERRIDES — never bulk-mapped into premium.
@@ -213,6 +229,9 @@ def collect_sources() -> list[tuple[Path, str, str, str]]:
             if not path.is_file() or path.suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp"}:
                 continue
             rel = path.relative_to(SOURCE).as_posix()
+            if rel in SKIP_FILES:
+                print(f"  skip (near-duplicate): {rel}")
+                continue
             if rel not in FILE_OVERRIDES:
                 print(f"  skip (unmapped extra): {rel}")
                 continue
