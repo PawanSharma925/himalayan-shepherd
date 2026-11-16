@@ -27,6 +27,11 @@ const FILTERS: Filter[] = [
     match: (image) => image.category === "premium",
   },
   {
+    id: "large",
+    label: "Large Rooms",
+    match: (image) => image.category === "large",
+  },
+  {
     id: "double",
     label: "Double Rooms",
     match: (image) => image.category === "double",
@@ -49,7 +54,13 @@ const FILTERS: Filter[] = [
   },
 ];
 
-const ROOM_CATEGORIES: ImageCategory[] = ["exec", "premium", "double", "twin"];
+const ROOM_CATEGORIES: ImageCategory[] = [
+  "exec",
+  "premium",
+  "large",
+  "double",
+  "twin",
+];
 
 const DESKTOP_ROW = 300;
 const CONTAINER = 1280;

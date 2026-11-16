@@ -36,7 +36,7 @@ type Priority = (typeof PRIORITIES)[number]["id"];
 function recommend(who: Traveller | null, want: Priority | null): ImageCategory | null {
   if (who === "friends") return "twin";
   if (!want) return null;
-  return { view: "premium", space: "exec", value: "double" }[want] as ImageCategory;
+  return { view: "premium", space: "large", value: "double" }[want] as ImageCategory;
 }
 
 function photosFor(room: RoomTier): HotelImage[] {
@@ -90,7 +90,7 @@ export function Rooms() {
           <p className="kicker">Stay</p>
           <div className="gold-rule mt-5" />
           <h2 className="mt-6 font-serif text-[2rem] leading-tight text-ink sm:mt-8 sm:text-4xl md:text-5xl">
-            Four distinct rooms. Find yours in two taps.
+            Five distinct rooms. Find yours in two taps.
           </h2>
         </Reveal>
 

@@ -78,10 +78,10 @@ const MOMENTS: Moment[] = [
     title: "A slow afternoon",
     copy: "Back to a room full of soft daylight. Answer a few emails on fast Wi-Fi, or take a long shower and do absolutely nothing.",
     image: {
-      src: "/images/hotel/floor-2-premium/sunlit-hotel-room-naturally-balanced-3.jpg",
+      src: "/images/hotel/floor-2-premium/warm-nighttime-hotel-room-4.jpg",
       width: 1448,
       height: 1086,
-      alt: "A sunlit premium room at Himalayan Shepherd",
+      alt: "A premium room with bed and daybed at Himalayan Shepherd",
     },
     amenities: [
       { icon: Wifi, label: "High-speed Wi-Fi" },

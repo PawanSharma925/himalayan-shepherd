@@ -21,14 +21,7 @@ MIN_SHARPNESS = 450
 FOLDER_MAP: list[tuple[str, str, str, str]] = [
     ("View", "view", "view", "Views"),
     ("exec suite", "exec-suite", "exec", "Executive Suite"),
-    (
-        "Standard rooms/Floor 3 lobby",
-        "exec-suite",
-        "exec",
-        "Executive Suite",
-    ),
     ("Floor 2 premium", "floor-2-premium", "premium", "Premium Room"),
-    ("extras", "floor-2-premium", "premium", "Premium Room"),
     (
         "Standard rooms/Standard Double bed",
         "standard-double",
@@ -37,9 +30,9 @@ FOLDER_MAP: list[tuple[str, str, str, str]] = [
     ),
     (
         "Standard rooms/Standard Large rooms",
-        "standard-double",
-        "double",
-        "Double Room",
+        "standard-large",
+        "large",
+        "Large Room",
     ),
     (
         "Standard rooms/Standard Single bed room",
@@ -47,26 +40,84 @@ FOLDER_MAP: list[tuple[str, str, str, str]] = [
         "twin",
         "Twin Room",
     ),
+    (
+        "Standard rooms/Floor 3 lobby",
+        "reception-lobby",
+        "lobby",
+        "Reception & Lobby",
+    ),
     ("Reception lobby", "reception-lobby", "lobby", "Reception & Lobby"),
     ("Restaurant", "restaurant", "restaurant", "Restaurant"),
     ("Sundeck", "sundeck", "sundeck", "Sundeck"),
 ]
 
+# Files that sit in the wrong folder relative to what they actually show.
+# Key is path relative to "edited photos" using forward slashes.
+FILE_OVERRIDES: dict[str, tuple[str, str, str]] = {
+    # Floor 2 lounge by door 202 — property lookbook, not a bedroom.
+    "Floor 2 premium/Bright hotel room, clear views-1.png": (
+        "reception-lobby",
+        "lobby",
+        "Reception & Lobby",
+    ),
+    "Floor 2 premium/Sunlit hotel room, clear mountain view-2.png": (
+        "reception-lobby",
+        "lobby",
+        "Reception & Lobby",
+    ),
+    "Floor 2 premium/Sunlit hotel room, naturally balanced-3.png": (
+        "reception-lobby",
+        "lobby",
+        "Reception & Lobby",
+    ),
+    # Room 303 is a twin layout (two singles), not Floor 2 Premium.
+    "Floor 2 premium/Warm nighttime glow in Room 303.png": (
+        "standard-twin",
+        "twin",
+        "Twin Room",
+    ),
+    "extras/Room 303 in warm evening light.png": (
+        "standard-twin",
+        "twin",
+        "Twin Room",
+    ),
+    "extras/Warmly lit hotel room 303.png": (
+        "standard-twin",
+        "twin",
+        "Twin Room",
+    ),
+    "extras/Interior crop with cupboard removed.png": (
+        "standard-twin",
+        "twin",
+        "Twin Room",
+    ),
+    # Remaining extras are Floor 2 Premium bedroom / amenity shots.
+    "extras/room.png": ("floor-2-premium", "premium", "Premium Room"),
+    "extras/Warm hotel interior at night-7.png": (
+        "floor-2-premium",
+        "premium",
+        "Premium Room",
+    ),
+    "extras/Warm hotel room at night-3.png": (
+        "floor-2-premium",
+        "premium",
+        "Premium Room",
+    ),
+}
+
 FEATURED_SLUGS = {
     "himalayan-shepherd-02-golden-peak-telephoto",
-    "sunlit-hotel-room-clear-mountain-view-2",
+    "warm-nighttime-executive-suite-5",
+    "warm-nighttime-hotel-room-4",
+    "warm-nighttime-standard-room-2",
+    "warm-nighttime-himalayan-shepherd-hotel-room-1",
+    "himalayan-shepherd-twin-room-warmly-retouched-5",
     "bright-himalayan-shepherd-dining-room-3",
     "himalayan-shepherd-hotel-terrace-3",
-    "warm-lit-executive-suite-at-night-7",
-    "bright-hotel-room-clear-views-1",
     "warm-lounge-with-blue-seating",
     "himalayan-shepherd-hotel-interior-1",
-    "warm-nighttime-hotel-room-glow-5",
-    "warm-nighttime-standard-room-2",
-    "bright-himalayan-shepherd-twin-room-7",
     "sunlit-himalayan-shepherd-dining-room-2",
     "himalayan-shepherd-outdoor-bbq-amenity-2",
-    "warm-himalayan-hotel-room-at-night-7",
 }
 
 UNKNOWN_RE = re.compile(r"^unknown(\s+copy)?([\s\-_]?\d+)?$", re.I)
@@ -82,16 +133,13 @@ def slugify(name: str) -> str:
 
 
 def title_from_stem(stem: str) -> str:
-    # strip trailing -N counters
     cleaned = re.sub(r"-\d+$", "", stem)
     cleaned = cleaned.replace("-", " ").replace("_", " ")
     cleaned = re.sub(r"\s+", " ", cleaned).strip()
-    # Drop leading brand + sequence numbers from View exports
     cleaned = re.sub(r"^himalayan\s+shepherd\s+", "", cleaned, flags=re.I)
     cleaned = re.sub(r"^\d+\s+", "", cleaned)
     cleaned = re.sub(r"\s+hd$", "", cleaned, flags=re.I)
     cleaned = re.sub(r"\s+at himalayan shepherd( hotel)?$", "", cleaned, flags=re.I)
-    # Title-case lightly but keep short words
     words = cleaned.split(" ")
     out: list[str] = []
     for i, w in enumerate(words):
@@ -112,7 +160,6 @@ def is_unknown(path: Path) -> bool:
 
 
 def fit(img: Image.Image) -> Image.Image:
-    # Cap the short edge so panoramas keep their native height.
     w, h = img.size
     shortest = min(w, h)
     if shortest <= MAX_SHORT_EDGE:
@@ -159,30 +206,57 @@ def collect_sources() -> list[tuple[Path, str, str, str]]:
         ]
         by_folder.setdefault(key, []).extend(files)
 
+    # Extras are only taken via FILE_OVERRIDES — never bulk-mapped into premium.
+    extras = SOURCE / "extras"
+    if extras.exists():
+        for path in extras.iterdir():
+            if not path.is_file() or path.suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp"}:
+                continue
+            rel = path.relative_to(SOURCE).as_posix()
+            if rel not in FILE_OVERRIDES:
+                print(f"  skip (unmapped extra): {rel}")
+                continue
+            slug, category, group = FILE_OVERRIDES[rel]
+            key = f"{slug}|{category}|{group}"
+            by_folder.setdefault(key, []).append(path)
+
     results: list[tuple[Path, str, str, str]] = []
     for key, files in by_folder.items():
         slug, category, group = key.split("|", 2)
         named = [p for p in files if not is_unknown(p)]
         unknowns = [p for p in files if is_unknown(p)]
-        # Skip Unknown* when the folder already has clearly named shots
-        keep = named if named else unknowns
-        # Near-duplicate edits share a title; keep only the sharpest one.
-        best: dict[str, tuple[float, Path]] = {}
+        # Large Room has few named exports — keep sharp Unknown* studies too.
+        keep = named + unknowns if (named and category == "large") else (named if named else unknowns)
+        best: dict[str, tuple[float, Path, str, str, str]] = {}
         for path in sorted(keep, key=lambda p: p.name.lower()):
+            rel = path.relative_to(SOURCE).as_posix()
+            out_slug, out_category, out_group = FILE_OVERRIDES.get(
+                rel, (slug, category, group)
+            )
             with Image.open(path) as img:
                 score = sharpness(img.convert("RGB"))
-            if category != "view" and score < MIN_SHARPNESS:
-                print(f"  skip (soft, {score:.0f}): {path.relative_to(SOURCE)}")
+            if out_category != "view" and score < MIN_SHARPNESS:
+                print(f"  skip (soft, {score:.0f}): {rel}")
                 continue
-            title = title_from_stem(path.stem).lower()
-            if title in best and best[title][0] >= score:
-                print(f"  skip (duplicate of sharper shot): {path.relative_to(SOURCE)}")
+            title = (
+                f"{out_group} study {slugify(path.stem)}".lower()
+                if is_unknown(path)
+                else title_from_stem(path.stem).lower()
+            )
+            dedupe_key = f"{out_category}:{title}"
+            if dedupe_key in best and best[dedupe_key][0] >= score:
+                print(f"  skip (duplicate of sharper shot): {rel}")
                 continue
-            if title in best:
-                print(f"  skip (duplicate of sharper shot): {best[title][1].relative_to(SOURCE)}")
-            best[title] = (score, path)
-        for _, path in sorted(best.values(), key=lambda item: item[1].name.lower()):
-            results.append((path, slug, category, group))
+            if dedupe_key in best:
+                print(
+                    f"  skip (duplicate of sharper shot): "
+                    f"{best[dedupe_key][1].relative_to(SOURCE)}"
+                )
+            best[dedupe_key] = (score, path, out_slug, out_category, out_group)
+        for _, path, out_slug, out_category, out_group in sorted(
+            best.values(), key=lambda item: item[1].name.lower()
+        ):
+            results.append((path, out_slug, out_category, out_group))
     return results
 
 
@@ -227,13 +301,14 @@ def main() -> None:
             "  }"
         )
         index += 1
-        print(f"  {src.relative_to(SOURCE)} → {dest.relative_to(ROOT)}")
+        print(f"  {src.relative_to(SOURCE)} → {dest.relative_to(ROOT)} [{category}]")
 
     body = ",\n".join(entries)
     content = f"""export type ImageCategory =
   | "exec"
   | "premium"
   | "double"
+  | "large"
   | "twin"
   | "lobby"
   | "restaurant"
