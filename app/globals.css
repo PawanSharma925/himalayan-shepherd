@@ -40,12 +40,34 @@ body {
   max-width: 100%;
 }
 
-/* iOS date fields have a large intrinsic min-width that blows out 2-col grids. */
+/* iOS Safari date controls have a large intrinsic width; force them to fit. */
 input[type="date"],
 input[type="datetime-local"],
 select {
   min-width: 0;
   max-width: 100%;
+  width: 100%;
+}
+
+input.plan-date {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+}
+
+input.plan-date::-webkit-date-and-time-value {
+  text-align: left;
+  min-width: 0;
+}
+
+input.plan-date::-webkit-datetime-edit {
+  min-width: 0;
+  padding: 0;
+}
+
+input.plan-date::-webkit-calendar-picker-indicator {
+  margin-left: 0.25rem;
+  opacity: 0.7;
 }
 
 ::selection {

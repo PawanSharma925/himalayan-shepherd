@@ -199,81 +199,86 @@ export function StayPlanner() {
           </span>
         ) : null}
       </div>
-      <div className="grid grid-cols-2 gap-2 sm:gap-3">
-        <div className="min-w-0">
-          <label htmlFor="plan-in" className={label}>
-            Check-in
-          </label>
-          <input
-            id="plan-in"
-            type="date"
-            min={today}
-            value={checkIn}
-            onChange={(event) => {
-              setCheckIn(event.target.value);
-              setSunrise("");
-              if (checkOut && event.target.value >= checkOut) setCheckOut("");
-            }}
-            className={field}
-          />
-        </div>
-        <div className="min-w-0">
-          <label htmlFor="plan-out" className={label}>
-            Check-out
-          </label>
-          <input
-            id="plan-out"
-            type="date"
-            min={checkIn || today}
-            value={checkOut}
-            onChange={(event) => {
-              setCheckOut(event.target.value);
-              setSunrise("");
-            }}
-            className={field}
-          />
-        </div>
-        <div className="min-w-0">
-          <span className={label}>Guests</span>
-          <div className="flex items-center justify-between rounded-xl border border-white/15 bg-white/[0.06] px-2 py-1.5">
-            <button
-              type="button"
-              aria-label="Fewer guests"
-              onClick={() => setGuests((value) => Math.max(1, value - 1))}
-              className="grid h-7 w-7 place-items-center rounded-full text-white/80 hover:bg-white/10"
-            >
-              <Minus className="h-3.5 w-3.5" />
-            </button>
-            <span className="text-sm tabular-nums">{guests}</span>
-            <button
-              type="button"
-              aria-label="More guests"
-              onClick={() => setGuests((value) => Math.min(8, value + 1))}
-              className="grid h-7 w-7 place-items-center rounded-full text-white/80 hover:bg-white/10"
-            >
-              <Plus className="h-3.5 w-3.5" />
-            </button>
+      <div className="flex flex-col gap-2 sm:gap-3">
+        {/* iOS Safari date controls won't shrink in a 2-col grid — stack on small screens. */}
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3">
+          <div className="min-w-0 overflow-hidden">
+            <label htmlFor="plan-in" className={label}>
+              Check-in
+            </label>
+            <input
+              id="plan-in"
+              type="date"
+              min={today}
+              value={checkIn}
+              onChange={(event) => {
+                setCheckIn(event.target.value);
+                setSunrise("");
+                if (checkOut && event.target.value >= checkOut) setCheckOut("");
+              }}
+              className={`${field} plan-date`}
+            />
+          </div>
+          <div className="min-w-0 overflow-hidden">
+            <label htmlFor="plan-out" className={label}>
+              Check-out
+            </label>
+            <input
+              id="plan-out"
+              type="date"
+              min={checkIn || today}
+              value={checkOut}
+              onChange={(event) => {
+                setCheckOut(event.target.value);
+                setSunrise("");
+              }}
+              className={`${field} plan-date`}
+            />
           </div>
         </div>
-        <div className="min-w-0">
-          <label htmlFor="plan-room" className={label}>
-            Room
-          </label>
-          <select
-            id="plan-room"
-            value={room}
-            onChange={(event) => setRoom(event.target.value)}
-            className={`${field} appearance-none`}
-          >
-            <option value="any" className="text-ink">
-              Any room
-            </option>
-            {ROOM_TIERS.map((tier) => (
-              <option key={tier.id} value={tier.id} className="text-ink">
-                {tier.name}
+        <div className="grid grid-cols-2 gap-2 sm:gap-3">
+          <div className="min-w-0">
+            <span className={label}>Guests</span>
+            <div className="flex items-center justify-between rounded-xl border border-white/15 bg-white/[0.06] px-2 py-1.5">
+              <button
+                type="button"
+                aria-label="Fewer guests"
+                onClick={() => setGuests((value) => Math.max(1, value - 1))}
+                className="grid h-7 w-7 place-items-center rounded-full text-white/80 hover:bg-white/10"
+              >
+                <Minus className="h-3.5 w-3.5" />
+              </button>
+              <span className="text-sm tabular-nums">{guests}</span>
+              <button
+                type="button"
+                aria-label="More guests"
+                onClick={() => setGuests((value) => Math.min(8, value + 1))}
+                className="grid h-7 w-7 place-items-center rounded-full text-white/80 hover:bg-white/10"
+              >
+                <Plus className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          </div>
+          <div className="min-w-0">
+            <label htmlFor="plan-room" className={label}>
+              Room
+            </label>
+            <select
+              id="plan-room"
+              value={room}
+              onChange={(event) => setRoom(event.target.value)}
+              className={`${field} appearance-none`}
+            >
+              <option value="any" className="text-ink">
+                Any room
               </option>
-            ))}
-          </select>
+              {ROOM_TIERS.map((tier) => (
+                <option key={tier.id} value={tier.id} className="text-ink">
+                  {tier.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
       <button
