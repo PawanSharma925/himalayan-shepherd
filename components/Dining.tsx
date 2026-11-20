@@ -47,9 +47,9 @@ export function Dining() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid gap-3 sm:mt-16 sm:grid-cols-3 sm:gap-4">
+        <div className="mt-12 grid min-w-0 gap-3 sm:mt-16 sm:grid-cols-3 sm:gap-4">
           {DINING.map((item, index) => (
-            <Reveal key={item.src} delay={index * 0.08} className={item.className}>
+            <Reveal key={item.src} delay={index * 0.08} className={`min-w-0 ${item.className}`}>
               <div className="group relative h-full min-h-[14rem] overflow-hidden">
                 <SmartImage
                   src={item.src}

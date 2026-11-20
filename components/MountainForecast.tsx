@@ -138,14 +138,16 @@ export function MountainForecast() {
               your stay around it.
             </p>
           </div>
-          <p className="flex shrink-0 items-center gap-2 whitespace-nowrap text-sm text-white/60">
-            <span className="relative flex h-2 w-2">
+          <p className="flex max-w-full items-center gap-2 text-sm text-white/60 md:shrink-0">
+            <span className="relative flex h-2 w-2 shrink-0">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold opacity-60" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-gold" />
             </span>
-            {state.status === "ready"
-              ? `Now in Lakeside · ${state.temp}°C · ${state.now}`
-              : "Checking the sky over Lakeside…"}
+            <span className="min-w-0 break-words">
+              {state.status === "ready"
+                ? `Now in Lakeside · ${state.temp}°C · ${state.now}`
+                : "Checking the sky over Lakeside…"}
+            </span>
           </p>
         </div>
 

@@ -15,7 +15,7 @@ export default function HomePage() {
   return (
     <>
       <Navbar />
-      <main className="pb-28 md:pb-0">
+      <main className="max-w-[100vw] overflow-x-clip pb-28 md:pb-0">
         <Hero />
         <About />
         <Rooms />

@@ -174,7 +174,7 @@ export function StayPlanner() {
   }, [arrival, wishes, message, checkIn, checkOut, nights, guests, room, sunrise, restored]);
 
   const field =
-    "w-full rounded-xl border border-white/15 bg-white/[0.06] px-3 py-2.5 text-sm text-white outline-none transition focus:border-gold [color-scheme:dark]";
+    "box-border w-full min-w-0 max-w-full rounded-xl border border-white/15 bg-white/[0.06] px-2.5 py-2.5 text-[13px] text-white outline-none transition focus:border-gold sm:px-3 sm:text-sm [color-scheme:dark]";
   const label = "mb-1.5 block text-[10px] uppercase tracking-[0.22em] text-white/55";
 
   return (
@@ -185,22 +185,22 @@ export function StayPlanner() {
         event.preventDefault();
         window.open(whatsappHref(message), "_blank", "noopener,noreferrer");
       }}
-      className={`rounded-2xl border bg-white/[0.04] p-4 shadow-[0_30px_80px_rgba(0,0,0,0.35)] backdrop-blur-sm transition duration-500 md:p-5 ${
+      className={`w-full max-w-full overflow-hidden rounded-2xl border bg-white/[0.04] p-3.5 shadow-[0_30px_80px_rgba(0,0,0,0.35)] backdrop-blur-sm transition duration-500 sm:p-4 md:p-5 ${
         flash ? "border-gold ring-4 ring-gold/25" : "border-white/10"
       }`}
     >
-      <div className="mb-4 flex items-center gap-2 text-sm text-white/80">
-        <CalendarDays className="h-4 w-4 text-gold" />
-        Plan your stay
+      <div className="mb-4 flex flex-wrap items-center gap-2 text-sm text-white/80">
+        <CalendarDays className="h-4 w-4 shrink-0 text-gold" />
+        <span className="min-w-0">Plan your stay</span>
         {sunrise ? (
-          <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-gold/15 px-2.5 py-1 text-[11px] text-gold">
-            <Sunrise className="h-3 w-3" />
-            Sunrise {pretty(sunrise).replace(/ \d{4}$/, "")}
+          <span className="ml-auto inline-flex max-w-full items-center gap-1 rounded-full bg-gold/15 px-2.5 py-1 text-[11px] text-gold">
+            <Sunrise className="h-3 w-3 shrink-0" />
+            <span className="truncate">Sunrise {pretty(sunrise).replace(/ \d{4}$/, "")}</span>
           </span>
         ) : null}
       </div>
-      <div className="grid grid-cols-2 gap-3">
-        <div>
+      <div className="grid grid-cols-2 gap-2 sm:gap-3">
+        <div className="min-w-0">
           <label htmlFor="plan-in" className={label}>
             Check-in
           </label>
@@ -217,7 +217,7 @@ export function StayPlanner() {
             className={field}
           />
         </div>
-        <div>
+        <div className="min-w-0">
           <label htmlFor="plan-out" className={label}>
             Check-out
           </label>
@@ -233,7 +233,7 @@ export function StayPlanner() {
             className={field}
           />
         </div>
-        <div>
+        <div className="min-w-0">
           <span className={label}>Guests</span>
           <div className="flex items-center justify-between rounded-xl border border-white/15 bg-white/[0.06] px-2 py-1.5">
             <button
@@ -255,7 +255,7 @@ export function StayPlanner() {
             </button>
           </div>
         </div>
-        <div>
+        <div className="min-w-0">
           <label htmlFor="plan-room" className={label}>
             Room
           </label>

@@ -69,6 +69,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.55 }}
+          className="min-w-0 w-full"
         >
           <StayPlanner />
         </motion.div>
