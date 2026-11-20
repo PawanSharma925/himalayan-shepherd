@@ -201,7 +201,7 @@ export function MountainForecast() {
         </div>
         <p className="mt-4 text-[11px] text-white/40">
           Forecast by Open-Meteo, refreshed on every visit. Mountain weather changes fast — the
-          house will tell you what the sky looks like when you message.
+          hotel will tell you what the sky looks like when you message.
         </p>
       </div>
     </section>

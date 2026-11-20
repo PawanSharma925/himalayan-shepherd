@@ -20,8 +20,18 @@ MIN_SHARPNESS = 450
 # (relative path under edited photos, public folder slug, category, group label)
 FOLDER_MAP: list[tuple[str, str, str, str]] = [
     ("View", "view", "view", "Views"),
-    ("exec suite", "exec-suite", "exec", "Executive Suite"),
-    ("Floor 2 premium", "floor-2-premium", "premium", "Premium Room"),
+    (
+        "Floor 2 Large Premium",
+        "floor-2-large-premium",
+        "largePremium",
+        "Large Premium Room",
+    ),
+    (
+        "Floor 2 Premium Room",
+        "floor-2-premium",
+        "premium",
+        "Premium Room",
+    ),
     (
         "Standard rooms/Standard Double bed",
         "standard-double",
@@ -40,95 +50,97 @@ FOLDER_MAP: list[tuple[str, str, str, str]] = [
         "twin",
         "Twin Room",
     ),
+    ("Dining Room", "dining", "dining", "Dining Room"),
     (
-        "Standard rooms/Floor 3 lobby",
-        "reception-lobby",
-        "lobby",
-        "Reception & Lobby",
+        "Coffee & Drinks Lounge",
+        "drinks-lounge",
+        "drinksLounge",
+        "Coffee & Drinks Lounge",
     ),
-    ("Reception lobby", "reception-lobby", "lobby", "Reception & Lobby"),
-    ("Restaurant", "restaurant", "restaurant", "Restaurant"),
-    ("Sundeck", "sundeck", "sundeck", "Sundeck"),
+    ("Sundeck", "rooftop", "rooftop", "Rooftop Terrace"),
 ]
 
-# Near-duplicate room shots — keep one clear view of each scene.
+# Near-duplicate / misplaced / ignored sources.
 SKIP_FILES = {
-    # Double Room: same vanity/toilet angle as warm-himalayan-hotel-room-at-night-7.
+    # Twin layout wrongly sitting in Large Premium.
+    "Floor 2 Large Premium/Warm nighttime glow in Room 303.png",
+    # Double Room near-duplicate vanity.
     "Standard rooms/Standard Double bed/Warm nighttime Himalayan Shepherd room-6.png",
-    # Twin Room: same two-bed angle as Warmly Retouched-5.
-    "extras/Interior crop with cupboard removed.png",
-    # Twin Room: same desk/TV angle as Refined Twin Room-4.
-    "extras/Room 303 in warm evening light.png",
-    # Twin Room: same bathroom as Bright Twin Room-7.
-    "Floor 2 premium/Warm nighttime glow in Room 303.png",
+    # Same Floor 3 lounge already taken from Standard Large.
+    "Standard rooms/Standard Double bed/Floor 3 lounge.png",
+    # Lounge shots duplicated into Premium Room folder (kept from Large Premium).
+    "Floor 2 Premium Room/Sunlit hotel room, clear mountain view-2.png",
+    "Floor 2 Premium Room/Sunlit hotel room, naturally balanced-3.png",
+    # Twin near-dups still present under Standard Single.
+    "Standard rooms/Standard Single bed room/Himalayan Shepherd Twin Room at Dusk-6.png",
 }
 
-# Files that sit in the wrong folder relative to what they actually show.
-# Key is path relative to "edited photos" using forward slashes.
+# Always keep these even if soft or Unknown among named siblings.
+FORCE_INCLUDE = {
+    "Coffee & Drinks Lounge/Warm Himalayan Shepherd coffee moment-2.png",
+    "Sundeck/Unknown-2.png",
+}
+
+# Path → (public slug folder, category, group)
 FILE_OVERRIDES: dict[str, tuple[str, str, str]] = {
-    # Floor 2 lounge by door 202 — property lookbook, not a bedroom.
-    "Floor 2 premium/Bright hotel room, clear views-1.png": (
+    # Floor 2 shared lounge (door 202) — stay with Large Premium + Photobook lounge tab.
+    "Floor 2 Large Premium/Bright hotel room, clear views-1.png": (
+        "floor-2-lounge",
+        "largePremium",
+        "Floor 2 Premium Room Lounge",
+    ),
+    "Floor 2 Large Premium/Sunlit hotel room, clear mountain view-2.png": (
+        "floor-2-lounge",
+        "largePremium",
+        "Floor 2 Premium Room Lounge",
+    ),
+    "Floor 2 Large Premium/Sunlit hotel room, naturally balanced-3.png": (
+        "floor-2-lounge",
+        "largePremium",
+        "Floor 2 Premium Room Lounge",
+    ),
+    # Floor 3 standard lounge (file lives under standard room folders).
+    "Standard rooms/Standard Large rooms/Floor 3 lounge.png": (
+        "floor-3-lounge",
+        "floor3Lounge",
+        "Floor 3 Standard Room Lounge",
+    ),
+    "Standard rooms/Standard Double bed/Floor 3 lounge.png": (
+        "floor-3-lounge",
+        "floor3Lounge",
+        "Floor 3 Standard Room Lounge",
+    ),
+    # Sundeck split: outdoor dining terrace vs rooftop.
+    "Sundeck/Himalayan Shepherd Hotel Terrace-3.png": (
+        "dining-terrace",
+        "diningTerrace",
+        "Dining Room Terrace",
+    ),
+    "Sundeck/Unknown-2.png": (
+        "rooftop",
+        "rooftop",
+        "Rooftop Terrace",
+    ),
+    # Receptionist for About mosaic only.
+    "Reception lobby/Waving receptionist at Himalayan Shepherd hotel-1.png": (
         "reception-lobby",
         "lobby",
-        "Reception & Lobby",
-    ),
-    "Floor 2 premium/Sunlit hotel room, clear mountain view-2.png": (
-        "reception-lobby",
-        "lobby",
-        "Reception & Lobby",
-    ),
-    "Floor 2 premium/Sunlit hotel room, naturally balanced-3.png": (
-        "reception-lobby",
-        "lobby",
-        "Reception & Lobby",
-    ),
-    # Room 303 is a twin layout (two singles), not Floor 2 Premium.
-    "Floor 2 premium/Warm nighttime glow in Room 303.png": (
-        "standard-twin",
-        "twin",
-        "Twin Room",
-    ),
-    "extras/Room 303 in warm evening light.png": (
-        "standard-twin",
-        "twin",
-        "Twin Room",
-    ),
-    "extras/Warmly lit hotel room 303.png": (
-        "standard-twin",
-        "twin",
-        "Twin Room",
-    ),
-    "extras/Interior crop with cupboard removed.png": (
-        "standard-twin",
-        "twin",
-        "Twin Room",
-    ),
-    # Remaining extras are Floor 2 Premium bedroom / amenity shots.
-    "extras/room.png": ("floor-2-premium", "premium", "Premium Room"),
-    "extras/Warm hotel interior at night-7.png": (
-        "floor-2-premium",
-        "premium",
-        "Premium Room",
-    ),
-    "extras/Warm hotel room at night-3.png": (
-        "floor-2-premium",
-        "premium",
-        "Premium Room",
+        "Reception",
     ),
 }
+
+# Categories that keep sharp Unknown* studies (few named exports).
+KEEP_UNKNOWNS = {"large", "largePremium", "premium", "double"}
 
 FEATURED_SLUGS = {
     "himalayan-shepherd-02-golden-peak-telephoto",
-    "warm-nighttime-executive-suite-5",
     "warm-nighttime-hotel-room-4",
-    "warm-nighttime-standard-room-2",
     "warm-nighttime-himalayan-shepherd-hotel-room-1",
+    "warm-nighttime-standard-room-2",
     "himalayan-shepherd-twin-room-warmly-retouched-5",
     "bright-himalayan-shepherd-dining-room-3",
     "himalayan-shepherd-hotel-terrace-3",
     "warm-lounge-with-blue-seating",
-    "himalayan-shepherd-hotel-interior-1",
-    "sunlit-himalayan-shepherd-dining-room-2",
     "himalayan-shepherd-outdoor-bbq-amenity-2",
 }
 
@@ -209,53 +221,67 @@ def collect_sources() -> list[tuple[Path, str, str, str]]:
     for rel, slug, category, group in FOLDER_MAP:
         folder = SOURCE / rel
         if not folder.exists():
+            print(f"  missing folder: {rel}")
             continue
         key = f"{slug}|{category}|{group}"
         files = []
         for p in folder.iterdir():
             if not p.is_file() or p.suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp"}:
                 continue
-            rel = p.relative_to(SOURCE).as_posix()
-            if rel in SKIP_FILES:
-                print(f"  skip (near-duplicate): {rel}")
+            file_rel = p.relative_to(SOURCE).as_posix()
+            if file_rel in SKIP_FILES:
+                print(f"  skip (near-duplicate): {file_rel}")
                 continue
             files.append(p)
         by_folder.setdefault(key, []).extend(files)
 
-    # Extras are only taken via FILE_OVERRIDES — never bulk-mapped into premium.
-    extras = SOURCE / "extras"
-    if extras.exists():
-        for path in extras.iterdir():
-            if not path.is_file() or path.suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp"}:
-                continue
-            rel = path.relative_to(SOURCE).as_posix()
-            if rel in SKIP_FILES:
-                print(f"  skip (near-duplicate): {rel}")
-                continue
-            if rel not in FILE_OVERRIDES:
-                print(f"  skip (unmapped extra): {rel}")
-                continue
-            slug, category, group = FILE_OVERRIDES[rel]
-            key = f"{slug}|{category}|{group}"
-            by_folder.setdefault(key, []).append(path)
+    # One-off files only present via overrides (Reception waving).
+    for rel, (slug, category, group) in FILE_OVERRIDES.items():
+        path = SOURCE / rel
+        if not path.is_file():
+            continue
+        # Already collected from a FOLDER_MAP folder — override applied later.
+        already = any(path in files for files in by_folder.values())
+        if already:
+            continue
+        if rel in SKIP_FILES:
+            continue
+        key = f"{slug}|{category}|{group}"
+        by_folder.setdefault(key, []).append(path)
 
     results: list[tuple[Path, str, str, str]] = []
     for key, files in by_folder.items():
         slug, category, group = key.split("|", 2)
         named = [p for p in files if not is_unknown(p)]
         unknowns = [p for p in files if is_unknown(p)]
-        # Large Room has few named exports — keep sharp Unknown* studies too.
-        keep = named + unknowns if (named and category == "large") else (named if named else unknowns)
+        forced = [
+            p
+            for p in files
+            if p.relative_to(SOURCE).as_posix() in FORCE_INCLUDE
+        ]
+        keep = (
+            named + unknowns
+            if (named and category in KEEP_UNKNOWNS)
+            else (named if named else unknowns)
+        )
+        # Ensure forced Unknown / soft lifestyle shots are not dropped.
+        for path in forced:
+            if path not in keep:
+                keep.append(path)
         best: dict[str, tuple[float, Path, str, str, str]] = {}
         for path in sorted(keep, key=lambda p: p.name.lower()):
-            rel = path.relative_to(SOURCE).as_posix()
+            file_rel = path.relative_to(SOURCE).as_posix()
             out_slug, out_category, out_group = FILE_OVERRIDES.get(
-                rel, (slug, category, group)
+                file_rel, (slug, category, group)
             )
             with Image.open(path) as img:
                 score = sharpness(img.convert("RGB"))
-            if out_category != "view" and score < MIN_SHARPNESS:
-                print(f"  skip (soft, {score:.0f}): {rel}")
+            if (
+                out_category != "view"
+                and score < MIN_SHARPNESS
+                and file_rel not in FORCE_INCLUDE
+            ):
+                print(f"  skip (soft, {score:.0f}): {file_rel}")
                 continue
             title = (
                 f"{out_group} study {slugify(path.stem)}".lower()
@@ -264,7 +290,7 @@ def collect_sources() -> list[tuple[Path, str, str, str]]:
             )
             dedupe_key = f"{out_category}:{title}"
             if dedupe_key in best and best[dedupe_key][0] >= score:
-                print(f"  skip (duplicate of sharper shot): {rel}")
+                print(f"  skip (duplicate of sharper shot): {file_rel}")
                 continue
             if dedupe_key in best:
                 print(
@@ -320,18 +346,21 @@ def main() -> None:
             "  }"
         )
         index += 1
-        print(f"  {src.relative_to(SOURCE)} → {dest.relative_to(ROOT)} [{category}]")
+        print(f"  {src.relative_to(SOURCE)} → {dest.relative_to(ROOT)} [{category}/{group}]")
 
     body = ",\n".join(entries)
     content = f"""export type ImageCategory =
-  | "exec"
+  | "largePremium"
   | "premium"
   | "double"
   | "large"
   | "twin"
+  | "dining"
+  | "diningTerrace"
+  | "drinksLounge"
+  | "rooftop"
+  | "floor3Lounge"
   | "lobby"
-  | "restaurant"
-  | "sundeck"
   | "view";
 
 export type HotelImage = {{
@@ -352,6 +381,9 @@ export const hotelImages: HotelImage[] = [
 
 export const imagesByCategory = (category: ImageCategory) =>
   hotelImages.filter((image) => image.category === category);
+
+export const imagesByGroup = (group: string) =>
+  hotelImages.filter((image) => image.group === group);
 
 export const firstImage = (category: ImageCategory) =>
   imagesByCategory(category)[0];

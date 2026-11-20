@@ -24,9 +24,9 @@ export const whatsappHref = (message?: string) => {
 export const NAV_LINKS = [
   { href: "#about", label: "About" },
   { href: "#rooms", label: "Rooms" },
-  { href: "#amenities", label: "Amenities" },
   { href: "#dining", label: "Dining" },
   { href: "#gallery", label: "Gallery" },
   { href: "#explore", label: "Pokhara" },
+  { href: "#forecast", label: "Live from Pokhara" },
   { href: "#contact", label: "Contact" },
 ] as const;

@@ -204,7 +204,7 @@ export function TripCard() {
                   </h2>
                   <p className="mt-2 text-sm leading-6 text-cream/65">
                     {shared
-                      ? "Here's the plan they made. Change anything you like, or send it straight to the house."
+                      ? "Here's the plan they made. Change anything you like, or send it straight to the Shepherd."
                       : "Share it with whoever you're travelling with — the link opens this exact plan."}
                   </p>
                 </div>
@@ -339,7 +339,7 @@ export function TripCard() {
                 <div className="flex items-center justify-between gap-3 px-5 py-4 sm:px-6">
                   <p className="text-xs leading-5 text-ink-soft">
                     <span className="font-semibold text-ink">Not booked yet.</span> A plan to send to
-                    the house, who reply personally.
+                    the Shepherd, who reply personally.
                   </p>
                   <Ticket className="h-6 w-6 shrink-0 text-gold" strokeWidth={1.5} />
                 </div>
@@ -361,7 +361,7 @@ export function TripCard() {
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-whatsapp px-5 py-3 text-sm font-semibold text-white transition hover:brightness-110"
                 >
                   <MessageCircle className="h-4 w-4" />
-                  Send to the house
+                  Send to the Shepherd
                 </a>
               </div>
               {manual ? (

@@ -45,7 +45,7 @@ export const ROUTES: Route[] = [
     ],
     timeLabel: "Landing around",
     note: (time) =>
-      `We're flying in from Kathmandu${at(time, " and land around")} — could you help us with a taxi to the house?`,
+      `We're flying in from Kathmandu${at(time, " and land around")} — could you help us with a taxi to the hotel?`,
     summary: "Arriving by air",
   },
   {
@@ -61,7 +61,7 @@ export const ROUTES: Route[] = [
     ],
     timeLabel: "Bus arrives around",
     note: (time) =>
-      `We're coming on the tourist bus from Kathmandu${at(time, ", arriving around")} — could you help us get from the bus park to the house?`,
+      `We're coming on the tourist bus from Kathmandu${at(time, ", arriving around")} — could you help us get from the bus park to the hotel?`,
     summary: "Arriving by bus",
   },
   {
@@ -73,11 +73,11 @@ export const ROUTES: Route[] = [
     notes: [
       "Door to door at your own pace, with stops for tea and the view.",
       "Traffic leaving Kathmandu sets the pace — an early start helps.",
-      "Your driver can bring you straight to the house.",
+      "Your driver can bring you straight to the hotel.",
     ],
     timeLabel: "Expected around",
     note: (time) =>
-      `We're driving from Kathmandu${at(time, " and expect to arrive around")}. Is there parking at the house?`,
+      `We're driving from Kathmandu${at(time, " and expect to arrive around")}. Is there parking at the hotel?`,
     summary: "Arriving by car",
   },
   {
@@ -154,7 +154,7 @@ export function GettingHere() {
             <p className="kicker">Getting here</p>
             <div className="gold-rule mt-5" />
             <h2 className="mt-6 font-serif text-[2rem] leading-tight text-ink sm:mt-8 sm:text-4xl md:text-5xl">
-              However you&rsquo;re coming, we&rsquo;ll help you in.
+              Hotel arrival &amp; Check-in, we can assist.
             </h2>
           </div>
           <p className="max-w-xl text-[17px] leading-8 text-ink-soft">

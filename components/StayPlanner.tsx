@@ -284,7 +284,7 @@ export function StayPlanner() {
         {nights ? `Check ${nights} ${nights === 1 ? "night" : "nights"} on WhatsApp` : "Check availability on WhatsApp"}
       </button>
       <p className="mt-3 text-center text-[11px] tracking-wide text-white/50">
-        No booking fees · The house replies personally
+        No booking fees · The Shepherd replies personally
       </p>
     </form>
   );

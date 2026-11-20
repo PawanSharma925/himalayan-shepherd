@@ -17,8 +17,8 @@ const MOSAIC = [
     sizes: "(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 600px",
   },
   {
-    src: "/images/hotel/sundeck/himalayan-shepherd-hotel-terrace-3.jpg",
-    alt: "Sundeck terrace seating at Himalayan Shepherd",
+    src: "/images/hotel/drinks-lounge/warm-lounge-with-blue-seating.jpg",
+    alt: "Coffee and drinks lounge seating at Himalayan Shepherd",
     className: "aspect-[4/3]",
     object: "object-center",
     sizes: "(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 600px",
@@ -30,7 +30,7 @@ export function About() {
     <section id="about" className="bg-paper px-4 py-16 sm:px-5 md:px-8 md:py-32">
       <div className="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-2 lg:gap-20">
         <Reveal>
-          <p className="kicker">The house</p>
+          <p className="kicker">The hotel</p>
           <div className="gold-rule mt-5" />
           <h2 className="mt-6 font-serif text-[2rem] leading-tight text-ink sm:mt-8 sm:text-4xl md:text-5xl">
             A pause between Fewa Lake and the Annapurna trail.
@@ -43,7 +43,7 @@ export function About() {
             </p>
             <p>
               The rooms are timber, linen, and soft light. The sundeck catches
-              late mountain air. Breakfast is unhurried. We keep the house
+              late mountain air. Breakfast is unhurried. We keep the hotel
               personal on purpose: no platforms, no booking engine — just a
               conversation, then a key.
             </p>

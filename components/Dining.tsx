@@ -3,22 +3,22 @@ import { SmartImage } from "./SmartImage";
 
 const DINING = [
   {
-    src: "/images/hotel/restaurant/sunlit-himalayan-shepherd-dining-room-2.jpg",
+    src: "/images/hotel/dining/sunlit-himalayan-shepherd-dining-room-2.jpg",
     alt: "Sunlit dining room at Himalayan Shepherd",
     title: "Sunlit dining room",
   },
   {
-    src: "/images/hotel/restaurant/himalayan-shepherd-hotel-interior-1.jpg",
+    src: "/images/hotel/dining/himalayan-shepherd-hotel-interior-1.jpg",
     alt: "Restaurant interior at Himalayan Shepherd",
     title: "The restaurant",
   },
   {
-    src: "/images/hotel/restaurant/bright-himalayan-shepherd-dining-room-3.jpg",
+    src: "/images/hotel/dining/bright-himalayan-shepherd-dining-room-3.jpg",
     alt: "Bright Himalayan Shepherd dining room",
     title: "The dining court",
   },
   {
-    src: "/images/hotel/restaurant/warm-taupe-interior-with-glazed-partition.jpg",
+    src: "/images/hotel/dining/warm-taupe-interior-with-glazed-partition.jpg",
     alt: "Warm taupe dining interior with glazed partition",
     title: "Taupe interior",
   },

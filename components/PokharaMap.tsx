@@ -68,10 +68,10 @@ export const PLACES: Place[] = [
   },
   {
     id: "falls",
-    name: "Davis Falls & the cave",
+    name: "Devi Falls & the cave",
     when: "Any time · a couple of hours",
     blurb: "A waterfall that disappears underground, and Gupteshwor Cave beneath it.",
-    ask: "Davis Falls and Gupteshwor Cave",
+    ask: "Devi Falls and Gupteshwor Cave",
     halfDays: 1,
     x: 478,
     y: 448,
@@ -370,7 +370,7 @@ function Valley() {
           POKHARA VALLEY
         </text>
         <text x="124" y="527" textAnchor="middle" fontSize="10.5" fontStyle="italic" opacity="0.7">
-          drawn around the house · not to scale
+          drawn around the hotel · not to scale
         </text>
       </g>
 
@@ -607,7 +607,7 @@ export function PokharaMap() {
               ) : (
                 <p className="text-sm leading-6 text-cream/60">
                   Nothing picked yet. Choose a few places and they&rsquo;ll appear in your note to the
-                  house, ready to send with your dates.
+                  hotel, ready to send with your dates.
                 </p>
               )}
             </div>

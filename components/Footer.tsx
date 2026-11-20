@@ -14,7 +14,7 @@ export function Footer() {
           </h2>
           <p className="mt-5 max-w-md text-[17px] leading-8 text-cream/70">
             No booking engine, no platform fees — just a conversation. Your note to
-            the house fills itself in as you plan your stay. Change anything you
+            the hotel fills itself in as you plan your stay. Change anything you
             like, then send it straight to reception.
           </p>
         </div>

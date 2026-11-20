@@ -14,27 +14,28 @@ export type RoomTier = {
 
 export const ROOM_TIERS: RoomTier[] = [
   {
-    id: "exec",
-    name: "Executive Suite",
-    eyebrow: "Flagship suite",
+    id: "largePremium",
+    name: "Large Premium Room",
+    eyebrow: "Floor 2",
     capacity: "2 guests",
-    layout: "King bed · lounge plane · evening light",
+    layout: "King Bed - extra day bed - en suite bathroom",
     description:
-      "Our most generous room: a wide living plane, soft night lighting, and space to stretch after the lake or the trail. Quiet, slow, and unmistakably the suite.",
-    cover: "/images/hotel/exec-suite/warm-nighttime-executive-suite-5.jpg",
-    tags: ["Wi-Fi", "En-suite bathroom", "Wardrobe", "Lounge seating"],
+      "Our most generous Floor 2 room: a king bed, an extra day bed, a large wardrobe, and access to the shared lounge just outside. Quiet, slow, and made for unhurried evenings after the lake or the trail.",
+    cover: "/images/hotel/floor-2-large-premium/warm-nighttime-hotel-room-4.jpg",
+    tags: ["Wi-Fi", "En-suite bathroom", "Large wardrobe", "Shared lounge"],
     inquireMessage:
-      "Hello Himalayan Shepherd, I would like to inquire about the Executive Suite in Pokhara.",
+      "Hello Himalayan Shepherd, I would like to inquire about the Large Premium Room on Floor 2 in Pokhara.",
   },
   {
     id: "premium",
     name: "Premium Room",
-    eyebrow: "Floor 2 · views",
+    eyebrow: "Floor 2",
     capacity: "2 guests",
-    layout: "King bed · daybed · mountain light",
+    layout: "King bed · daybed · Floor 2",
     description:
-      "Bright premium rooms on Floor 2 — a proper bed, a daybed for the afternoon, and on the best days a clean look toward the hills. Made for guests who came for the view.",
-    cover: "/images/hotel/floor-2-premium/warm-nighttime-hotel-room-4.jpg",
+      "Bright Premium Rooms on Floor 2 — a proper bed, a daybed for the afternoon, and on the best days a clean look toward the hills. Made for guests who came for the view.",
+    cover:
+      "/images/hotel/floor-2-premium/warm-nighttime-himalayan-shepherd-hotel-room-1.jpg",
     tags: ["Wi-Fi", "En-suite bathroom", "Daybed", "Floor 2"],
     inquireMessage:
       "Hello Himalayan Shepherd, I would like to inquire about a Premium Room with a mountain view in Pokhara.",
@@ -46,7 +47,7 @@ export const ROOM_TIERS: RoomTier[] = [
     capacity: "2 guests",
     layout: "Double bed · checkered daybed · desk",
     description:
-      "A larger standard room with a double bed and a checkered daybed by the window. Space to sit, stretch, and settle after the lake without giving up the house’s calm.",
+      "A larger standard room with a double bed and a checkered daybed by the window. Space to sit, stretch, and settle after the lake without giving up the hotel’s calm.",
     cover:
       "/images/hotel/standard-large/warm-nighttime-himalayan-shepherd-hotel-room-1.jpg",
     tags: ["Wi-Fi", "En-suite bathroom", "Daybed", "Desk"],
@@ -73,7 +74,7 @@ export const ROOM_TIERS: RoomTier[] = [
     capacity: "2 guests",
     layout: "Twin beds · bright plan · shared stay",
     description:
-      "Two single beds side by side in a bright, practical room. Space for friends, siblings, or travellers who prefer separate beds without losing the house’s warmth.",
+      "Two single beds side by side in a bright, practical room. Space for friends, siblings, or travellers who prefer separate beds without losing the hotel’s warmth.",
     cover:
       "/images/hotel/standard-twin/himalayan-shepherd-twin-room-warmly-retouched-5.jpg",
     tags: ["Wi-Fi", "En-suite bathroom", "Wardrobe", "Twin beds"],

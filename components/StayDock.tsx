@@ -70,7 +70,7 @@ export function StayDock() {
             className="inline-flex items-center gap-2 rounded-full bg-whatsapp px-5 py-2.5 text-sm font-semibold text-white transition hover:brightness-110"
           >
             <MessageCircle className="h-4 w-4" />
-            {plan.hasPlan ? "Send on WhatsApp" : "Ask the house"}
+            {plan.hasPlan ? "Send on WhatsApp" : "Ask the Shepherd"}
           </a>
         </div>
       </div>
@@ -96,7 +96,7 @@ export function StayDock() {
         <div className="grid grid-cols-[auto_1fr] gap-2">
           <a
             href={HOTEL.phoneHref}
-            aria-label="Call the house"
+            aria-label="Call the Shepherd"
             className="inline-flex items-center justify-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-medium text-cream"
           >
             <Phone className="h-4 w-4" />

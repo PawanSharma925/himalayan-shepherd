@@ -1,5 +1,4 @@
 import { About } from "@/components/About";
-import { DayAtTheHouse } from "@/components/DayAtTheHouse";
 import { Dining } from "@/components/Dining";
 import { Footer } from "@/components/Footer";
 import { Gallery } from "@/components/Gallery";
@@ -18,14 +17,13 @@ export default function HomePage() {
       <Navbar />
       <main className="pb-28 md:pb-0">
         <Hero />
-        <MountainForecast />
         <About />
         <Rooms />
-        <DayAtTheHouse />
         <Dining />
         <Gallery />
         <PokharaMap />
         <GettingHere />
+        <MountainForecast />
         <Footer />
       </main>
       <StayDock />

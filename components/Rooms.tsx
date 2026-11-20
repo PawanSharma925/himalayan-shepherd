@@ -8,7 +8,6 @@ import {
   ChevronRight,
   Expand,
   Layout,
-  Sparkles,
   Users,
 } from "lucide-react";
 import { ROOM_TIERS, type RoomTier } from "@/lib/rooms";
@@ -18,49 +17,18 @@ import { Lightbox } from "./Lightbox";
 import { PLAN_ROOM_EVENT } from "./StayPlanner";
 import { SmartImage } from "./SmartImage";
 
-const TRAVELLERS = [
-  { id: "couple", label: "As a couple" },
-  { id: "friends", label: "With a friend" },
-  { id: "solo", label: "Solo" },
-] as const;
-
-const PRIORITIES = [
-  { id: "view", label: "The view" },
-  { id: "space", label: "Space to spread out" },
-  { id: "value", label: "Best value" },
-] as const;
-
-type Traveller = (typeof TRAVELLERS)[number]["id"];
-type Priority = (typeof PRIORITIES)[number]["id"];
-
-function recommend(who: Traveller | null, want: Priority | null): ImageCategory | null {
-  if (who === "friends") return "twin";
-  if (!want) return null;
-  return { view: "premium", space: "large", value: "double" }[want] as ImageCategory;
-}
-
 function photosFor(room: RoomTier): HotelImage[] {
   const all = imagesByCategory(room.id);
   const cover = all.find((image) => image.src === room.cover);
   return cover ? [cover, ...all.filter((image) => image !== cover)] : all;
 }
 
-const chip = (active: boolean) =>
-  `shrink-0 rounded-full px-4 py-2 text-sm transition ${
-    active
-      ? "bg-ink text-cream"
-      : "border border-sand bg-paper text-ink-soft hover:border-gold"
-  }`;
-
 export function Rooms() {
   const [roomId, setRoomId] = useState<ImageCategory>(ROOM_TIERS[0].id);
   const [photo, setPhoto] = useState(0);
   const [direction, setDirection] = useState(1);
-  const [who, setWho] = useState<Traveller | null>(null);
-  const [want, setWant] = useState<Priority | null>(null);
   const [lightbox, setLightbox] = useState<HotelImage | null>(null);
 
-  const pick = recommend(who, want);
   const room = ROOM_TIERS.find((tier) => tier.id === roomId) ?? ROOM_TIERS[0];
   const photos = useMemo(() => photosFor(room), [room]);
   const current = photos[Math.min(photo, photos.length - 1)];
@@ -69,13 +37,6 @@ export function Rooms() {
   const selectRoom = (id: ImageCategory) => {
     setRoomId(id);
     setPhoto(0);
-  };
-
-  const answer = (nextWho: Traveller | null, nextWant: Priority | null) => {
-    setWho(nextWho);
-    setWant(nextWant);
-    const next = recommend(nextWho, nextWant);
-    if (next) selectRoom(next);
   };
 
   const step = (delta: number) => {
@@ -89,61 +50,6 @@ export function Rooms() {
         <Reveal className="max-w-2xl">
           <p className="kicker">Stay</p>
           <div className="gold-rule mt-5" />
-          <h2 className="mt-6 font-serif text-[2rem] leading-tight text-ink sm:mt-8 sm:text-4xl md:text-5xl">
-            Five distinct rooms. Find yours in two taps.
-          </h2>
-        </Reveal>
-
-        <Reveal className="mt-8 rounded-2xl border border-sand bg-paper p-4 sm:p-5 md:mt-10 md:flex md:flex-wrap md:items-center md:gap-x-8 md:gap-y-4">
-          <div>
-            <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-ink-soft">
-              Travelling
-            </p>
-            <div className="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0 [&::-webkit-scrollbar]:hidden">
-              {TRAVELLERS.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  aria-pressed={who === item.id}
-                  className={chip(who === item.id)}
-                  onClick={() => answer(who === item.id ? null : item.id, want)}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="mt-4 md:mt-0">
-            <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-ink-soft">
-              What matters most
-            </p>
-            <div className="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0 [&::-webkit-scrollbar]:hidden">
-              {PRIORITIES.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  aria-pressed={want === item.id}
-                  className={chip(want === item.id)}
-                  onClick={() => answer(who, want === item.id ? null : item.id)}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          </div>
-          <p className="mt-4 flex items-center gap-2 text-sm text-ink-soft md:ml-auto md:mt-0" aria-live="polite">
-            <Sparkles className="h-4 w-4 text-gold-deep" />
-            {pick ? (
-              <span>
-                Our pick for you:{" "}
-                <strong className="font-medium text-ink">
-                  {ROOM_TIERS.find((tier) => tier.id === pick)?.name}
-                </strong>
-              </span>
-            ) : (
-              "Answer either one and we'll suggest a room"
-            )}
-          </p>
         </Reveal>
 
         <div
@@ -165,7 +71,7 @@ export function Rooms() {
                 }`}
               >
                 <span className="block text-[10px] uppercase tracking-[0.22em] text-gold-deep">
-                  {tier.id === pick ? "Our pick" : tier.eyebrow}
+                  {tier.eyebrow}
                 </span>
                 <span className="mt-1 block font-serif text-xl md:text-2xl">{tier.name}</span>
                 {selected ? (
@@ -290,12 +196,6 @@ export function Rooms() {
                 <span className="text-[10px] uppercase tracking-[0.22em] text-gold-deep">
                   {room.eyebrow}
                 </span>
-                {room.id === pick ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-gold/15 px-2.5 py-0.5 text-[10px] uppercase tracking-[0.18em] text-gold-deep">
-                    <Sparkles className="h-3 w-3" />
-                    Our pick for you
-                  </span>
-                ) : null}
               </div>
               <h3 className="mt-3 font-serif text-[2rem] leading-tight text-ink md:text-4xl">
                 {room.name}
@@ -333,7 +233,7 @@ export function Rooms() {
                   Check dates for the {room.name}
                 </button>
                 <p className="mt-3 text-center text-xs text-ink-soft">
-                  No booking fees · the house replies personally on WhatsApp
+                  No booking fees · the Shepherd replies personally on WhatsApp
                 </p>
               </div>
             </motion.article>

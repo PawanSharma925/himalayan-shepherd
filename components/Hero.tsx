@@ -55,7 +55,7 @@ export function Hero() {
             className="mt-5 max-w-md text-base leading-relaxed text-white/75 md:text-[17px]"
           >
             Wake to Fewa Lake and the Annapurna skyline, then come back to a
-            quiet boutique house in Lakeside.{" "}
+            quiet boutique hotel in Lakeside.{" "}
             <a
               href="#rooms"
               className="text-white underline decoration-gold/70 underline-offset-4 hover:text-gold"

@@ -70,7 +70,7 @@ export function MessageTheHouse() {
 
         <div className="ml-auto max-w-[92%] rounded-2xl rounded-tr-sm bg-[#d9fdd3] px-4 pb-2 pt-3 shadow-sm">
           <label htmlFor="house-message" className="sr-only">
-            Your message to the house
+            Your message to the Shepherd
           </label>
           <textarea
             id="house-message"
@@ -115,7 +115,7 @@ export function MessageTheHouse() {
           </a>{" "}
           · Prefer to talk?{" "}
           <a href={HOTEL.phoneHref} className="text-gold underline-offset-4 hover:underline">
-            Call the house
+            Call the Shepherd
           </a>
           <br />
           Planning together?{" "}
