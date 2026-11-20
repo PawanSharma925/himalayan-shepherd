@@ -17,8 +17,8 @@ const MOSAIC = [
     sizes: "(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 600px",
   },
   {
-    src: "/images/hotel/drinks-lounge/warm-lounge-with-blue-seating.jpg",
-    alt: "Coffee and drinks lounge seating at Himalayan Shepherd",
+    src: "/images/hotel/drinks-lounge/reception-area-with-olive-glass.jpg",
+    alt: "Guest reading in the coffee and drinks lounge at Himalayan Shepherd",
     className: "aspect-[4/3]",
     object: "object-center",
     sizes: "(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 600px",
