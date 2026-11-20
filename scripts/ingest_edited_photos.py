@@ -110,11 +110,11 @@ FILE_OVERRIDES: dict[str, tuple[str, str, str]] = {
         "floor3Lounge",
         "Floor 3 Standard Room Lounge",
     ),
-    # Sundeck split: outdoor dining terrace vs rooftop.
+    # Same outdoor terrace / sundeck — keep under Rooftop Terrace.
     "Sundeck/Himalayan Shepherd Hotel Terrace-3.png": (
-        "dining-terrace",
-        "diningTerrace",
-        "Dining Room Terrace",
+        "rooftop",
+        "rooftop",
+        "Rooftop Terrace",
     ),
     "Sundeck/Unknown-2.png": (
         "rooftop",
@@ -356,7 +356,6 @@ def main() -> None:
   | "large"
   | "twin"
   | "dining"
-  | "diningTerrace"
   | "drinksLounge"
   | "rooftop"
   | "floor3Lounge"

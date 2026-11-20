@@ -20,11 +20,6 @@ const FILTERS: Filter[] = [
     match: (image) => image.category === "dining",
   },
   {
-    id: "diningTerrace",
-    label: "Dining Room Terrace",
-    match: (image) => image.category === "diningTerrace",
-  },
-  {
     id: "drinksLounge",
     label: "Coffee & Drinks Lounge",
     match: (image) => image.category === "drinksLounge",

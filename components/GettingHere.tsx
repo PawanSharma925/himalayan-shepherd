@@ -5,11 +5,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   Bus,
   Car,
+  CarTaxiFront,
   Check,
   Clock,
   Footprints,
   MessageCircle,
-  Plane,
   Trees,
   type LucideIcon,
 } from "lucide-react";
@@ -33,20 +33,20 @@ const at = (time: string, lead: string) => (time ? `${lead} ${time}` : "");
 
 export const ROUTES: Route[] = [
   {
-    id: "flight",
-    icon: Plane,
-    label: "Flying in",
-    duration: "About 25 min",
-    from: "flight from Kathmandu",
+    id: "airport",
+    icon: CarTaxiFront,
+    label: "Taxi from the airport",
+    duration: "About 15–25 min",
+    from: "taxi from Pokhara airport",
     notes: [
-      "The quickest way in — on a clear day the Himalaya line the horizon the whole way.",
-      "Pokhara's airport is a short taxi ride from Lakeside.",
-      "Morning flights tend to cope best when the weather turns later in the day.",
+      "Pokhara’s airport is a short ride from Lakeside — usually 15 to 25 minutes depending on traffic.",
+      "We can arrange a taxi to meet you at arrivals, or point you to a reliable one at the curb.",
+      "Share your flight details and we’ll help with the last stretch to the hotel.",
     ],
     timeLabel: "Landing around",
     note: (time) =>
-      `We're flying in from Kathmandu${at(time, " and land around")} — could you help us with a taxi to the hotel?`,
-    summary: "Arriving by air",
+      `We're landing at Pokhara airport${at(time, " around")} — could you arrange a taxi to the hotel?`,
+    summary: "Taxi from the airport",
   },
   {
     id: "bus",

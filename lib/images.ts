@@ -5,7 +5,6 @@ export type ImageCategory =
   | "large"
   | "twin"
   | "dining"
-  | "diningTerrace"
   | "drinksLounge"
   | "rooftop"
   | "floor3Lounge"
@@ -466,14 +465,14 @@ export const hotelImages: HotelImage[] = [
     featured: true,
   },
   {
-    id: "diningTerrace-40",
-    src: "/images/hotel/dining-terrace/himalayan-shepherd-hotel-terrace-3.jpg",
+    id: "rooftop-40",
+    src: "/images/hotel/rooftop/himalayan-shepherd-hotel-terrace-3.jpg",
     width: 1536,
     height: 1024,
     title: "Hotel Terrace",
     alt: "Hotel Terrace at Himalayan Shepherd, Pokhara",
-    category: "diningTerrace",
-    group: "Dining Room Terrace",
+    category: "rooftop",
+    group: "Rooftop Terrace",
     featured: true,
   },
   {
