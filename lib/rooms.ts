@@ -1,6 +1,6 @@
 import { imagesByCategory, type HotelImage, type ImageCategory } from "./images";
 
-export type RoomId = "king" | "double" | "twin";
+export type RoomId = "premium" | "double" | "twin";
 
 export type RoomTier = {
   id: RoomId;
@@ -17,18 +17,19 @@ export type RoomTier = {
 
 export const ROOM_TIERS: RoomTier[] = [
   {
-    id: "king",
+    id: "premium",
+    // Former Large Premium + Premium folders — one Premium type (king or twin).
     categories: ["largePremium", "premium"],
-    name: "King Room",
-    eyebrow: "King bed",
+    name: "Premium Room",
+    eyebrow: "King or twin beds",
     capacity: "2 guests",
-    layout: "King bed · en-suite · wardrobe",
+    layout: "King bed or twin beds · en-suite",
     description:
-      "A generous king-bed room with soft night lighting and space to settle after the lake or the trail. Quiet, considered, and made for an unhurried stay.",
+      "Our Premium Rooms offer a king bed or twin beds, soft night lighting, and space to settle after the lake or the trail. Quiet, considered, and made for an unhurried stay.",
     cover: "/images/hotel/floor-2-large-premium/warm-nighttime-hotel-room-4.jpg",
-    tags: ["Wi-Fi", "En-suite bathroom", "King bed", "Wardrobe"],
+    tags: ["Wi-Fi", "En-suite bathroom", "King or twin", "Wardrobe"],
     inquireMessage:
-      "Hello Himalayan Shepherd, I would like to inquire about a King Room in Pokhara.",
+      "Hello Himalayan Shepherd, I would like to inquire about a Premium Room in Pokhara (king bed or twin beds).",
   },
   {
     id: "double",
