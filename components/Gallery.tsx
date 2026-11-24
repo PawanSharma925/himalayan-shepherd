@@ -20,6 +20,16 @@ const FILTERS: Filter[] = [
     match: (image) => image.category === "dining",
   },
   {
+    id: "diningPatio",
+    label: "Dining Patio",
+    match: (image) => image.category === "diningPatio",
+  },
+  {
+    id: "building",
+    label: "Entrance & Building",
+    match: (image) => image.category === "building",
+  },
+  {
     id: "drinksLounge",
     label: "Coffee & Drinks Lounge",
     match: (image) => image.category === "drinksLounge",

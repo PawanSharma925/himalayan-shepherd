@@ -52,6 +52,18 @@ FOLDER_MAP: list[tuple[str, str, str, str]] = [
     ),
     ("Dining Room", "dining", "dining", "Dining Room"),
     (
+        "Dining Room Patio",
+        "dining-patio",
+        "diningPatio",
+        "Dining Patio",
+    ),
+    (
+        "Building Exterior",
+        "building",
+        "building",
+        "Entrance & Building",
+    ),
+    (
         "Coffee & Drinks Lounge",
         "drinks-lounge",
         "drinksLounge",
@@ -356,6 +368,8 @@ def main() -> None:
   | "large"
   | "twin"
   | "dining"
+  | "diningPatio"
+  | "building"
   | "drinksLounge"
   | "rooftop"
   | "floor3Lounge"

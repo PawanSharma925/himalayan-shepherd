@@ -5,6 +5,8 @@ export type ImageCategory =
   | "large"
   | "twin"
   | "dining"
+  | "diningPatio"
+  | "building"
   | "drinksLounge"
   | "rooftop"
   | "floor3Lounge"
@@ -432,7 +434,40 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "drinksLounge-37",
+    id: "diningPatio-37",
+    src: "/images/hotel/dining-patio/patio-outside-dining-green-cushions.jpg",
+    width: 1024,
+    height: 682,
+    title: "Patio Outside Dining Green Cushions",
+    alt: "Patio Outside Dining Green Cushions at Himalayan Shepherd, Pokhara",
+    category: "diningPatio",
+    group: "Dining Patio",
+    featured: false,
+  },
+  {
+    id: "diningPatio-38",
+    src: "/images/hotel/dining-patio/patio-street-view-pink-cushions.jpg",
+    width: 1024,
+    height: 682,
+    title: "Patio Street View Pink Cushions",
+    alt: "Patio Street View Pink Cushions at Himalayan Shepherd, Pokhara",
+    category: "diningPatio",
+    group: "Dining Patio",
+    featured: false,
+  },
+  {
+    id: "building-39",
+    src: "/images/hotel/building/hotel-entrance-and-facade.jpg",
+    width: 890,
+    height: 1024,
+    title: "Hotel Entrance and Facade",
+    alt: "Hotel Entrance and Facade at Himalayan Shepherd, Pokhara",
+    category: "building",
+    group: "Entrance & Building",
+    featured: false,
+  },
+  {
+    id: "drinksLounge-40",
     src: "/images/hotel/drinks-lounge/reception-area-with-olive-glass.jpg",
     width: 1448,
     height: 1086,
@@ -443,7 +478,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "drinksLounge-38",
+    id: "drinksLounge-41",
     src: "/images/hotel/drinks-lounge/warm-himalayan-shepherd-coffee-moment-2.jpg",
     width: 1536,
     height: 1024,
@@ -454,7 +489,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "drinksLounge-39",
+    id: "drinksLounge-42",
     src: "/images/hotel/drinks-lounge/warm-lounge-with-blue-seating.jpg",
     width: 1536,
     height: 1024,
@@ -465,7 +500,7 @@ export const hotelImages: HotelImage[] = [
     featured: true,
   },
   {
-    id: "rooftop-40",
+    id: "rooftop-43",
     src: "/images/hotel/rooftop/himalayan-shepherd-hotel-terrace-3.jpg",
     width: 1536,
     height: 1024,
@@ -476,7 +511,7 @@ export const hotelImages: HotelImage[] = [
     featured: true,
   },
   {
-    id: "rooftop-41",
+    id: "rooftop-44",
     src: "/images/hotel/rooftop/himalayan-shepherd-outdoor-bbq-amenity-2.jpg",
     width: 1536,
     height: 1024,
@@ -487,7 +522,7 @@ export const hotelImages: HotelImage[] = [
     featured: true,
   },
   {
-    id: "rooftop-42",
+    id: "rooftop-45",
     src: "/images/hotel/rooftop/unknown-2.jpg",
     width: 1536,
     height: 1024,
@@ -498,7 +533,7 @@ export const hotelImages: HotelImage[] = [
     featured: false,
   },
   {
-    id: "lobby-43",
+    id: "lobby-46",
     src: "/images/hotel/reception-lobby/waving-receptionist-at-himalayan-shepherd-hotel-1.jpg",
     width: 1536,
     height: 1024,
