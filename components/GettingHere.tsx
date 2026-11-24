@@ -52,7 +52,7 @@ export const ROUTES: Route[] = [
     id: "bus",
     icon: Bus,
     label: "Tourist bus",
-    duration: "6–8 hours",
+    duration: "6–8 hours from Kathmandu",
     from: "tourist bus from Kathmandu",
     notes: [
       "The classic route along the Prithvi Highway, following the river valleys west.",
@@ -68,7 +68,7 @@ export const ROUTES: Route[] = [
     id: "car",
     icon: Car,
     label: "Private car",
-    duration: "5–7 hours",
+    duration: "5–7 hours from Kathmandu",
     from: "drive from Kathmandu",
     notes: [
       "Door to door at your own pace, with stops for tea and the view.",

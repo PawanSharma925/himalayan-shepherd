@@ -1,6 +1,6 @@
 import { imagesByCategory, type HotelImage, type ImageCategory } from "./images";
 
-export type RoomId = "premium" | "double" | "twin";
+export type RoomId = "premium" | "standard";
 
 export type RoomTier = {
   id: RoomId;
@@ -18,7 +18,6 @@ export type RoomTier = {
 export const ROOM_TIERS: RoomTier[] = [
   {
     id: "premium",
-    // Former Large Premium + Premium folders — one Premium type (king or twin).
     categories: ["largePremium", "premium"],
     name: "Premium Room",
     eyebrow: "King or twin beds",
@@ -32,33 +31,18 @@ export const ROOM_TIERS: RoomTier[] = [
       "Hello Himalayan Shepherd, I would like to inquire about a Premium Room in Pokhara (king bed or twin beds).",
   },
   {
-    id: "double",
-    categories: ["double", "large"],
-    name: "Double Room",
-    eyebrow: "Double bed",
+    id: "standard",
+    categories: ["double", "large", "twin"],
+    name: "Standard Room",
+    eyebrow: "Double or twin beds",
     capacity: "2 guests",
-    layout: "Double bed · en-suite · wardrobe",
+    layout: "Double bed or twin beds · en-suite",
     description:
-      "A composed double room with warm night lighting, soft linen, and a calm, uncluttered plan. Made for unhurried evenings after the lake.",
+      "Our Standard Rooms come with a double bed or twin beds, warm timber, and a calm, practical plan. Comfortable and unhurried for evenings after the lake.",
     cover: "/images/hotel/standard-double/warm-nighttime-standard-room-2.jpg",
-    tags: ["Wi-Fi", "En-suite bathroom", "Double bed", "Wardrobe"],
+    tags: ["Wi-Fi", "En-suite bathroom", "Double or twin", "Wardrobe"],
     inquireMessage:
-      "Hello Himalayan Shepherd, I would like to inquire about a Double Room in Pokhara.",
-  },
-  {
-    id: "twin",
-    categories: ["twin"],
-    name: "Twin Room",
-    eyebrow: "Twin beds",
-    capacity: "2 guests",
-    layout: "Twin beds · en-suite · wardrobe",
-    description:
-      "Two single beds side by side in a bright, practical room. Space for friends, siblings, or travellers who prefer separate beds without losing the hotel’s warmth.",
-    cover:
-      "/images/hotel/standard-twin/himalayan-shepherd-twin-room-warmly-retouched-5.jpg",
-    tags: ["Wi-Fi", "En-suite bathroom", "Twin beds", "Wardrobe"],
-    inquireMessage:
-      "Hello Himalayan Shepherd, I would like to inquire about a Twin Room in Pokhara.",
+      "Hello Himalayan Shepherd, I would like to inquire about a Standard Room in Pokhara (double bed or twin beds).",
   },
 ];
 
