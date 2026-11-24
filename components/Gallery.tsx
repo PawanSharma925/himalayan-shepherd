@@ -50,6 +50,16 @@ const ROOM_CATEGORIES: ImageCategory[] = [
   "twin",
 ];
 
+const roomSetFor = (category: ImageCategory) => {
+  if (category === "largePremium" || category === "premium") {
+    return new Set<ImageCategory>(["largePremium", "premium"]);
+  }
+  if (category === "large" || category === "double" || category === "twin") {
+    return new Set<ImageCategory>(["large", "double", "twin"]);
+  }
+  return new Set<ImageCategory>([category]);
+};
+
 const DESKTOP_ROW = 300;
 const CONTAINER = 1280;
 
@@ -82,7 +92,8 @@ export function Gallery() {
   const lightboxSet = useMemo(() => {
     if (!active) return visible;
     if (ROOM_CATEGORIES.includes(active.category)) {
-      return hotelImages.filter((image) => image.category === active.category);
+      const set = roomSetFor(active.category);
+      return hotelImages.filter((image) => set.has(image.category));
     }
     return visible;
   }, [active, visible]);
@@ -138,16 +149,11 @@ export function Gallery() {
                   sizes={sizes}
                   className="object-cover transition duration-700 group-hover:scale-[1.03]"
                 />
-                <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-ink/80 via-ink/30 to-transparent px-4 pb-3.5 pt-10 text-left md:px-5 md:pb-4 md:opacity-0 md:transition md:group-hover:opacity-100">
-                  <span className="font-serif text-[17px] leading-snug text-cream md:text-lg">
-                    {image.title}
+                {ratio > 2.2 ? (
+                  <span className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-ink/55 px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-gold backdrop-blur-sm md:opacity-0 md:transition md:group-hover:opacity-100">
+                    Panorama
                   </span>
-                  {ratio > 2.2 ? (
-                    <span className="shrink-0 text-[10px] uppercase tracking-[0.2em] text-gold">
-                      Panorama
-                    </span>
-                  ) : null}
-                </span>
+                ) : null}
               </button>
             );
           })}

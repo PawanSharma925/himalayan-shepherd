@@ -29,15 +29,15 @@ export function Navbar() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:gap-6 sm:px-5 md:px-8">
         <a href="#top" className="flex items-center gap-3">
-          <span className="relative flex h-12 w-12 overflow-hidden rounded-full bg-cream shadow-sm ring-1 ring-sand/80">
+          <span className="relative flex h-12 w-12 overflow-hidden rounded-full bg-cream p-1 shadow-sm ring-1 ring-sand/80">
             <SmartImage
               src="/brand/logo.jpg"
               alt={`${HOTEL.name} emblem`}
               fill
               priority
               sizes="48px"
-              quality={80}
-              className="object-cover"
+              quality={90}
+              className="object-contain p-0.5"
             />
           </span>
           <span className="leading-tight">

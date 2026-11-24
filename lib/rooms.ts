@@ -1,7 +1,10 @@
-import { imagesByCategory, type ImageCategory } from "./images";
+import { imagesByCategory, type HotelImage, type ImageCategory } from "./images";
+
+export type RoomId = "premium" | "standard";
 
 export type RoomTier = {
-  id: ImageCategory;
+  id: RoomId;
+  categories: ImageCategory[];
   name: string;
   eyebrow: string;
   capacity: string;
@@ -14,73 +17,50 @@ export type RoomTier = {
 
 export const ROOM_TIERS: RoomTier[] = [
   {
-    id: "largePremium",
-    name: "Large Premium Room",
-    eyebrow: "Floor 2",
-    capacity: "2 guests",
-    layout: "King Bed - extra day bed - en suite bathroom",
-    description:
-      "Our most generous Floor 2 room: a king bed, an extra day bed, a large wardrobe, and access to the shared lounge just outside. Quiet, slow, and made for unhurried evenings after the lake or the trail.",
-    cover: "/images/hotel/floor-2-large-premium/warm-nighttime-hotel-room-4.jpg",
-    tags: ["Wi-Fi", "En-suite bathroom", "Large wardrobe", "Shared lounge"],
-    inquireMessage:
-      "Hello Himalayan Shepherd, I would like to inquire about the Large Premium Room on Floor 2 in Pokhara.",
-  },
-  {
     id: "premium",
+    categories: ["largePremium", "premium"],
     name: "Premium Room",
-    eyebrow: "Floor 2",
+    eyebrow: "King or twin",
     capacity: "2 guests",
-    layout: "King bed · daybed · Floor 2",
+    layout: "King bed or twin beds · en-suite",
     description:
-      "Bright Premium Rooms on Floor 2 — a proper bed, a daybed for the afternoon, and on the best days a clean look toward the hills. Made for guests who came for the view.",
-    cover:
-      "/images/hotel/floor-2-premium/warm-nighttime-himalayan-shepherd-hotel-room-1.jpg",
-    tags: ["Wi-Fi", "En-suite bathroom", "Daybed", "Floor 2"],
+      "Our Premium Rooms offer a king bed or twin beds, soft night lighting, and space to settle after the lake or the trail. Quiet, considered, and made for an unhurried stay.",
+    cover: "/images/hotel/floor-2-large-premium/warm-nighttime-hotel-room-4.jpg",
+    tags: ["Wi-Fi", "En-suite bathroom", "King or twin", "Wardrobe"],
     inquireMessage:
-      "Hello Himalayan Shepherd, I would like to inquire about a Premium Room with a mountain view in Pokhara.",
+      "Hello Himalayan Shepherd, I would like to inquire about a Premium Room in Pokhara (king bed or twin beds).",
   },
   {
-    id: "large",
-    name: "Large Room",
-    eyebrow: "Standard · more space",
+    id: "standard",
+    categories: ["large", "double", "twin"],
+    name: "Standard Room",
+    eyebrow: "Double or twin",
     capacity: "2 guests",
-    layout: "Double bed · checkered daybed · desk",
+    layout: "Double bed or twin beds · en-suite",
     description:
-      "A larger standard room with a double bed and a checkered daybed by the window. Space to sit, stretch, and settle after the lake without giving up the hotel’s calm.",
-    cover:
-      "/images/hotel/standard-large/warm-nighttime-himalayan-shepherd-hotel-room-1.jpg",
-    tags: ["Wi-Fi", "En-suite bathroom", "Daybed", "Desk"],
-    inquireMessage:
-      "Hello Himalayan Shepherd, I would like to inquire about a Large Room in Pokhara.",
-  },
-  {
-    id: "double",
-    name: "Double Room",
-    eyebrow: "Standard · for two",
-    capacity: "2 guests",
-    layout: "Double bed · rattan wardrobe · warm timber",
-    description:
-      "A composed double room with warm night lighting, soft linen, and a calm, uncluttered plan. Made for unhurried evenings after the lake.",
+      "Our Standard Rooms come with a double bed or twin beds, warm timber, and a calm, practical plan. Comfortable and unhurried for evenings after the lake.",
     cover: "/images/hotel/standard-double/warm-nighttime-standard-room-2.jpg",
-    tags: ["Wi-Fi", "En-suite bathroom", "Wardrobe", "Double bed"],
+    tags: ["Wi-Fi", "En-suite bathroom", "Double or twin", "Wardrobe"],
     inquireMessage:
-      "Hello Himalayan Shepherd, I would like to inquire about a Double Room in Pokhara.",
-  },
-  {
-    id: "twin",
-    name: "Twin Room",
-    eyebrow: "Standard · two beds",
-    capacity: "2 guests",
-    layout: "Twin beds · bright plan · shared stay",
-    description:
-      "Two single beds side by side in a bright, practical room. Space for friends, siblings, or travellers who prefer separate beds without losing the hotel’s warmth.",
-    cover:
-      "/images/hotel/standard-twin/himalayan-shepherd-twin-room-warmly-retouched-5.jpg",
-    tags: ["Wi-Fi", "En-suite bathroom", "Wardrobe", "Twin beds"],
-    inquireMessage:
-      "Hello Himalayan Shepherd, I would like to inquire about a Twin Room in Pokhara.",
+      "Hello Himalayan Shepherd, I would like to inquire about a Standard Room in Pokhara (double bed or twin beds).",
   },
 ];
 
-export const roomGallery = (id: ImageCategory) => imagesByCategory(id);
+export const roomPhotos = (room: RoomTier): HotelImage[] => {
+  const seen = new Set<string>();
+  const all: HotelImage[] = [];
+  for (const category of room.categories) {
+    for (const image of imagesByCategory(category)) {
+      if (seen.has(image.src)) continue;
+      seen.add(image.src);
+      all.push(image);
+    }
+  }
+  const cover = all.find((image) => image.src === room.cover);
+  return cover ? [cover, ...all.filter((image) => image !== cover)] : all;
+};
+
+export const roomGallery = (id: RoomId) => {
+  const room = ROOM_TIERS.find((tier) => tier.id === id);
+  return room ? roomPhotos(room) : [];
+};

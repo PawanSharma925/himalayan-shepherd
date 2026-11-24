@@ -4,14 +4,14 @@ export const HOTEL = {
   tagline: "Where Himalayan Serenity Meets Modern Elegance",
   kicker: "Boutique stay · Pokhara, Nepal",
   locationLine: "Pokhara · Fewa Lake · Annapurna trails",
-  address: "Lakeside, Pokhara 33700, Nepal",
+  address: "15 street / Lakeside Road, Lakeside, Pokhara 33700, Nepal",
   email: "stay@himalayanshepherd.com",
-  phoneDisplay: "+977 980-000-0000",
-  phoneHref: "tel:+9779800000000",
-  whatsappNumber: "9779800000000",
+  phoneDisplay: "+977 970-5451660",
+  phoneHref: "tel:+9779705451660",
+  whatsappNumber: "9779705451660",
   mapEmbed:
-    "https://maps.google.com/maps?q=Lakeside%20Pokhara%20Nepal&z=14&output=embed",
-  mapLink: "https://maps.google.com/?q=Lakeside+Pokhara+Nepal",
+    "https://maps.google.com/maps?q=Lakeside%20Road%20Lakeside%20Pokhara%20Nepal&z=15&output=embed",
+  mapLink: "https://maps.google.com/?q=Lakeside+Road+Lakeside+Pokhara+Nepal",
 } as const;
 
 export const whatsappHref = (message?: string) => {

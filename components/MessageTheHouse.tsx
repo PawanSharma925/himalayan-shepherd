@@ -38,14 +38,14 @@ export function MessageTheHouse() {
   return (
     <div className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#0f0d0a] shadow-[0_40px_100px_rgba(0,0,0,0.45)]">
       <div className="flex items-center gap-3 bg-[#1f2c26] px-5 py-4">
-        <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full bg-cream">
+        <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full bg-cream p-1">
           <SmartImage
             src="/brand/logo.jpg"
             alt=""
             fill
             sizes="44px"
             quality={80}
-            className="object-cover"
+            className="object-contain"
           />
         </div>
         <div className="min-w-0">

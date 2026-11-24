@@ -10,31 +10,25 @@ import {
   Layout,
   Users,
 } from "lucide-react";
-import { ROOM_TIERS, type RoomTier } from "@/lib/rooms";
-import { imagesByCategory, type HotelImage, type ImageCategory } from "@/lib/images";
+import { ROOM_TIERS, roomPhotos, type RoomId } from "@/lib/rooms";
+import type { HotelImage } from "@/lib/images";
 import { Reveal } from "./Reveal";
 import { Lightbox } from "./Lightbox";
 import { PLAN_ROOM_EVENT } from "./StayPlanner";
 import { SmartImage } from "./SmartImage";
 
-function photosFor(room: RoomTier): HotelImage[] {
-  const all = imagesByCategory(room.id);
-  const cover = all.find((image) => image.src === room.cover);
-  return cover ? [cover, ...all.filter((image) => image !== cover)] : all;
-}
-
 export function Rooms() {
-  const [roomId, setRoomId] = useState<ImageCategory>(ROOM_TIERS[0].id);
+  const [roomId, setRoomId] = useState<RoomId>(ROOM_TIERS[0].id);
   const [photo, setPhoto] = useState(0);
   const [direction, setDirection] = useState(1);
   const [lightbox, setLightbox] = useState<HotelImage | null>(null);
 
   const room = ROOM_TIERS.find((tier) => tier.id === roomId) ?? ROOM_TIERS[0];
-  const photos = useMemo(() => photosFor(room), [room]);
+  const photos = useMemo(() => roomPhotos(room), [room]);
   const current = photos[Math.min(photo, photos.length - 1)];
   const portrait = current.height > current.width;
 
-  const selectRoom = (id: ImageCategory) => {
+  const selectRoom = (id: RoomId) => {
     setRoomId(id);
     setPhoto(0);
   };
@@ -117,9 +111,8 @@ export function Rooms() {
                 </motion.div>
               </AnimatePresence>
 
-              <span className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-ink/75 to-transparent px-4 pb-3 pt-12 text-cream md:px-5 md:pb-4">
-                <span className="font-serif text-lg leading-snug">{current.title}</span>
-                <span className="shrink-0 text-xs tabular-nums tracking-[0.18em] text-cream/75">
+              <span className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-end bg-gradient-to-t from-ink/55 to-transparent px-4 pb-3 pt-10 text-cream md:px-5 md:pb-4">
+                <span className="shrink-0 text-xs tabular-nums tracking-[0.18em] text-cream/80">
                   {photo + 1} / {photos.length}
                 </span>
               </span>

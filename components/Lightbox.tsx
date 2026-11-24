@@ -44,7 +44,9 @@ export function Lightbox({ image, images, onClose, onSelect }: Props) {
   }, [image, images, onClose, onSelect]);
 
   const index = image ? images.findIndex((item) => item.src === image.src) : -1;
-  const room = image ? ROOM_TIERS.find((tier) => tier.id === image.category) : undefined;
+  const room = image
+    ? ROOM_TIERS.find((tier) => tier.categories.includes(image.category))
+    : undefined;
 
   if (!mounted) return null;
 
@@ -111,14 +113,13 @@ export function Lightbox({ image, images, onClose, onSelect }: Props) {
               />
             </div>
             <figcaption className="flex flex-col items-center gap-3 pt-4 text-center sm:flex-row sm:justify-between sm:text-left">
-              <span>
-                <span className="block font-serif text-xl text-cream">{image.title}</span>
-                {index >= 0 && images.length > 1 ? (
-                  <span className="text-xs uppercase tracking-[0.2em] text-cream/60">
-                    {index + 1} / {images.length}
-                  </span>
-                ) : null}
-              </span>
+              {index >= 0 && images.length > 1 ? (
+                <span className="text-xs uppercase tracking-[0.2em] text-cream/60">
+                  {index + 1} / {images.length}
+                </span>
+              ) : (
+                <span />
+              )}
               {room ? (
                 <button
                   type="button"

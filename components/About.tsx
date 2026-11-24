@@ -17,8 +17,8 @@ const MOSAIC = [
     sizes: "(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 600px",
   },
   {
-    src: "/images/hotel/drinks-lounge/reception-area-with-olive-glass.jpg",
-    alt: "Guest reading in the coffee and drinks lounge at Himalayan Shepherd",
+    src: "/images/hotel/rooftop/himalayan-shepherd-hotel-terrace-3.jpg",
+    alt: "Patio outside the dining room at Himalayan Shepherd",
     className: "aspect-[4/3]",
     object: "object-center",
     sizes: "(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 600px",
@@ -45,10 +45,15 @@ export function About() {
               The rooms are timber, linen, and soft light. The sundeck catches
               late mountain air. Breakfast is unhurried. We keep the hotel
               personal on purpose: no platforms, no booking engine — just a
-              conversation, then a key.
+              conversation, then a key to rest.
             </p>
             <p>
-              Come for the mountains. Stay for the still hour after you arrive.
+              Come for the Himalayan mountains. Stay for the still hour. Retreat
+              for your soul.
+            </p>
+            <p className="font-serif text-[1.15rem] italic leading-8 text-ink">
+              I lift my eyes toward Himalayan mountains. Where will my help come
+              from? Who is my Shepherd?
             </p>
           </div>
         </Reveal>
