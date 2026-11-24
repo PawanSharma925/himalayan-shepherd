@@ -42,7 +42,7 @@ export function Navbar() {
           </span>
           <span className="leading-tight">
             <span
-              className={`block truncate font-serif text-base tracking-wide sm:text-lg md:text-xl ${
+              className={`block max-w-[11.5rem] font-serif text-[15px] leading-tight tracking-wide sm:max-w-none sm:text-lg md:text-xl ${
                 scrolled || open ? "text-ink" : "text-white"
               }`}
             >

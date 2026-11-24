@@ -85,6 +85,10 @@ SKIP_FILES = {
     "Floor 2 Premium Room/Sunlit hotel room, naturally balanced-3.png",
     # Twin near-dups still present under Standard Single.
     "Standard rooms/Standard Single bed room/Himalayan Shepherd Twin Room at Dusk-6.png",
+    # Premium room shots misfiled under Standard Large (already in Premium Stay).
+    "Standard rooms/Standard Large rooms/Unknown.png",
+    "Standard rooms/Standard Large rooms/Warm Himalayan Shepherd hotel room-2.png",
+    "Standard rooms/Standard Large rooms/Warm Nighttime Himalayan Shepherd Hotel Room-1.png",
 }
 
 # Always keep these even if soft or Unknown among named siblings.

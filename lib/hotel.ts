@@ -1,5 +1,5 @@
 export const HOTEL = {
-  name: "Himalayan Shepherd",
+  name: "Hotel Himalayan Shepherd",
   legalName: "Hotel Himalayan Shepherd Pvt. Ltd.",
   tagline: "Where Himalayan Serenity Meets Modern Elegance",
   kicker: "Boutique stay · Pokhara, Nepal",
