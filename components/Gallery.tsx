@@ -54,8 +54,8 @@ const roomSetFor = (category: ImageCategory) => {
   if (category === "largePremium" || category === "premium") {
     return new Set<ImageCategory>(["largePremium", "premium"]);
   }
-  if (category === "large" || category === "double" || category === "twin") {
-    return new Set<ImageCategory>(["large", "double", "twin"]);
+  if (category === "large" || category === "double") {
+    return new Set<ImageCategory>(["large", "double"]);
   }
   return new Set<ImageCategory>([category]);
 };
