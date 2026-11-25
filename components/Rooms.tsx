@@ -10,6 +10,8 @@ import {
   Layout,
   Users,
 } from "lucide-react";
+import { useLocale } from "@/lib/i18n";
+import { roomCopy } from "@/lib/i18n/rooms";
 import { ROOM_TIERS, roomPhotos, type RoomId } from "@/lib/rooms";
 import type { HotelImage } from "@/lib/images";
 import { Reveal } from "./Reveal";
@@ -18,12 +20,14 @@ import { PLAN_ROOM_EVENT } from "./StayPlanner";
 import { SmartImage } from "./SmartImage";
 
 export function Rooms() {
+  const { t, messages } = useLocale();
   const [roomId, setRoomId] = useState<RoomId>(ROOM_TIERS[0].id);
   const [photo, setPhoto] = useState(0);
   const [direction, setDirection] = useState(1);
   const [lightbox, setLightbox] = useState<HotelImage | null>(null);
 
   const room = ROOM_TIERS.find((tier) => tier.id === roomId) ?? ROOM_TIERS[0];
+  const copy = roomCopy(messages, room.id);
   const photos = useMemo(() => roomPhotos(room), [room]);
   const current = photos[Math.min(photo, photos.length - 1)];
   const portrait = current.height > current.width;
@@ -42,17 +46,18 @@ export function Rooms() {
     <section id="rooms" className="bg-cream px-4 py-16 sm:px-5 md:px-8 md:py-28">
       <div className="mx-auto max-w-7xl">
         <Reveal className="max-w-2xl">
-          <p className="kicker">Stay</p>
+          <p className="kicker">{t("rooms.kicker")}</p>
           <div className="gold-rule mt-5" />
         </Reveal>
 
         <div
           role="tablist"
-          aria-label="Rooms"
+          aria-label={t("rooms.tablist")}
           className="-mx-4 mt-8 flex gap-1 overflow-x-auto border-b border-sand px-4 [scrollbar-width:none] sm:mx-0 sm:px-0 md:mt-10 [&::-webkit-scrollbar]:hidden"
         >
           {ROOM_TIERS.map((tier) => {
             const selected = tier.id === roomId;
+            const tierCopy = roomCopy(messages, tier.id);
             return (
               <button
                 key={tier.id}
@@ -65,9 +70,9 @@ export function Rooms() {
                 }`}
               >
                 <span className="block text-[10px] uppercase tracking-[0.22em] text-gold-deep">
-                  {tier.eyebrow}
+                  {tierCopy.eyebrow}
                 </span>
-                <span className="mt-1 block font-serif text-xl md:text-2xl">{tier.name}</span>
+                <span className="mt-1 block font-serif text-xl md:text-2xl">{tierCopy.name}</span>
                 {selected ? (
                   <motion.span
                     layoutId="room-tab"
@@ -120,7 +125,7 @@ export function Rooms() {
               <button
                 type="button"
                 onClick={() => setLightbox(current)}
-                aria-label="View full screen"
+                aria-label={t("rooms.viewFullscreen")}
                 className="absolute right-3 top-3 grid h-10 w-10 place-items-center rounded-full bg-ink/60 text-cream backdrop-blur transition hover:bg-ink"
               >
                 <Expand className="h-4 w-4" />
@@ -130,7 +135,7 @@ export function Rooms() {
                   <button
                     type="button"
                     onClick={() => step(-1)}
-                    aria-label="Previous photo"
+                    aria-label={t("rooms.prevPhoto")}
                     className="absolute left-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-cream/90 text-ink shadow transition hover:bg-cream md:opacity-0 md:group-hover:opacity-100"
                   >
                     <ChevronLeft className="h-5 w-5" />
@@ -138,7 +143,7 @@ export function Rooms() {
                   <button
                     type="button"
                     onClick={() => step(1)}
-                    aria-label="Next photo"
+                    aria-label={t("rooms.nextPhoto")}
                     className="absolute right-3 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-cream/90 text-ink shadow transition hover:bg-cream md:opacity-0 md:group-hover:opacity-100"
                   >
                     <ChevronRight className="h-5 w-5" />
@@ -156,7 +161,7 @@ export function Rooms() {
                     setDirection(index > photo ? 1 : -1);
                     setPhoto(index);
                   }}
-                  aria-label={`Show ${image.title}`}
+                  aria-label={t("rooms.showPhoto", { title: image.title })}
                   className={`relative h-16 w-20 shrink-0 overflow-hidden rounded-lg transition md:h-[72px] md:w-24 ${
                     index === photo
                       ? "ring-2 ring-gold ring-offset-2 ring-offset-cream"
@@ -187,25 +192,25 @@ export function Rooms() {
             >
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-[10px] uppercase tracking-[0.22em] text-gold-deep">
-                  {room.eyebrow}
+                  {copy.eyebrow}
                 </span>
               </div>
               <h3 className="mt-3 font-serif text-[2rem] leading-tight text-ink md:text-4xl">
-                {room.name}
+                {copy.name}
               </h3>
               <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-ink-soft">
                 <span className="inline-flex items-center gap-1.5">
                   <Users className="h-4 w-4 text-gold-deep" />
-                  {room.capacity}
+                  {copy.capacity}
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <Layout className="h-4 w-4 text-gold-deep" />
-                  {room.layout}
+                  {copy.layout}
                 </span>
               </div>
-              <p className="mt-5 text-[15px] leading-7 text-ink-soft">{room.description}</p>
+              <p className="mt-5 text-[15px] leading-7 text-ink-soft">{copy.description}</p>
               <div className="mt-5 flex flex-wrap gap-2">
-                {room.tags.map((tag) => (
+                {copy.tags.map((tag) => (
                   <span
                     key={tag}
                     className="rounded-full border border-sand bg-cream px-3 py-1 text-xs tracking-wide text-ink-soft"
@@ -223,11 +228,9 @@ export function Rooms() {
                   className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold px-6 py-3.5 text-sm font-semibold tracking-wide text-ink transition hover:bg-gold-deep hover:text-white"
                 >
                   <CalendarDays className="h-4 w-4" />
-                  Check dates for the {room.name}
+                  {t("rooms.checkDates", { name: copy.name })}
                 </button>
-                <p className="mt-3 text-center text-xs text-ink-soft">
-                  No booking fees · the Shepherd replies personally on WhatsApp
-                </p>
+                <p className="mt-3 text-center text-xs text-ink-soft">{t("rooms.noFees")}</p>
               </div>
             </motion.article>
           </AnimatePresence>

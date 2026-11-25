@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Bus,
@@ -14,162 +14,108 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { whatsappHref } from "@/lib/hotel";
+import { useLocale } from "@/lib/i18n";
 import { initialPlan, planStore } from "@/lib/planStore";
 import { PLAN_ARRIVAL_EVENT, type PlanArrivalDetail } from "./StayPlanner";
 
-export type Route = {
-  id: string;
+export type RouteId = "airport" | "bus" | "car" | "chitwan" | "trek";
+
+export type RouteMeta = {
+  id: RouteId;
   icon: LucideIcon;
-  label: string;
-  duration: string;
-  from: string;
-  notes: string[];
-  timeLabel: string;
-  note: (time: string) => string;
-  summary: string;
 };
 
-const at = (time: string, lead: string) => (time ? `${lead} ${time}` : "");
-
-export const ROUTES: Route[] = [
-  {
-    id: "airport",
-    icon: CarTaxiFront,
-    label: "Taxi from the airport",
-    duration: "About 15–25 min",
-    from: "taxi from Pokhara airport",
-    notes: [
-      "Pokhara’s airport is a short ride from Lakeside — usually 15 to 25 minutes depending on traffic.",
-      "We can arrange a taxi to meet you at arrivals, or point you to a reliable one at the curb.",
-      "Share your flight details and we’ll help with the last stretch to the hotel.",
-    ],
-    timeLabel: "Landing around",
-    note: (time) =>
-      `We're landing at Pokhara airport${at(time, " around")} — could you arrange a taxi to the hotel?`,
-    summary: "Taxi from the airport",
-  },
-  {
-    id: "bus",
-    icon: Bus,
-    label: "Tourist bus",
-    duration: "6–8 hours from Kathmandu",
-    from: "tourist bus from Kathmandu",
-    notes: [
-      "The classic route along the Prithvi Highway, following the river valleys west.",
-      "Buses usually leave Kathmandu early and arrive at Pokhara's tourist bus park.",
-      "From the bus park it is a short taxi ride to Lakeside.",
-    ],
-    timeLabel: "Bus arrives around",
-    note: (time) =>
-      `We're coming on the tourist bus from Kathmandu${at(time, ", arriving around")} — could you help us get from the bus park to the hotel?`,
-    summary: "Arriving by bus",
-  },
-  {
-    id: "car",
-    icon: Car,
-    label: "Private car",
-    duration: "5–7 hours from Kathmandu",
-    from: "drive from Kathmandu",
-    notes: [
-      "Door to door at your own pace, with stops for tea and the view.",
-      "Traffic leaving Kathmandu sets the pace — an early start helps.",
-      "Your driver can bring you straight to the hotel.",
-    ],
-    timeLabel: "Expected around",
-    note: (time) =>
-      `We're driving from Kathmandu${at(time, " and expect to arrive around")}. Is there parking at the hotel?`,
-    summary: "Arriving by car",
-  },
-  {
-    id: "chitwan",
-    icon: Trees,
-    label: "From Chitwan",
-    duration: "4–5 hours",
-    from: "trip from Chitwan",
-    notes: [
-      "A common pairing: jungle first, then the lake and the mountains.",
-      "Tourist buses and private cars both make the run north.",
-      "Arrive in the afternoon and you'll catch the light on the lake.",
-    ],
-    timeLabel: "Arriving around",
-    note: (time) =>
-      `We're coming up from Chitwan${at(time, ", arriving around")} — anything we should know for the journey?`,
-    summary: "Coming from Chitwan",
-  },
-  {
-    id: "trek",
-    icon: Footprints,
-    label: "Off a trek",
-    duration: "1–3 hours",
-    from: "ride from the trailhead",
-    notes: [
-      "Coming down from Annapurna, Poon Hill or Mardi? Jeeps and buses run back to Pokhara.",
-      "A hot shower, soft linen and a long breakfast are waiting.",
-      "Tell us if you'd like to leave bags with us while you are on the trail.",
-    ],
-    timeLabel: "Back around",
-    note: (time) =>
-      `We'll be coming straight off a trek${at(time, ", back in Pokhara around")}. Could we leave luggage with you while we're on the trail?`,
-    summary: "Coming off a trek",
-  },
+export const ROUTE_META: RouteMeta[] = [
+  { id: "airport", icon: CarTaxiFront },
+  { id: "bus", icon: Bus },
+  { id: "car", icon: Car },
+  { id: "chitwan", icon: Trees },
+  { id: "trek", icon: Footprints },
 ];
 
-function announceArrival(route: Route, time: string) {
-  const code = `${route.id}|${time}`;
-  const detail: PlanArrivalDetail = { note: route.note(time), label: route.summary, code };
+/** @deprecated Use ROUTE_META; kept for TripCard route lookup by id. */
+export const ROUTES = ROUTE_META;
+
+function announceArrival(detail: PlanArrivalDetail) {
   window.dispatchEvent(new CustomEvent(PLAN_ARRIVAL_EVENT, { detail }));
-  return code;
+  return detail.code;
 }
 
 export function GettingHere() {
-  const [routeId, setRouteId] = useState(ROUTES[0].id);
+  const { t, messages, locale } = useLocale();
+  const [routeId, setRouteId] = useState<RouteId>(ROUTE_META[0].id);
   const [time, setTime] = useState("");
   const [added, setAdded] = useState<string | null>(null);
   const plan = useSyncExternalStore(planStore.subscribe, planStore.get, planStore.getServer);
-  const route = ROUTES.find((item) => item.id === routeId) ?? ROUTES[0];
-  const isAdded = added === `${route.id}|${time}`;
+  const meta = ROUTE_META.find((item) => item.id === routeId) ?? ROUTE_META[0];
+  const routeCopy = messages.gettingHere.routes[meta.id];
+  const isAdded = added === `${meta.id}|${time}`;
+
+  const note = useMemo(
+    () => (time ? t(`gettingHere.routes.${meta.id}.noteTimed`, { time }) : routeCopy.note),
+    [meta.id, routeCopy.note, t, time],
+  );
+
+  const buildDetail = (id: RouteId, arrivalTime: string): PlanArrivalDetail => {
+    const copy = messages.gettingHere.routes[id];
+    return {
+      note: arrivalTime
+        ? t(`gettingHere.routes.${id}.noteTimed`, { time: arrivalTime })
+        : copy.note,
+      label: copy.summary,
+      code: `${id}|${arrivalTime}`,
+    };
+  };
 
   const add = () => {
-    setAdded(announceArrival(route, time));
+    setAdded(announceArrival(buildDetail(meta.id, time)));
   };
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
       const [id, savedTime = ""] = (initialPlan().params.get("arr") ?? "").split("|");
-      const saved = ROUTES.find((item) => item.id === id);
+      const saved = ROUTE_META.find((item) => item.id === id);
       if (!saved) return;
       const clean = /^\d{2}:\d{2}$/.test(savedTime) ? savedTime : "";
       setRouteId(saved.id);
       setTime(clean);
-      setAdded(announceArrival(saved, clean));
+      setAdded(announceArrival(buildDetail(saved.id, clean)));
     }, 0);
     return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!added) return;
+    const [id, savedTime = ""] = added.split("|");
+    if (id !== meta.id) return;
+    announceArrival(buildDetail(meta.id, savedTime));
+    // Re-localize arrival note when language changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale]);
 
   return (
     <section id="getting-here" className="bg-cream px-4 py-16 sm:px-5 md:px-8 md:py-28">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-end lg:gap-16">
           <div>
-            <p className="kicker">Getting here</p>
+            <p className="kicker">{t("gettingHere.kicker")}</p>
             <div className="gold-rule mt-5" />
             <h2 className="mt-6 font-serif text-[2rem] leading-tight text-ink sm:mt-8 sm:text-4xl md:text-5xl">
-              Hotel arrival &amp; Check-in, we can assist.
+              {t("gettingHere.title")}
             </h2>
           </div>
-          <p className="max-w-xl text-[17px] leading-8 text-ink-soft">
-            Pick how you&rsquo;re travelling to Pokhara. We&rsquo;ll add it to your note so
-            reception can help with the last stretch before you even ask.
-          </p>
+          <p className="max-w-xl text-[17px] leading-8 text-ink-soft">{t("gettingHere.lead")}</p>
         </div>
 
         <div
           role="tablist"
-          aria-label="How are you travelling?"
+          aria-label={t("gettingHere.tablist")}
           className="-mx-4 mt-10 flex gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-5 sm:px-0 md:mt-12 [&::-webkit-scrollbar]:hidden"
         >
-          {ROUTES.map((item) => {
+          {ROUTE_META.map((item) => {
             const selected = item.id === routeId;
+            const copy = messages.gettingHere.routes[item.id];
             return (
               <button
                 key={item.id}
@@ -187,11 +133,11 @@ export function GettingHere() {
                   className={`h-6 w-6 ${selected ? "text-gold" : "text-gold-deep"}`}
                   strokeWidth={1.5}
                 />
-                <span className="mt-4 font-serif text-xl leading-tight md:text-2xl">{item.label}</span>
+                <span className="mt-4 font-serif text-xl leading-tight md:text-2xl">{copy.label}</span>
                 <span
                   className={`mt-1 text-xs tracking-wide ${selected ? "text-cream/60" : "text-ink-soft"}`}
                 >
-                  {item.duration}
+                  {copy.duration}
                 </span>
               </button>
             );
@@ -200,7 +146,7 @@ export function GettingHere() {
 
         <AnimatePresence mode="wait">
           <motion.div
-            key={route.id}
+            key={meta.id}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
@@ -210,19 +156,20 @@ export function GettingHere() {
             <div>
               <p className="flex items-center gap-2 text-[11px] uppercase tracking-[0.22em] text-gold-deep">
                 <Clock className="h-3.5 w-3.5" />
-                {route.duration} by {route.from}
+                {t("gettingHere.byFrom", {
+                  duration: routeCopy.duration,
+                  from: routeCopy.from,
+                })}
               </p>
               <ul className="mt-5 space-y-4">
-                {route.notes.map((note) => (
-                  <li key={note} className="flex gap-3 text-[16px] leading-7 text-ink-soft">
+                {routeCopy.notes.map((item) => (
+                  <li key={item} className="flex gap-3 text-[16px] leading-7 text-ink-soft">
                     <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />
-                    {note}
+                    {item}
                   </li>
                 ))}
               </ul>
-              <p className="mt-5 text-xs text-ink-soft/70">
-                Journey times are typical, not promised — roads and mountain weather set the pace.
-              </p>
+              <p className="mt-5 text-xs text-ink-soft/70">{t("gettingHere.disclaimer")}</p>
             </div>
 
             <div className="flex flex-col justify-between gap-5 rounded-xl bg-cream p-5 md:p-6">
@@ -231,7 +178,8 @@ export function GettingHere() {
                   htmlFor="arrival-time"
                   className="block text-[10px] uppercase tracking-[0.22em] text-ink-soft"
                 >
-                  {route.timeLabel} <span className="normal-case tracking-normal">(optional)</span>
+                  {routeCopy.timeLabel}{" "}
+                  <span className="normal-case tracking-normal">{t("gettingHere.optional")}</span>
                 </label>
                 <input
                   id="arrival-time"
@@ -241,7 +189,7 @@ export function GettingHere() {
                   className="mt-2 w-full rounded-xl border border-sand bg-paper px-3 py-2.5 text-ink outline-none focus:border-gold"
                 />
                 <p className="mt-4 rounded-xl bg-paper px-4 py-3 text-sm italic leading-6 text-ink-soft">
-                  &ldquo;{route.note(time)}&rdquo;
+                  &ldquo;{note}&rdquo;
                 </p>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
@@ -253,7 +201,7 @@ export function GettingHere() {
                   }`}
                 >
                   {isAdded ? <Check className="h-4 w-4" /> : null}
-                  {isAdded ? "Added to your message" : "Add to my message"}
+                  {isAdded ? t("gettingHere.added") : t("gettingHere.add")}
                 </button>
                 {isAdded ? (
                   <a
@@ -263,7 +211,7 @@ export function GettingHere() {
                     className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-whatsapp px-5 py-3 text-sm font-semibold text-white transition hover:brightness-110"
                   >
                     <MessageCircle className="h-4 w-4" />
-                    Send on WhatsApp
+                    {t("gettingHere.sendWhatsApp")}
                   </a>
                 ) : null}
               </div>

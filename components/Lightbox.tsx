@@ -5,6 +5,8 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { CalendarDays, ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { HotelImage } from "@/lib/images";
+import { useLocale } from "@/lib/i18n";
+import { roomCopy } from "@/lib/i18n/rooms";
 import { ROOM_TIERS } from "@/lib/rooms";
 import { SmartImage } from "./SmartImage";
 import { PLAN_ROOM_EVENT } from "./StayPlanner";
@@ -19,6 +21,7 @@ type Props = {
 };
 
 export function Lightbox({ image, images, onClose, onSelect }: Props) {
+  const { t, messages } = useLocale();
   const mounted = useSyncExternalStore(
     noopSubscribe,
     () => true,
@@ -64,7 +67,7 @@ export function Lightbox({ image, images, onClose, onSelect }: Props) {
             type="button"
             className="absolute right-5 top-5 z-10 text-white"
             onClick={onClose}
-            aria-label="Close gallery"
+            aria-label={t("rooms.viewFullscreen")}
           >
             <X className="h-7 w-7" />
           </button>
@@ -77,7 +80,7 @@ export function Lightbox({ image, images, onClose, onSelect }: Props) {
                   event.stopPropagation();
                   onSelect(images[(index - 1 + images.length) % images.length]);
                 }}
-                aria-label="Previous photograph"
+                aria-label={t("rooms.prevPhoto")}
               >
                 <ChevronLeft className="h-10 w-10" />
               </button>
@@ -88,7 +91,7 @@ export function Lightbox({ image, images, onClose, onSelect }: Props) {
                   event.stopPropagation();
                   onSelect(images[(index + 1) % images.length]);
                 }}
-                aria-label="Next photograph"
+                aria-label={t("rooms.nextPhoto")}
               >
                 <ChevronRight className="h-10 w-10" />
               </button>
@@ -132,7 +135,7 @@ export function Lightbox({ image, images, onClose, onSelect }: Props) {
                   }}
                 >
                   <CalendarDays className="h-4 w-4" />
-                  Check dates for the {room.name}
+                  {t("rooms.checkDates", { name: roomCopy(messages, room.id).name })}
                 </button>
               ) : null}
             </figcaption>

@@ -4,15 +4,21 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CalendarDays, Check, MessageCircle, Plus } from "lucide-react";
 import { whatsappHref } from "@/lib/hotel";
+import { useLocale } from "@/lib/i18n";
 import { initialPlan, planStore } from "@/lib/planStore";
 import { PLAN_WISHES_EVENT, type PlanArrivalDetail } from "./StayPlanner";
 
+export type PlaceId =
+  | "sunrise"
+  | "paragliding"
+  | "boat"
+  | "pagoda"
+  | "falls"
+  | "museum"
+  | "begnas";
+
 export type Place = {
-  id: string;
-  name: string;
-  when: string;
-  blurb: string;
-  ask: string;
+  id: PlaceId;
   halfDays: number;
   x: number;
   y: number;
@@ -22,87 +28,20 @@ export type Place = {
 const HOUSE = { x: 458, y: 330 };
 
 export const PLACES: Place[] = [
-  {
-    id: "sunrise",
-    name: "Sunrise at Sarangkot",
-    when: "Pre-dawn · half day",
-    blurb: "A dark drive up the hill above the lake, then first light on the Annapurna.",
-    ask: "seeing the sunrise from Sarangkot",
-    halfDays: 1,
-    x: 232,
-    y: 214,
-    side: "left",
-  },
-  {
-    id: "paragliding",
-    name: "Paragliding over Fewa",
-    when: "Morning · half day",
-    blurb: "Tandem flights launch from Sarangkot and drift down over the water.",
-    ask: "a tandem paragliding flight",
-    halfDays: 1,
-    x: 290,
-    y: 256,
-    side: "right",
-  },
-  {
-    id: "boat",
-    name: "A boat to Tal Barahi",
-    when: "Any time · an hour or two",
-    blurb: "Row out from Lakeside to the little temple on its island.",
-    ask: "a boat out to Tal Barahi",
-    halfDays: 1,
-    x: 384,
-    y: 346,
-    side: "left",
-  },
-  {
-    id: "pagoda",
-    name: "World Peace Pagoda",
-    when: "Morning or late afternoon",
-    blurb: "A white stupa on the ridge across the lake. Many cross by boat and walk up.",
-    ask: "the World Peace Pagoda",
-    halfDays: 1,
-    x: 318,
-    y: 446,
-    side: "left",
-  },
-  {
-    id: "falls",
-    name: "Devi Falls & the cave",
-    when: "Any time · a couple of hours",
-    blurb: "A waterfall that disappears underground, and Gupteshwor Cave beneath it.",
-    ask: "Devi Falls and Gupteshwor Cave",
-    halfDays: 1,
-    x: 478,
-    y: 448,
-    side: "right",
-  },
-  {
-    id: "museum",
-    name: "Mountain Museum",
-    when: "Good for a cloudy day",
-    blurb: "The story of the Himalaya and the people who climb it.",
-    ask: "the International Mountain Museum",
-    halfDays: 1,
-    x: 590,
-    y: 478,
-    side: "right",
-  },
-  {
-    id: "begnas",
-    name: "Begnas Lake",
-    when: "A slow day out",
-    blurb: "A quieter lake east of the city, away from the Lakeside bustle.",
-    ask: "a quiet day at Begnas Lake",
-    halfDays: 2,
-    x: 716,
-    y: 318,
-    side: "left",
-  },
+  { id: "sunrise", halfDays: 1, x: 232, y: 214, side: "left" },
+  { id: "paragliding", halfDays: 1, x: 290, y: 256, side: "right" },
+  { id: "boat", halfDays: 1, x: 384, y: 346, side: "left" },
+  { id: "pagoda", halfDays: 1, x: 318, y: 446, side: "left" },
+  { id: "falls", halfDays: 1, x: 478, y: 448, side: "right" },
+  { id: "museum", halfDays: 1, x: 590, y: 478, side: "right" },
+  { id: "begnas", halfDays: 2, x: 716, y: 318, side: "left" },
 ];
 
-const join = (items: string[]) =>
-  items.length < 2 ? items.join("") : `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`;
+const join = (items: string[], locale: string) => {
+  if (items.length < 2) return items.join("");
+  if (locale === "zh-HK") return items.join("、");
+  return `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`;
+};
 
 const route = (place: Place) => {
   const midX = (HOUSE.x + place.x) / 2;
@@ -380,24 +319,37 @@ function Valley() {
   );
 }
 
-function announceWishes(ids: string[]) {
-  const items = PLACES.filter((place) => ids.includes(place.id));
-  const detail: PlanArrivalDetail | null = items.length
-    ? {
-        note: `While we're in Pokhara we'd love to fit in ${join(items.map((place) => place.ask))} — could you help us plan any of it?`,
-        label: items.length === 1 ? items[0].name : `${items.length} things to do`,
-        code: items.map((place) => place.id).join("."),
-      }
-    : null;
-  window.dispatchEvent(new CustomEvent(PLAN_WISHES_EVENT, { detail }));
-}
-
 export function PokharaMap() {
+  const { t, messages, locale } = useLocale();
   const [picked, setPicked] = useState<string[]>([]);
   const [focus, setFocus] = useState<string | null>(null);
   const plan = useSyncExternalStore(planStore.subscribe, planStore.get, planStore.getServer);
   const chosen = PLACES.filter((place) => picked.includes(place.id));
   const days = Math.max(1, Math.ceil(chosen.reduce((sum, place) => sum + place.halfDays, 0) / 2));
+
+  const placeCopy = (id: PlaceId) => messages.explore.places[id];
+
+  const announceWishes = (ids: string[]) => {
+    const items = PLACES.filter((place) => ids.includes(place.id));
+    const detail: PlanArrivalDetail | null = items.length
+      ? {
+          note: t("explore.wishQuote", {
+            asks: join(
+              items.map((place) => placeCopy(place.id).ask),
+              locale,
+            ),
+          }),
+          label:
+            items.length === 1
+              ? placeCopy(items[0].id).name
+              : locale === "zh-HK"
+                ? `${items.length} 個行程`
+                : `${items.length} things to do`,
+          code: items.map((place) => place.id).join("."),
+        }
+      : null;
+    window.dispatchEvent(new CustomEvent(PLAN_WISHES_EVENT, { detail }));
+  };
 
   const toggle = (id: string) => {
     const next = picked.includes(id) ? picked.filter((item) => item !== id) : [...picked, id];
@@ -414,27 +366,30 @@ export function PokharaMap() {
       announceWishes(ids);
     }, 0);
     return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (picked.length) announceWishes(picked);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale]);
 
   return (
     <section
       id="explore"
-      aria-label="Map out your days in Pokhara"
+      aria-label={t("explore.aria")}
       className="overflow-hidden bg-ink px-4 py-16 text-cream sm:px-5 md:px-8 md:py-28"
     >
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-16">
           <div>
-            <p className="kicker">Around Pokhara</p>
+            <p className="kicker">{t("explore.kicker")}</p>
             <div className="gold-rule mt-5" />
             <h2 className="mt-6 font-serif text-[2rem] leading-tight sm:mt-8 sm:text-4xl md:text-5xl">
-              Map out your days between the lake and the peaks.
+              {t("explore.title")}
             </h2>
           </div>
-          <p className="max-w-xl text-[17px] leading-8 text-cream/70">
-            Tap the places you&rsquo;d like to see. We&rsquo;ll add them to your note, so reception
-            can suggest how to fit them around your stay when you write.
-          </p>
+          <p className="max-w-xl text-[17px] leading-8 text-cream/70">{t("explore.lead")}</p>
         </div>
 
         <div className="mt-10 grid gap-8 md:mt-14 lg:grid-cols-[1.3fr_1fr] lg:items-start lg:gap-12">
@@ -480,19 +435,22 @@ export function PokharaMap() {
                   <path d="M9.5 21 V15 H14.5 V21" fill="#f1e7d3" stroke="#2e261d" strokeWidth="1.4" />
                 </svg>
                 <span className="absolute left-1 top-full mt-0.5 whitespace-nowrap font-serif text-[9px] uppercase tracking-[0.16em] text-[#2e261d] [text-shadow:0_0_3px_#f1e7d3,0_0_3px_#f1e7d3] md:text-[11px]">
-                  Himalayan Shepherd
+                  {t("explore.houseLabel")}
                 </span>
               </div>
 
               {PLACES.map((place, index) => {
                 const on = picked.includes(place.id);
                 const lit = on || focus === place.id;
+                const copy = placeCopy(place.id);
                 return (
                   <button
                     key={place.id}
                     type="button"
                     aria-pressed={on}
-                    aria-label={`${on ? "Remove" : "Add"} ${place.name}`}
+                    aria-label={t(on ? "explore.removePlace" : "explore.addPlace", {
+                      name: copy.name,
+                    })}
                     onClick={() => toggle(place.id)}
                     onMouseEnter={() => setFocus(place.id)}
                     onMouseLeave={() => setFocus(null)}
@@ -517,21 +475,20 @@ export function PokharaMap() {
                         place.side === "left" ? "right-full" : "left-full"
                       } ${lit ? "text-[#a8432a]" : "text-[#2e261d]"}`}
                     >
-                      {place.name}
+                      {copy.name}
                     </span>
                   </button>
                 );
               })}
             </div>
-            <p className="mt-3 text-xs text-cream/40">
-              Illustrated, not to scale. Timings are rough guides; reception knows the day&rsquo;s weather.
-            </p>
+            <p className="mt-3 text-xs text-cream/40">{t("explore.mapNote")}</p>
           </div>
 
           <div>
             <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
               {PLACES.map((place, index) => {
                 const on = picked.includes(place.id);
+                const copy = placeCopy(place.id);
                 return (
                   <li key={place.id}>
                     <button
@@ -556,11 +513,13 @@ export function PokharaMap() {
                         {index + 1}
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block font-serif text-xl leading-tight">{place.name}</span>
+                        <span className="block font-serif text-xl leading-tight">{copy.name}</span>
                         <span className="mt-1 block text-[10px] uppercase tracking-[0.2em] text-gold/80">
-                          {place.when}
+                          {copy.when}
                         </span>
-                        <span className="mt-1.5 block text-sm leading-6 text-cream/60">{place.blurb}</span>
+                        <span className="mt-1.5 block text-sm leading-6 text-cream/60">
+                          {copy.blurb}
+                        </span>
                       </span>
                       <span
                         className={`mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full transition ${
@@ -579,11 +538,20 @@ export function PokharaMap() {
               {chosen.length ? (
                 <>
                   <p className="text-[11px] uppercase tracking-[0.22em] text-gold">
-                    About {days} {days === 1 ? "day" : "days"} of plans · added to your message
+                    {t("explore.aboutDays", {
+                      days,
+                      dayWord: days === 1 ? t("explore.day") : t("explore.days"),
+                    })}
                   </p>
                   <p className="mt-3 text-sm italic leading-6 text-cream/75">
-                    &ldquo;While we&rsquo;re in Pokhara we&rsquo;d love to fit in{" "}
-                    {join(chosen.map((place) => place.ask))} — could you help us plan any of it?&rdquo;
+                    &ldquo;
+                    {t("explore.wishQuote", {
+                      asks: join(
+                        chosen.map((place) => placeCopy(place.id).ask),
+                        locale,
+                      ),
+                    })}
+                    &rdquo;
                   </p>
                   <div className="mt-4 flex flex-col gap-3 sm:flex-row">
                     <a
@@ -593,22 +561,19 @@ export function PokharaMap() {
                       className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-whatsapp px-5 py-3 text-sm font-semibold text-white transition hover:brightness-110"
                     >
                       <MessageCircle className="h-4 w-4" />
-                      Send on WhatsApp
+                      {t("explore.sendWhatsApp")}
                     </a>
                     <a
                       href="#plan"
                       className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-cream transition hover:border-gold hover:text-gold"
                     >
                       <CalendarDays className="h-4 w-4" />
-                      Pick dates · about {days + 1} nights
+                      {t("explore.pickDates", { nights: days + 1 })}
                     </a>
                   </div>
                 </>
               ) : (
-                <p className="text-sm leading-6 text-cream/60">
-                  Nothing picked yet. Choose a few places and they&rsquo;ll appear in your note to the
-                  hotel, ready to send with your dates.
-                </p>
+                <p className="text-sm leading-6 text-cream/60">{t("explore.empty")}</p>
               )}
             </div>
           </div>

@@ -5,22 +5,16 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, Link2, MessageCircle, Pencil, Share2, Sunrise, Ticket, Users, X } from "lucide-react";
 import { whatsappHref } from "@/lib/hotel";
+import { useLocale } from "@/lib/i18n";
+import { roomCopy } from "@/lib/i18n/rooms";
 import { initialPlan, OPEN_TRIP_EVENT, planStore, savePlan } from "@/lib/planStore";
-import { ROOM_TIERS } from "@/lib/rooms";
-import { ROUTES } from "./GettingHere";
-import { PLACES } from "./PokharaMap";
+import { ROOM_TIERS, type RoomId } from "@/lib/rooms";
+import { ROUTE_META, type RouteId } from "./GettingHere";
+import { PLACES, type PlaceId } from "./PokharaMap";
 
 const LAKE = "/images/hotel/view/himalayan-shepherd-01-lake-and-mountains-hd.jpg";
 
 export const openTripCard = () => window.dispatchEvent(new Event(OPEN_TRIP_EVENT));
-
-const day = (value: string) => {
-  const date = new Date(`${value}T00:00:00`);
-  return {
-    weekday: date.toLocaleDateString("en-GB", { weekday: "short" }),
-    date: date.toLocaleDateString("en-GB", { day: "numeric", month: "short" }),
-  };
-};
 
 function readTrip(share: string) {
   const query = new URLSearchParams(share);
@@ -35,20 +29,22 @@ function readTrip(share: string) {
       : 0;
   const [arrivalId, arrivalTime] = (query.get("arr") ?? "").split("|");
   const doing = (query.get("do") ?? "").split(".");
+  const roomId = query.get("room");
   return {
     checkIn,
     checkOut,
     nights,
     guests: Number(query.get("g") ?? 2) || 2,
-    room: ROOM_TIERS.find((tier) => tier.id === query.get("room")),
+    room: ROOM_TIERS.find((tier) => tier.id === roomId),
     sunrise: query.get("sun") ?? "",
-    route: ROUTES.find((item) => item.id === arrivalId),
+    route: ROUTE_META.find((item) => item.id === arrivalId),
     arrivalTime,
     places: PLACES.filter((place) => doing.includes(place.id)),
   };
 }
 
 export function TripCard() {
+  const { t, messages, locale } = useLocale();
   const plan = useSyncExternalStore(planStore.subscribe, planStore.get, planStore.getServer);
   const [open, setOpen] = useState(false);
   const [shared, setShared] = useState(false);
@@ -56,6 +52,15 @@ export function TripCard() {
   const [copied, setCopied] = useState(false);
   const [manual, setManual] = useState<string | null>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+
+  const dateLocale = locale === "zh-HK" ? "zh-HK" : "en-GB";
+  const day = (value: string) => {
+    const date = new Date(`${value}T00:00:00`);
+    return {
+      weekday: date.toLocaleDateString(dateLocale, { weekday: "short" }),
+      date: date.toLocaleDateString(dateLocale, { day: "numeric", month: "short" }),
+    };
+  };
 
   useEffect(() => {
     const onOpen = () => setOpen(true);
@@ -95,14 +100,15 @@ export function TripCard() {
   }, [open]);
 
   const trip = readTrip(plan.share);
-  const link = () => `${window.location.origin}${window.location.pathname}${plan.share ? `?${plan.share}` : ""}`;
-  const pitch = `Our Pokhara plan at Himalayan Shepherd — ${plan.summary.join(" · ")}. Have a look:`;
+  const link = () =>
+    `${window.location.origin}${window.location.pathname}${plan.share ? `?${plan.share}` : ""}`;
+  const pitch = t("trip.pitch", { summary: plan.summary.join(" · ") });
 
   const share = async () => {
     const url = link();
     if (navigator.share) {
       try {
-        await navigator.share({ title: "Our Pokhara plan", text: pitch, url });
+        await navigator.share({ title: t("trip.shareTitle"), text: pitch, url });
         return;
       } catch (error) {
         if ((error as Error).name === "AbortError") return;
@@ -123,6 +129,11 @@ export function TripCard() {
     setManual(null);
   };
 
+  const roomName = trip.room ? roomCopy(messages, trip.room.id as RoomId).name : null;
+  const routeLabel = trip.route
+    ? messages.gettingHere.routes[trip.route.id as RouteId].label
+    : null;
+
   return (
     <>
       <AnimatePresence>
@@ -136,15 +147,15 @@ export function TripCard() {
           >
             <button
               type="button"
-              aria-label="Dismiss"
+              aria-label={t("trip.dismiss")}
               onClick={() => setWelcome(false)}
               className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full text-cream/50 hover:bg-white/10 hover:text-cream"
             >
               <X className="h-4 w-4" />
             </button>
-            <p className="pr-8 font-serif text-xl leading-tight">Welcome back.</p>
+            <p className="pr-8 font-serif text-xl leading-tight">{t("trip.welcomeBack")}</p>
             <p className="mt-1 text-sm leading-6 text-cream/65">
-              Your Pokhara plan is just as you left it: {plan.summary.join(" · ")}.
+              {t("trip.welcomeBody", { summary: plan.summary.join(" · ") })}
             </p>
             <div className="mt-3 flex gap-2">
               <button
@@ -156,7 +167,7 @@ export function TripCard() {
                 className="inline-flex items-center gap-2 rounded-full bg-gold px-4 py-2 text-sm font-semibold text-ink transition hover:bg-cream"
               >
                 <Ticket className="h-4 w-4" />
-                See trip card
+                {t("trip.seeTripCard")}
               </button>
               <button
                 type="button"
@@ -166,7 +177,7 @@ export function TripCard() {
                 }}
                 className="rounded-full px-4 py-2 text-sm text-cream/70 transition hover:bg-white/10 hover:text-cream"
               >
-                Start fresh
+                {t("trip.startFresh")}
               </button>
             </div>
           </motion.div>
@@ -197,21 +208,19 @@ export function TripCard() {
               <div className="mb-5 flex items-start justify-between gap-4 text-cream">
                 <div>
                   <p className="text-[11px] uppercase tracking-[0.24em] text-gold">
-                    {shared ? "Shared with you" : "Your trip card"}
+                    {shared ? t("trip.sharedWithYou") : t("trip.yourTripCard")}
                   </p>
                   <h2 id="trip-title" className="mt-2 font-serif text-3xl leading-tight">
-                    {shared ? "Someone is planning Pokhara with you." : "Plan it together."}
+                    {shared ? t("trip.sharedTitle") : t("trip.ownTitle")}
                   </h2>
                   <p className="mt-2 text-sm leading-6 text-cream/65">
-                    {shared
-                      ? "Here's the plan they made. Change anything you like, or send it straight to the Shepherd."
-                      : "Share it with whoever you're travelling with — the link opens this exact plan."}
+                    {shared ? t("trip.sharedLead") : t("trip.ownLead")}
                   </p>
                 </div>
                 <button
                   ref={closeRef}
                   type="button"
-                  aria-label="Close trip card"
+                  aria-label={t("trip.close")}
                   onClick={close}
                   className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/10 text-cream transition hover:bg-white/20"
                 >
@@ -229,7 +238,7 @@ export function TripCard() {
                 <div className="relative h-44 sm:h-48">
                   <Image
                     src={trip.room?.cover ?? LAKE}
-                    alt={trip.room ? trip.room.name : "Fewa Lake and the Annapurna range"}
+                    alt={roomName ?? t("trip.lakeAlt")}
                     fill
                     sizes={trip.room ? "480px" : "960px"}
                     quality={85}
@@ -237,12 +246,12 @@ export function TripCard() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/20 to-ink/30" />
                   <p className="absolute left-5 top-4 text-[10px] uppercase tracking-[0.28em] text-cream/85">
-                    Himalayan Shepherd · Lakeside
+                    {t("trip.lakeside")}
                   </p>
                   <div className="absolute inset-x-5 bottom-4 flex items-end justify-between gap-3 text-cream">
                     <p className="font-serif text-[2.6rem] leading-none tracking-[0.12em]">POKHARA</p>
                     <p className="pb-1 text-right text-[10px] uppercase tracking-[0.22em] text-cream/75">
-                      Nepal
+                      {t("trip.nepal")}
                       <br />
                       28.2° N · 84.0° E
                     </p>
@@ -253,61 +262,80 @@ export function TripCard() {
                   {trip.checkIn ? (
                     <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
                       <div>
-                        <p className="text-[10px] uppercase tracking-[0.22em] text-ink-soft/70">Check-in</p>
-                        <p className="mt-1 font-serif text-3xl leading-none">{day(trip.checkIn).date}</p>
+                        <p className="text-[10px] uppercase tracking-[0.22em] text-ink-soft/70">
+                          {t("trip.checkIn")}
+                        </p>
+                        <p className="mt-1 font-serif text-3xl leading-none">
+                          {day(trip.checkIn).date}
+                        </p>
                         <p className="mt-1 text-xs text-ink-soft">{day(trip.checkIn).weekday}</p>
                       </div>
                       <div className="text-center">
                         <div className="mx-auto h-px w-12 bg-gold" />
                         <p className="mt-2 text-[10px] uppercase tracking-[0.2em] text-gold-deep">
-                          {trip.nights ? `${trip.nights} ${trip.nights === 1 ? "night" : "nights"}` : "Open"}
+                          {trip.nights
+                            ? `${trip.nights} ${trip.nights === 1 ? t("trip.night") : t("trip.nights")}`
+                            : t("trip.open")}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-[10px] uppercase tracking-[0.22em] text-ink-soft/70">Check-out</p>
+                        <p className="text-[10px] uppercase tracking-[0.22em] text-ink-soft/70">
+                          {t("trip.checkOut")}
+                        </p>
                         <p className="mt-1 font-serif text-3xl leading-none">
                           {trip.checkOut ? day(trip.checkOut).date : "—"}
                         </p>
                         <p className="mt-1 text-xs text-ink-soft">
-                          {trip.checkOut ? day(trip.checkOut).weekday : "Flexible"}
+                          {trip.checkOut ? day(trip.checkOut).weekday : t("trip.flexible")}
                         </p>
                       </div>
                     </div>
                   ) : (
                     <div>
-                      <p className="text-[10px] uppercase tracking-[0.22em] text-ink-soft/70">Dates</p>
-                      <p className="mt-1 font-serif text-3xl leading-none">Flexible</p>
+                      <p className="text-[10px] uppercase tracking-[0.22em] text-ink-soft/70">
+                        {t("trip.dates")}
+                      </p>
+                      <p className="mt-1 font-serif text-3xl leading-none">{t("trip.flexible")}</p>
                     </div>
                   )}
 
                   <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-4 border-t border-sand pt-5 text-sm">
                     <div>
-                      <dt className="text-[10px] uppercase tracking-[0.22em] text-ink-soft/70">Guests</dt>
+                      <dt className="text-[10px] uppercase tracking-[0.22em] text-ink-soft/70">
+                        {t("trip.guests")}
+                      </dt>
                       <dd className="mt-1 flex items-center gap-1.5">
                         <Users className="h-3.5 w-3.5 text-gold-deep" />
-                        {trip.guests} {trip.guests === 1 ? "guest" : "guests"}
+                        {trip.guests}{" "}
+                        {trip.guests === 1 ? t("trip.guest") : t("trip.guestsWord")}
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-[10px] uppercase tracking-[0.22em] text-ink-soft/70">Room</dt>
-                      <dd className="mt-1">{trip.room?.name ?? "Any room"}</dd>
+                      <dt className="text-[10px] uppercase tracking-[0.22em] text-ink-soft/70">
+                        {t("trip.room")}
+                      </dt>
+                      <dd className="mt-1">{roomName ?? t("trip.anyRoom")}</dd>
                     </div>
                     {trip.route ? (
                       <div>
-                        <dt className="text-[10px] uppercase tracking-[0.22em] text-ink-soft/70">Arriving</dt>
+                        <dt className="text-[10px] uppercase tracking-[0.22em] text-ink-soft/70">
+                          {t("trip.arriving")}
+                        </dt>
                         <dd className="mt-1 flex items-center gap-1.5">
                           <trip.route.icon className="h-3.5 w-3.5 text-gold-deep" />
-                          {trip.route.label}
+                          {routeLabel}
                           {trip.arrivalTime ? ` · ${trip.arrivalTime}` : ""}
                         </dd>
                       </div>
                     ) : null}
                     {trip.sunrise ? (
                       <div>
-                        <dt className="text-[10px] uppercase tracking-[0.22em] text-ink-soft/70">Sunrise</dt>
+                        <dt className="text-[10px] uppercase tracking-[0.22em] text-ink-soft/70">
+                          {t("trip.sunrise")}
+                        </dt>
                         <dd className="mt-1 flex items-center gap-1.5">
                           <Sunrise className="h-3.5 w-3.5 text-gold-deep" />
-                          Hoping for {day(trip.sunrise).date}
+                          {t("trip.hopingFor", { date: day(trip.sunrise).date })}
                         </dd>
                       </div>
                     ) : null}
@@ -315,14 +343,16 @@ export function TripCard() {
 
                   {trip.places.length ? (
                     <div className="mt-5">
-                      <p className="text-[10px] uppercase tracking-[0.22em] text-ink-soft/70">In Pokhara</p>
+                      <p className="text-[10px] uppercase tracking-[0.22em] text-ink-soft/70">
+                        {t("trip.inPokhara")}
+                      </p>
                       <ul className="mt-2 flex flex-wrap gap-1.5">
                         {trip.places.map((place) => (
                           <li
                             key={place.id}
                             className="rounded-full border border-sand bg-cream px-3 py-1 text-xs text-ink-soft"
                           >
-                            {place.name}
+                            {messages.explore.places[place.id as PlaceId].name}
                           </li>
                         ))}
                       </ul>
@@ -338,8 +368,7 @@ export function TripCard() {
 
                 <div className="flex items-center justify-between gap-3 px-5 py-4 sm:px-6">
                   <p className="text-xs leading-5 text-ink-soft">
-                    <span className="font-semibold text-ink">Not booked yet.</span> A plan to send to
-                    the Shepherd, who reply personally.
+                    <span className="font-semibold text-ink">{t("trip.notBooked")}</span>
                   </p>
                   <Ticket className="h-6 w-6 shrink-0 text-gold" strokeWidth={1.5} />
                 </div>
@@ -352,7 +381,7 @@ export function TripCard() {
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink transition hover:bg-cream"
                 >
                   {copied ? <Check className="h-4 w-4" /> : <Share2 className="h-4 w-4" />}
-                  {copied ? "Link copied" : "Share the plan"}
+                  {copied ? t("trip.linkCopied") : t("trip.sharePlan")}
                 </button>
                 <a
                   href={whatsappHref(plan.message)}
@@ -361,12 +390,12 @@ export function TripCard() {
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-whatsapp px-5 py-3 text-sm font-semibold text-white transition hover:brightness-110"
                 >
                   <MessageCircle className="h-4 w-4" />
-                  Send to the Shepherd
+                  {t("trip.sendShepherd")}
                 </a>
               </div>
               {manual ? (
                 <label className="mt-4 block text-xs text-cream/65">
-                  Copy this link to share your plan
+                  {t("trip.copyLink")}
                   <input
                     readOnly
                     value={manual}
@@ -379,11 +408,17 @@ export function TripCard() {
               <div className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-cream/65">
                 <button
                   type="button"
-                  onClick={() => window.open(`https://wa.me/?text=${encodeURIComponent(`${pitch} ${link()}`)}`, "_blank", "noopener,noreferrer")}
+                  onClick={() =>
+                    window.open(
+                      `https://wa.me/?text=${encodeURIComponent(`${pitch} ${link()}`)}`,
+                      "_blank",
+                      "noopener,noreferrer",
+                    )
+                  }
                   className="inline-flex items-center gap-1.5 transition hover:text-gold"
                 >
                   <Link2 className="h-3.5 w-3.5" />
-                  Send to a friend on WhatsApp
+                  {t("trip.sendFriend")}
                 </button>
                 <a
                   href="#plan"
@@ -391,7 +426,7 @@ export function TripCard() {
                   className="inline-flex items-center gap-1.5 transition hover:text-gold"
                 >
                   <Pencil className="h-3.5 w-3.5" />
-                  Change the plan
+                  {t("trip.changePlan")}
                 </a>
               </div>
             </div>

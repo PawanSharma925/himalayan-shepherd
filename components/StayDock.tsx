@@ -3,12 +3,14 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { CalendarDays, MessageCircle, Pencil, Phone, Ticket } from "lucide-react";
 import { HOTEL, whatsappHref } from "@/lib/hotel";
+import { useT } from "@/lib/i18n";
 import { planStore } from "@/lib/planStore";
 import { openTripCard } from "./TripCard";
 
 const WATCHED = ["plan", "contact"];
 
 export function StayDock() {
+  const t = useT();
   const plan = useSyncExternalStore(planStore.subscribe, planStore.get, planStore.getServer);
   const [covered, setCovered] = useState(true);
 
@@ -41,7 +43,7 @@ export function StayDock() {
         <div className="flex items-center gap-2 rounded-full border border-white/10 bg-ink/95 py-2 pl-5 pr-2 text-cream shadow-[0_20px_60px_rgba(23,20,16,0.35)] backdrop-blur">
           <CalendarDays className="h-4 w-4 shrink-0 text-gold" />
           <span className="max-w-[28rem] truncate pr-2 text-sm">
-            {plan.hasPlan ? plan.summary.join(" · ") : "Planning a stay in Pokhara?"}
+            {plan.hasPlan ? plan.summary.join(" · ") : t("dock.planning")}
           </span>
           <a
             href="#plan"
@@ -49,7 +51,7 @@ export function StayDock() {
             className="inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 text-sm text-cream/80 transition hover:bg-white/10 hover:text-cream"
           >
             <Pencil className="h-3.5 w-3.5" />
-            {plan.hasPlan ? "Edit" : "Pick dates"}
+            {plan.hasPlan ? t("dock.edit") : t("dock.pickDates")}
           </a>
           {plan.hasPlan ? (
             <button
@@ -59,7 +61,7 @@ export function StayDock() {
               className="inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 text-sm text-cream/80 transition hover:bg-white/10 hover:text-cream"
             >
               <Ticket className="h-3.5 w-3.5" />
-              Trip card
+              {t("dock.tripCard")}
             </button>
           ) : null}
           <a
@@ -70,7 +72,7 @@ export function StayDock() {
             className="inline-flex items-center gap-2 rounded-full bg-whatsapp px-5 py-2.5 text-sm font-semibold text-white transition hover:brightness-110"
           >
             <MessageCircle className="h-4 w-4" />
-            {plan.hasPlan ? "Send on WhatsApp" : "Ask the Shepherd"}
+            {plan.hasPlan ? t("dock.sendWhatsApp") : t("dock.askShepherd")}
           </a>
         </div>
       </div>
@@ -81,7 +83,9 @@ export function StayDock() {
             <a href="#plan" className="flex min-w-0 items-center gap-1.5">
               <CalendarDays className="h-3.5 w-3.5 shrink-0 text-gold-deep" />
               <span className="truncate">{plan.summary.join(" · ")}</span>
-              <span className="shrink-0 text-gold-deep underline underline-offset-2">Edit</span>
+              <span className="shrink-0 text-gold-deep underline underline-offset-2">
+                {t("dock.edit")}
+              </span>
             </a>
             <button
               type="button"
@@ -89,18 +93,18 @@ export function StayDock() {
               className="inline-flex shrink-0 items-center gap-1 rounded-full bg-cream px-2.5 py-1 font-medium text-ink"
             >
               <Ticket className="h-3.5 w-3.5 text-gold-deep" />
-              Share
+              {t("dock.share")}
             </button>
           </div>
         ) : null}
         <div className="grid grid-cols-[auto_1fr] gap-2">
           <a
             href={HOTEL.phoneHref}
-            aria-label="Call the Shepherd"
+            aria-label={t("dock.callShepherd")}
             className="inline-flex items-center justify-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-medium text-cream"
           >
             <Phone className="h-4 w-4" />
-            Call
+            {t("dock.call")}
           </a>
           {plan.hasPlan ? (
             <a
@@ -110,7 +114,7 @@ export function StayDock() {
               className="inline-flex items-center justify-center gap-2 rounded-full bg-whatsapp py-3 text-sm font-semibold text-white"
             >
               <MessageCircle className="h-4 w-4" />
-              Send on WhatsApp
+              {t("dock.sendWhatsApp")}
             </a>
           ) : (
             <a
@@ -118,7 +122,7 @@ export function StayDock() {
               className="inline-flex items-center justify-center gap-2 rounded-full bg-whatsapp py-3 text-sm font-medium text-white"
             >
               <CalendarDays className="h-4 w-4" />
-              Check dates
+              {t("dock.checkDates")}
             </a>
           )}
         </div>

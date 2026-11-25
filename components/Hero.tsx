@@ -1,11 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { HOTEL } from "@/lib/hotel";
+import { useT } from "@/lib/i18n";
 import { SmartImage } from "./SmartImage";
 import { StayPlanner } from "./StayPlanner";
 
 export function Hero() {
+  const t = useT();
+
   return (
     <section
       id="top"
@@ -15,7 +17,7 @@ export function Hero() {
         <div className="hero-pan h-full w-max group-hover:[animation-play-state:paused]">
           <SmartImage
             src="/images/hotel/view/himalayan-shepherd-01-lake-and-mountains-hd.jpg"
-            alt="Panorama of Fewa Lake and the Annapurna range above Lakeside, Pokhara"
+            alt={t("hero.alt")}
             width={4401}
             height={963}
             priority
@@ -26,7 +28,7 @@ export function Hero() {
         </div>
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-ink to-transparent" />
         <p className="absolute bottom-4 left-5 text-[10px] uppercase tracking-[0.28em] text-white/75 md:left-8">
-          Fewa Lake · Annapurna range · Lakeside
+          {t("hero.banner")}
         </p>
       </div>
 
@@ -38,7 +40,7 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 0.15 }}
             className="kicker !text-gold"
           >
-            {HOTEL.kicker}
+            {t("hotel.kicker")}
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
@@ -46,7 +48,7 @@ export function Hero() {
             transition={{ duration: 1, delay: 0.3 }}
             className="mt-4 max-w-3xl font-serif text-[2.1rem] leading-[1] sm:text-5xl md:text-6xl"
           >
-            {HOTEL.tagline}
+            {t("hotel.tagline")}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 18 }}
@@ -54,13 +56,12 @@ export function Hero() {
             transition={{ duration: 0.9, delay: 0.45 }}
             className="mt-5 max-w-md text-base leading-relaxed text-white/75 md:text-[17px]"
           >
-            Wake to Fewa Lake and the Annapurna skyline, then come back to a
-            quiet boutique hotel in Lakeside.{" "}
+            {t("hero.lead")}{" "}
             <a
               href="#rooms"
               className="text-white underline decoration-gold/70 underline-offset-4 hover:text-gold"
             >
-              See the rooms
+              {t("hero.seeRooms")}
             </a>
           </motion.p>
         </div>

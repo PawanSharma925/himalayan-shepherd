@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Cloud, CloudSun, Mountain, Sunrise } from "lucide-react";
+import { useLocale } from "@/lib/i18n";
 import { PLAN_DATES_EVENT, type PlanDatesDetail } from "./StayPlanner";
 
 const FORECAST_URL =
@@ -27,28 +28,6 @@ const shiftDate = (date: string, days: number) => {
   return d.toISOString().slice(0, 10);
 };
 
-const weekday = (date: string, today: string) => {
-  if (date === today) return "Today";
-  if (date === shiftDate(today, 1)) return "Tomorrow";
-  return new Date(`${date}T00:00:00Z`).toLocaleDateString("en-GB", {
-    weekday: "short",
-    timeZone: "UTC",
-  });
-};
-
-const dayMonth = (date: string) =>
-  new Date(`${date}T00:00:00Z`).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "short",
-    timeZone: "UTC",
-  });
-
-function verdict(cloud: number) {
-  if (cloud < 25) return { label: "Peaks likely clear", Icon: Mountain, tone: "text-gold" };
-  if (cloud < 60) return { label: "Partly clouded", Icon: CloudSun, tone: "text-white/80" };
-  return { label: "Hidden in cloud", Icon: Cloud, tone: "text-white/45" };
-}
-
 function toMornings(data: Forecast): { today: string; mornings: Morning[] } {
   const [today, clock] = data.current.time.split("T");
   const index = new Map(data.hourly.time.map((time, i) => [time, i]));
@@ -69,11 +48,37 @@ function toMornings(data: Forecast): { today: string; mornings: Morning[] } {
 }
 
 export function MountainForecast() {
+  const { t, locale } = useLocale();
   const [state, setState] = useState<
     | { status: "loading" }
     | { status: "error" }
     | { status: "ready"; today: string; now: string; temp: number; mornings: Morning[] }
   >({ status: "loading" });
+
+  const dateLocale = locale === "zh-HK" ? "zh-HK" : "en-GB";
+
+  const weekday = (date: string, today: string) => {
+    if (date === today) return t("forecast.today");
+    if (date === shiftDate(today, 1)) return t("forecast.tomorrow");
+    return new Date(`${date}T00:00:00Z`).toLocaleDateString(dateLocale, {
+      weekday: "short",
+      timeZone: "UTC",
+    });
+  };
+
+  const dayMonth = (date: string) =>
+    new Date(`${date}T00:00:00Z`).toLocaleDateString(dateLocale, {
+      day: "numeric",
+      month: "short",
+      timeZone: "UTC",
+    });
+
+  const verdict = (cloud: number) => {
+    if (cloud < 25) return { label: t("forecast.clear"), Icon: Mountain, tone: "text-gold" };
+    if (cloud < 60)
+      return { label: t("forecast.partly"), Icon: CloudSun, tone: "text-white/80" };
+    return { label: t("forecast.hidden"), Icon: Cloud, tone: "text-white/45" };
+  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -122,21 +127,17 @@ export function MountainForecast() {
   return (
     <section
       id="forecast"
-      aria-label="Annapurna sunrise forecast"
+      aria-label={t("forecast.aria")}
       className="border-t border-white/10 bg-ink px-5 py-14 text-white md:px-8 md:py-20"
     >
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="max-w-xl">
-            <p className="kicker !text-gold">Live from Pokhara</p>
+            <p className="kicker !text-gold">{t("forecast.kicker")}</p>
             <h2 className="mt-4 font-serif text-[2rem] leading-tight sm:text-4xl md:text-5xl">
-              Will the Annapurna show itself?
+              {t("forecast.title")}
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-white/70">
-              The peaks are clearest just after sunrise. Here is the morning cloud
-              forecast for the next seven days — tap a clear one and we&rsquo;ll plan
-              your stay around it.
-            </p>
+            <p className="mt-4 text-base leading-relaxed text-white/70">{t("forecast.lead")}</p>
           </div>
           <p className="flex max-w-full items-center gap-2 text-sm text-white/60 md:shrink-0">
             <span className="relative flex h-2 w-2 shrink-0">
@@ -145,8 +146,8 @@ export function MountainForecast() {
             </span>
             <span className="min-w-0 break-words">
               {state.status === "ready"
-                ? `Now in Lakeside · ${state.temp}°C · ${state.now}`
-                : "Checking the sky over Lakeside…"}
+                ? t("forecast.now", { temp: state.temp, time: state.now })
+                : t("forecast.checking")}
             </span>
           </p>
         </div>
@@ -175,13 +176,15 @@ export function MountainForecast() {
                   >
                     {isBest ? (
                       <span className="absolute -top-2.5 left-4 whitespace-nowrap rounded-full bg-gold px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-ink">
-                        Best morning
+                        {t("forecast.bestMorning")}
                       </span>
                     ) : null}
                     <span className="text-[11px] uppercase tracking-[0.2em] text-white/55">
                       {state.status === "ready" ? weekday(morning.date, state.today) : ""}
                     </span>
-                    <span className="mt-1 whitespace-nowrap font-serif text-2xl">{dayMonth(morning.date)}</span>
+                    <span className="mt-1 whitespace-nowrap font-serif text-2xl">
+                      {dayMonth(morning.date)}
+                    </span>
                     <Icon className={`mt-4 h-7 w-7 ${tone}`} strokeWidth={1.5} />
                     <span className={`mt-2 text-sm leading-snug ${tone}`}>{label}</span>
                     <span className="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/10">
@@ -192,19 +195,19 @@ export function MountainForecast() {
                     </span>
                     <span className="mt-3 flex items-center gap-1.5 text-[11px] text-white/50">
                       <Sunrise className="h-3.5 w-3.5" />
-                      {morning.sunrise} · {morning.cloud}% cloud
+                      {t("forecast.cloudLine", {
+                        sunrise: morning.sunrise,
+                        cloud: morning.cloud,
+                      })}
                     </span>
                     <span className="mt-3 text-xs text-gold opacity-0 transition group-hover:opacity-100 max-md:opacity-100">
-                      Plan around this →
+                      {t("forecast.planAround")}
                     </span>
                   </button>
                 );
               })}
         </div>
-        <p className="mt-4 text-[11px] text-white/40">
-          Forecast by Open-Meteo, refreshed on every visit. Mountain weather changes fast — the
-          hotel will tell you what the sky looks like when you message.
-        </p>
+        <p className="mt-4 text-[11px] text-white/40">{t("forecast.footnote")}</p>
       </div>
     </section>
   );

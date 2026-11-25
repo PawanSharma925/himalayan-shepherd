@@ -3,8 +3,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarDays, MessageCircle, Minus, Plus, Sunrise } from "lucide-react";
 import { whatsappHref } from "@/lib/hotel";
+import { useLocale } from "@/lib/i18n";
+import { roomCopy } from "@/lib/i18n/rooms";
 import { initialPlan, planStore, savePlan } from "@/lib/planStore";
-import { ROOM_TIERS } from "@/lib/rooms";
+import { ROOM_TIERS, type RoomId } from "@/lib/rooms";
 
 export const PLAN_ROOM_EVENT = "plan-room";
 export const PLAN_DATES_EVENT = "plan-dates";
@@ -29,14 +31,8 @@ const toInput = (date: Date) => {
   return local.toISOString().slice(0, 10);
 };
 
-const pretty = (value: string) =>
-  new Date(`${value}T00:00:00`).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-
 export function StayPlanner() {
+  const { t, locale, messages } = useLocale();
   const root = useRef<HTMLFormElement>(null);
   const [today, setToday] = useState("");
   const [checkIn, setCheckIn] = useState("");
@@ -48,6 +44,13 @@ export function StayPlanner() {
   const [wishes, setWishes] = useState<PlanArrivalDetail | null>(null);
   const [flash, setFlash] = useState(false);
   const [restored, setRestored] = useState(false);
+
+  const pretty = (value: string) =>
+    new Date(`${value}T00:00:00`).toLocaleDateString(locale === "zh-HK" ? "zh-HK" : "en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
 
   useEffect(() => {
     const todayTimer = window.setTimeout(() => {
@@ -123,36 +126,67 @@ export function StayPlanner() {
     return diff > 0 ? diff : 0;
   }, [checkIn, checkOut]);
 
+  const nightWord = nights === 1 ? t("planner.night") : t("planner.nights");
+  const who = `${guests} ${guests === 1 ? t("planner.guest") : t("planner.guestsWord")}`;
+
   const message = useMemo(() => {
     const roomName =
-      ROOM_TIERS.find((tier) => tier.id === room)?.name ?? "a room";
-    const who = `${guests} ${guests === 1 ? "guest" : "guests"}`;
+      room !== "any" && (room === "premium" || room === "standard")
+        ? roomCopy(messages, room as RoomId).name
+        : "";
     const when =
       checkIn && nights
-        ? `from ${pretty(checkIn)} to ${pretty(checkOut)} (${nights} ${nights === 1 ? "night" : "nights"})`
+        ? t("planner.whenRange", {
+            checkIn: pretty(checkIn),
+            checkOut: pretty(checkOut),
+            nights,
+            nightWord,
+          })
         : checkIn
-          ? `from ${pretty(checkIn)}`
-          : "— my dates are flexible";
-    const view = sunrise
-      ? ` I'd love to catch the sunrise over the Annapurna on ${pretty(sunrise)}.`
-      : "";
+          ? t("planner.whenFrom", { checkIn: pretty(checkIn) })
+          : t("planner.whenFlexible");
+    const view = sunrise ? t("planner.sunriseWish", { date: pretty(sunrise) }) : "";
     const travel = arrival ? ` ${arrival.note}` : "";
     const extras = wishes ? ` ${wishes.note}` : "";
-    return `Hello Himalayan Shepherd, is ${room === "any" ? "a room" : `the ${roomName}`} available ${when} for ${who}?${view}${travel}${extras}`;
-  }, [arrival, checkIn, checkOut, guests, nights, room, sunrise, wishes]);
+    const base =
+      room === "any"
+        ? t("planner.messageAny", { when, who })
+        : t("planner.messageRoom", { room: roomName, when, who });
+    return `${base}${view}${travel}${extras}`;
+  }, [
+    arrival,
+    checkIn,
+    checkOut,
+    guests,
+    messages,
+    nightWord,
+    nights,
+    room,
+    sunrise,
+    t,
+    who,
+    wishes,
+    locale,
+  ]);
 
   useEffect(() => {
     const short = (value: string) => pretty(value).replace(/ \d{4}$/, "");
     const summary = [
       checkIn && nights
-        ? `${short(checkIn)} → ${short(checkOut)} · ${nights} ${nights === 1 ? "night" : "nights"}`
+        ? t("planner.summaryRange", {
+            checkIn: short(checkIn),
+            checkOut: short(checkOut),
+            nights,
+            nightWord,
+          })
         : checkIn
-          ? `From ${short(checkIn)}`
-          : "Flexible dates",
-      `${guests} ${guests === 1 ? "guest" : "guests"}`,
+          ? t("planner.fromDate", { date: short(checkIn) })
+          : t("planner.flexibleDates"),
+      who,
     ];
-    const roomName = ROOM_TIERS.find((tier) => tier.id === room)?.name;
-    if (roomName) summary.push(roomName);
+    if (room === "premium" || room === "standard") {
+      summary.push(roomCopy(messages, room).name);
+    }
     if (arrival) summary.push(arrival.label);
     if (wishes) summary.push(wishes.label);
     const query = new URLSearchParams();
@@ -171,7 +205,23 @@ export function StayPlanner() {
       share,
     });
     if (restored) savePlan(share);
-  }, [arrival, wishes, message, checkIn, checkOut, nights, guests, room, sunrise, restored]);
+  }, [
+    arrival,
+    wishes,
+    message,
+    checkIn,
+    checkOut,
+    nights,
+    guests,
+    room,
+    sunrise,
+    restored,
+    t,
+    nightWord,
+    who,
+    messages,
+    locale,
+  ]);
 
   const field =
     "box-border w-full min-w-0 max-w-full rounded-xl border border-white/15 bg-white/[0.06] px-2.5 py-2.5 text-[13px] text-white outline-none transition focus:border-gold sm:px-3 sm:text-sm [color-scheme:dark]";
@@ -191,20 +241,21 @@ export function StayPlanner() {
     >
       <div className="mb-4 flex flex-wrap items-center gap-2 text-sm text-white/80">
         <CalendarDays className="h-4 w-4 shrink-0 text-gold" />
-        <span className="min-w-0">Plan your stay</span>
+        <span className="min-w-0">{t("planner.title")}</span>
         {sunrise ? (
           <span className="ml-auto inline-flex max-w-full items-center gap-1 rounded-full bg-gold/15 px-2.5 py-1 text-[11px] text-gold">
             <Sunrise className="h-3 w-3 shrink-0" />
-            <span className="truncate">Sunrise {pretty(sunrise).replace(/ \d{4}$/, "")}</span>
+            <span className="truncate">
+              {t("planner.sunrise", { date: pretty(sunrise).replace(/ \d{4}$/, "") })}
+            </span>
           </span>
         ) : null}
       </div>
       <div className="flex flex-col gap-2 sm:gap-3">
-        {/* iOS Safari date controls won't shrink in a 2-col grid — stack on small screens. */}
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3">
           <div className="min-w-0 overflow-hidden">
             <label htmlFor="plan-in" className={label}>
-              Check-in
+              {t("planner.checkIn")}
             </label>
             <input
               id="plan-in"
@@ -221,7 +272,7 @@ export function StayPlanner() {
           </div>
           <div className="min-w-0 overflow-hidden">
             <label htmlFor="plan-out" className={label}>
-              Check-out
+              {t("planner.checkOut")}
             </label>
             <input
               id="plan-out"
@@ -238,11 +289,11 @@ export function StayPlanner() {
         </div>
         <div className="grid grid-cols-2 gap-2 sm:gap-3">
           <div className="min-w-0">
-            <span className={label}>Guests</span>
+            <span className={label}>{t("planner.guests")}</span>
             <div className="flex items-center justify-between rounded-xl border border-white/15 bg-white/[0.06] px-2 py-1.5">
               <button
                 type="button"
-                aria-label="Fewer guests"
+                aria-label={t("planner.fewerGuests")}
                 onClick={() => setGuests((value) => Math.max(1, value - 1))}
                 className="grid h-7 w-7 place-items-center rounded-full text-white/80 hover:bg-white/10"
               >
@@ -251,7 +302,7 @@ export function StayPlanner() {
               <span className="text-sm tabular-nums">{guests}</span>
               <button
                 type="button"
-                aria-label="More guests"
+                aria-label={t("planner.moreGuests")}
                 onClick={() => setGuests((value) => Math.min(8, value + 1))}
                 className="grid h-7 w-7 place-items-center rounded-full text-white/80 hover:bg-white/10"
               >
@@ -261,7 +312,7 @@ export function StayPlanner() {
           </div>
           <div className="min-w-0">
             <label htmlFor="plan-room" className={label}>
-              Room
+              {t("planner.room")}
             </label>
             <select
               id="plan-room"
@@ -270,11 +321,11 @@ export function StayPlanner() {
               className={`${field} appearance-none`}
             >
               <option value="any" className="text-ink">
-                Any room
+                {t("planner.anyRoom")}
               </option>
               {ROOM_TIERS.map((tier) => (
                 <option key={tier.id} value={tier.id} className="text-ink">
-                  {tier.name}
+                  {roomCopy(messages, tier.id).name}
                 </option>
               ))}
             </select>
@@ -286,11 +337,11 @@ export function StayPlanner() {
         className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-whatsapp px-6 py-3 text-sm font-medium tracking-wide text-white transition hover:brightness-110"
       >
         <MessageCircle className="h-4 w-4" />
-        {nights ? `Check ${nights} ${nights === 1 ? "night" : "nights"} on WhatsApp` : "Check availability on WhatsApp"}
+        {nights
+          ? t("planner.checkNights", { nights, nightWord })
+          : t("planner.checkAvailability")}
       </button>
-      <p className="mt-3 text-center text-[11px] tracking-wide text-white/50">
-        No booking fees · The Shepherd replies personally
-      </p>
+      <p className="mt-3 text-center text-[11px] tracking-wide text-white/50">{t("planner.noFees")}</p>
     </form>
   );
 }
