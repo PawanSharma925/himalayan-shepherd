@@ -32,12 +32,13 @@ export const en = {
     kicker: "The hotel",
     title: "A pause between Fewa Lake and the Annapurna trail.",
     paragraphs: [
-      "Himalayan Shepherd is a small, considered hotel in Pokhara — close enough to the lake for an evening walk, close enough to the hills for a dawn start, and quiet enough that neither has to rush you.",
-      "The rooms are timber, linen, and soft light. The sundeck catches late mountain air. Breakfast is unhurried. We keep the hotel personal on purpose: no platforms, no booking engine — just a conversation, then a key to rest.",
-      "Come for the Himalayan mountains. Stay for the still hour. Retreat for your soul.",
+      "Himalayan Shepherd is an intimate, thoughtfully run boutique hotel in Pokhara. Whether you are strolling by the lakeside to refresh your soul or trekking into the mountains to embrace nature, both are right at your doorstep. It is a tranquil sanctuary where you can slow down and rediscover your inner calm.",
+      "With only ten guest rooms, our environment is simple, safe, and free from the disruption of large crowds—giving you the freedom and relaxation of feeling right at home.",
+      "Here, you can rest peacefully in clean, comfortable rooms, gather freely with friends to share time in our communal spaces across different floors, or head up to the rooftop to catch the evening mountain breeze.",
+      "Wake up to a slow, unhurried breakfast, then set out to explore the lakeside and mountain scenery at the foothills of the Himalayas, along with a long-awaited sense of inner peace—rediscovering a true sense of belonging among the mountains of Nepal.",
+      "We keep the hotel personal on purpose: no booking platforms and no reservation engines—just a conversation, followed by a key, so you can settle in comfortably and begin an extraordinary journey.",
     ],
-    quote:
-      "I lift my eyes toward Himalayan mountains. Where will my help come from? Who is my Shepherd?",
+    quote: "I lift up my eyes to the mountains—where does my help come from?",
     altSummit: "Annapurna summit above Pokhara, seen from Himalayan Shepherd",
     altPatio: "Patio outside the dining room at Himalayan Shepherd",
     altEntrance: "Entrance and facade of Himalayan Shepherd on Lakeside Road",
