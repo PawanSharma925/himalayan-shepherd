@@ -1,11 +1,11 @@
 "use client";
 
-import { useT } from "@/lib/i18n";
+import { useLocale } from "@/lib/i18n";
 import { Reveal } from "./Reveal";
 import { SmartImage } from "./SmartImage";
 
 export function About() {
-  const t = useT();
+  const { t, messages } = useLocale();
 
   const mosaic = [
     {
@@ -41,9 +41,9 @@ export function About() {
             {t("about.title")}
           </h2>
           <div className="mt-8 space-y-5 text-[17px] leading-8 text-ink-soft">
-            <p>{t("about.p1")}</p>
-            <p>{t("about.p2")}</p>
-            <p>{t("about.p3")}</p>
+            {messages.about.paragraphs.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
             <p className="font-serif text-[1.15rem] italic leading-8 text-ink">{t("about.quote")}</p>
           </div>
         </Reveal>

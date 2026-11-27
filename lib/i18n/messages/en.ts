@@ -31,9 +31,11 @@ export const en = {
   about: {
     kicker: "The hotel",
     title: "A pause between Fewa Lake and the Annapurna trail.",
-    p1: "Himalayan Shepherd is a small, considered hotel in Pokhara — close enough to the lake for an evening walk, close enough to the hills for a dawn start, and quiet enough that neither has to rush you.",
-    p2: "The rooms are timber, linen, and soft light. The sundeck catches late mountain air. Breakfast is unhurried. We keep the hotel personal on purpose: no platforms, no booking engine — just a conversation, then a key to rest.",
-    p3: "Come for the Himalayan mountains. Stay for the still hour. Retreat for your soul.",
+    paragraphs: [
+      "Himalayan Shepherd is a small, considered hotel in Pokhara — close enough to the lake for an evening walk, close enough to the hills for a dawn start, and quiet enough that neither has to rush you.",
+      "The rooms are timber, linen, and soft light. The sundeck catches late mountain air. Breakfast is unhurried. We keep the hotel personal on purpose: no platforms, no booking engine — just a conversation, then a key to rest.",
+      "Come for the Himalayan mountains. Stay for the still hour. Retreat for your soul.",
+    ],
     quote:
       "I lift my eyes toward Himalayan mountains. Where will my help come from? Who is my Shepherd?",
     altSummit: "Annapurna summit above Pokhara, seen from Himalayan Shepherd",
